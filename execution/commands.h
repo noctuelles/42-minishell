@@ -6,18 +6,22 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:38:03 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/18 17:55:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/18 19:34:16 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDS_H
 # define COMMANDS_H
 
+# include <stdlib.h>
+# include <string.h>
+# include <stdio.h>
 typedef enum e_command_separator
 {
 	PIPE,
 	AND,
-	OR
+	OR,
+	END
 }	t_command_separator;
 
 typedef enum e_redirection_type
@@ -48,5 +52,7 @@ typedef struct s_command_list
 	t_command_separator 	separator;
 	struct s_command_list	*next;
 }	t_command_list;
+
+int	is_builtin(char *str);
 
 #endif
