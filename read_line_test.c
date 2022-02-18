@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 15:00:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/18 15:18:36 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/18 15:45:39 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,18 @@ char	*ft_strcat(char *dest, char *src)
 	return (dest);
 }
 
+void print_syntax_error(int res)
+{
+	char error;
+
+	if(res == -1)
+		printf("Syntax error: \' never closed\n");
+	if(res == -2)
+		printf("Syntax error: \" never closed\n");
+}
+
+int is_expression_correctly_quoted(char *str);
+
 int main()
 {
 	char *line;
@@ -70,7 +82,12 @@ int main()
 		if(line == NULL)
 			break;
 		add_history(line);
-		printf("%s\n", line);
+		
+		int res = is_expression_correctly_quoted(line);
+		if(res == 1)
+			printf("Execute: %s\n", line);
+		else
+			print_syntax_error(res);
 	}
 	printf("\nExit\n");
 }
