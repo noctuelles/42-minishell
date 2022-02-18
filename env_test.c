@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 14:13:37 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/18 14:51:31 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/18 16:16:10 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-int	ft_strlen(char *str)
+static int	ft_strlen(char *str)
 {
 	int	i;
 
@@ -95,7 +95,34 @@ void	print_env_list(t_env **env_list)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+	{
+		i++;
+	}
+	return (s1[i] - s2[i]);
+}
+
+
+char *get_value(t_env **env_list, char *name)
+{
+	t_env	*elem;
+
+	elem = *env_list;
+	while (elem != NULL)
+	{
+		if(ft_strcmp(name, elem->name) == 0)
+			return elem->value;
+		elem = elem->next;
+	}
+	return NULL;
+}
+
+t_env *get_env_list(char **envp)
 {
 	t_env	*env_list;
 	t_env	*env;
@@ -106,7 +133,7 @@ int main(int argc, char **argv, char **envp)
 	if (envp[0] == NULL)
 	{
 		printf("Empty environment\n");
-		return (1);
+		return NULL;
 	}
 	else
 	{
@@ -115,7 +142,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			env = get_env_element(envp[i]);
 			if (!env)
-				return (1);
+				return NULL;
 			if (env_list == NULL)
 				env_list = env;
 			else
@@ -127,6 +154,5 @@ int main(int argc, char **argv, char **envp)
 			}
 		}
 	}
-	print_env_list(&env_list);
-	return (0);
+	return env_list;
 }
