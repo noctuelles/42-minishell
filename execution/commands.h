@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:38:03 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/18 19:34:16 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/20 12:03:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 # define COMMANDS_H
 
 # include <stdlib.h>
+# include <unistd.h>
 # include <string.h>
 # include <stdio.h>
+# include <sys/wait.h>
+# include <errno.h>
 typedef enum e_command_separator
 {
 	PIPE,
@@ -53,6 +56,7 @@ typedef struct s_command_list
 	struct s_command_list	*next;
 }	t_command_list;
 
-int	is_builtin(char *str);
+int		is_builtin(char *str);
+char	*ft_strtrunc(char **str, const char delim);
 
 #endif
