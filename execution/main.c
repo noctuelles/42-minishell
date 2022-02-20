@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/20 13:35:06 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/20 13:51:05 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_command_list *get_fake_command_list()
 
 	t_command_list *list3 = malloc(sizeof(t_command_list));
 	t_command *command3 = malloc(sizeof(t_command));
-	command3->name = strdup("ls");
+	command3->name = strdup("wc");
 	command3->args = malloc(sizeof(char*) * 2);
 	command3->args[0] = strdup("/usr/bin/wc");
 	command3->args[1] = NULL;
@@ -128,8 +128,8 @@ int	execute_file(t_command *command, char *path, char **envp, int is_last)
 	}
 	if(pid == 0)
 	{
-		if(execve(path, command->args, envp) < 0)
-			perror("Execution error");
+		execve(path, command->args, envp);
+		perror("Execution error");
 		exit(errno);
 	}
 	else
