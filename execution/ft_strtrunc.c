@@ -63,6 +63,7 @@ char    *ft_strtrunc(char **str, const char delim)
     static char *w_str;
     t_index     i;
  
+
     if (!w_str)
         w_str = *str;
     i = 0;
