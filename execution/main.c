@@ -6,21 +6,20 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/20 12:09:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/20 12:32:38 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
-
-char **g_env;
 
 static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
 	command1->name = strdup("ls");
-	command1->args = malloc(sizeof(char*) * 1);
-	command1->args[0] = NULL;
+	command1->args = malloc(sizeof(char*) * 2);
+	command1->args[0] = strdup("/usr/bin/ls");
+	command1->args[1] = NULL;
 	command1->redirection_count = 0;
 	command1->redirections = NULL;
 	list1->command = command1;
@@ -66,7 +65,7 @@ char	*get_path_from_pwd(char *command_name)
 	return NULL;
 }
 
-int	execute_file(t_command *command, char *path)
+int	execute_file(t_command *command, char *path, char **envp)
 {
 	int	pid;
 	int	wait_status;
@@ -77,16 +76,17 @@ int	execute_file(t_command *command, char *path)
 		return -1;
 	if(pid == 0)
 	{
-		if(execve(path, command->args, g_env) < 0)
+		if(execve(path, command->args, envp) < 0)
 			perror("Execution error");
-		else
-			printf("Worked\n");
 	}
 	else
+	{
 		waitpid(pid, &wait_status, 0);
+		return wait_status;
+	}
 }
 
-int	execute(t_command *command, t_command_separator separator_to_next)
+int	execute(t_command *command, t_command_separator separator_to_next, char **envp)
 {
 	char	*path;
 	
@@ -109,7 +109,7 @@ int	execute(t_command *command, t_command_separator separator_to_next)
 				return -1;
 			}
 			else
-				return(execute_file(command, path));
+				return(execute_file(command, path, envp));
 		}
 	}
 	else
@@ -121,25 +121,24 @@ int	execute(t_command *command, t_command_separator separator_to_next)
 			return -1;
 		}
 		else
-			return(execute_file(command, path));
+			return(execute_file(command, path, envp));
 	}
 }
 
-int execute_list(t_command_list **list)
+int execute_list(t_command_list **list, char **envp)
 {
 	t_command_list	*command_elem;
 
 	command_elem = *list;
 	while(command_elem != NULL)
 	{
-		execute(command_elem->command, command_elem->separator);
+		execute(command_elem->command, command_elem->separator, envp);
 		command_elem = command_elem->next;
 	}
 }
 
-int main(char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	g_env = envp;
 	t_command_list *list = get_fake_command_list();
-	execute_list(&list);
+	execute_list(&list, envp);
 }
