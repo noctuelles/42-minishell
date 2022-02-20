@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/20 13:51:05 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/20 15:20:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
-	command1->name = strdup("ls");
+	command1->name = strdup("cat");
 	command1->args = malloc(sizeof(char*) * 2);
-	command1->args[0] = strdup("/usr/bin/ls");
+	command1->args[0] = strdup("/usr/bin/cat");
 	command1->args[1] = NULL;
 	command1->redirection_count = 0;
 	command1->redirections = NULL;
@@ -28,29 +28,17 @@ static t_command_list *get_fake_command_list()
 
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
-	command2->name = strdup("wc");
+	command2->name = strdup("ls");
 	command2->args = malloc(sizeof(char*) * 2);
-	command2->args[0] = strdup("/usr/bin/wc");
+	command2->args[0] = strdup("/usr/bin/ls");
 	command2->args[1] = NULL;
 	command2->redirection_count = 0;
 	command2->redirections = NULL;
 	list2->command = command2;
 	list2->next = NULL;
-	list2->separator = PIPE;
+	list2->separator = END;
 	list1->next = list2;
 
-	t_command_list *list3 = malloc(sizeof(t_command_list));
-	t_command *command3 = malloc(sizeof(t_command));
-	command3->name = strdup("wc");
-	command3->args = malloc(sizeof(char*) * 2);
-	command3->args[0] = strdup("/usr/bin/wc");
-	command3->args[1] = NULL;
-	command3->redirection_count = 0;
-	command3->redirections = NULL;
-	list3->command = command3;
-	list3->next = NULL;
-	list3->separator = END;
-	list2->next = list3;
 	return list1;
 }
 
@@ -101,7 +89,7 @@ char	*get_path_from_pwd(char *command_name)
 	return NULL;
 }
 
-int	execute_file(t_command *command, char *path, char **envp, int is_last)
+int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 {
 	pid_t	pid;
 	int		pipefd[2];
@@ -113,7 +101,7 @@ int	execute_file(t_command *command, char *path, char **envp, int is_last)
 	pid = fork();
 	if(pid == -1)
 		return -1;
-	if(!is_last)
+	if(is_piped)
 	{
 		if(pid == 0)
 		{
@@ -138,7 +126,7 @@ int	execute_file(t_command *command, char *path, char **envp, int is_last)
 	}
 }
 
-int	execute(t_command *command, t_command_separator separator_to_next, char **envp, int is_last)
+int	execute(t_command *command, t_command_separator separator_to_next, char **envp)
 {
 	char	*path;
 	
@@ -161,7 +149,7 @@ int	execute(t_command *command, t_command_separator separator_to_next, char **en
 				return -1;
 			}
 			else
-				return(execute_file(command, path, envp, is_last));
+				return(execute_file(command, path, envp, separator_to_next == PIPE));
 		}
 	}
 	else
@@ -173,7 +161,7 @@ int	execute(t_command *command, t_command_separator separator_to_next, char **en
 			return -1;
 		}
 		else
-			return(execute_file(command, path, envp, is_last));
+			return(execute_file(command, path, envp, separator_to_next == PIPE));
 	}
 }
 
@@ -188,7 +176,7 @@ int execute_list(t_command_list **list, char **envp)
 	command_elem = *list;
 	while(command_elem != NULL)
 	{
-		count += (execute(command_elem->command, command_elem->separator, envp, command_elem->next == NULL) == 1);
+		count += (execute(command_elem->command, command_elem->separator, envp) == 1);
 		command_elem = command_elem->next;
 	}
 	i = -1;
