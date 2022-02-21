@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 16:04:25 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:30:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,20 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 		}
 	}
 
-	//For debug stdin redirection
+	//For debug redirection
 	if(pid == 0 && strcmp(command->name, "cat") == 0)
 	{
+		//dup stdin from a file
 		int fd = open("test2", O_RDONLY);
 		dup2(fd, 0);
+
+		//dup stdout to a file by creating it if neeeded
+		int fd2 = open("output", O_WRONLY | O_CREAT, 0777);
+		dup2(fd2, 1);
+
+		//dup stdout to a file by creating it if neeeded and append
+		int fd3 = open("output2", O_WRONLY | O_CREAT | O_APPEND, 0777);
+		dup2(fd3, 1);
 	}
 
 	if (pid == 0)
