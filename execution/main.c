@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 11:47:23 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 13:45:50 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,19 @@ static t_command_list *get_fake_command_list()
 
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
-	command2->name = strdup("ls");
+	command2->name = strdup("cat");
 	command2->args = malloc(sizeof(char*) * 1);
 	command2->args[0] = NULL;
 	command2->redirection_count = 0;
 	command2->redirections = NULL;
 	list2->command = command2;
 	list2->next = NULL;
-	list2->separator = END;
+	list2->separator = PIPE;
 	list1->next = list2;
 
 	t_command_list *list3 = malloc(sizeof(t_command_list));
 	t_command *command3 = malloc(sizeof(t_command));
-	command3->name = strdup("ls");
+	command3->name = strdup("cat");
 	command3->args = malloc(sizeof(char*) * 1);
 	command3->args[0] = NULL;
 	command3->redirection_count = 0;
@@ -48,7 +48,7 @@ static t_command_list *get_fake_command_list()
 	list3->command = command3;
 	list3->next = NULL;
 	list3->separator = END;
-	//list2->next = list3;
+	list2->next = list3;
 
 	return list1;
 }
@@ -135,12 +135,14 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 	{
 		if(pid == 0)
 		{
+			//printf("Redirect %s stdout to pipe\n", command->name);
 			dup2(pipefd[1], 1);
 			close(pipefd[0]);
 			close(pipefd[1]);
 		}
 		else
 		{
+			//printf("Redirect stdin of %s + 1 command from pipe\n", command->name);
 			dup2(pipefd[0], 0);
 			close(pipefd[1]);
 			close(pipefd[0]);
@@ -212,16 +214,12 @@ int execute_list(t_command_list **list, char **envp)
 		count += (execute(command_elem->command, command_elem->separator, envp) == 1);
 		command_elem = command_elem->next;
 	}
-	/*while(1)
-	{
-		str = get_next_line(0);
-		if(!str)
-			break;
-		free(str);
-	}*/
 	i = -1;
 	while(++i < count)
+	{
 		waitpid(-1, &status, 0);
+		close(0);
+	}
 }
 
 int main(int argc, char **argv, char **envp)
