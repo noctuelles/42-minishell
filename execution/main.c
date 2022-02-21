@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 14:28:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:04:25 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,30 @@ static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
-	command1->name = strdup("../a.out");
+	command1->name = strdup("ls");
 	command1->args = malloc(sizeof(char*) * 1);
 	command1->args[0] = NULL;
 	command1->redirection_count = 0;
 	command1->redirections = NULL;
 	list1->command = command1;
 	list1->next = NULL;
-	list1->separator = END;
+	list1->separator = PIPE;
 
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
-	command2->name = strdup("wc");
+	command2->name = strdup("cat");
 	command2->args = malloc(sizeof(char*) * 1);
 	command2->args[0] = NULL;
 	command2->redirection_count = 0;
 	command2->redirections = NULL;
 	list2->command = command2;
 	list2->next = NULL;
-	list2->separator = PIPE;
-	//list1->next = list2;
+	list2->separator = END;
+	list1->next = list2;
 
 	t_command_list *list3 = malloc(sizeof(t_command_list));
 	t_command *command3 = malloc(sizeof(t_command));
-	command3->name = strdup("cat");
+	command3->name = strdup("ls");
 	command3->args = malloc(sizeof(char*) * 1);
 	command3->args[0] = NULL;
 	command3->redirection_count = 0;
@@ -129,6 +129,14 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 			close(pipefd[0]);
 		}
 	}
+
+	//For debug stdin redirection
+	if(pid == 0 && strcmp(command->name, "cat") == 0)
+	{
+		int fd = open("test2", O_RDONLY);
+		dup2(fd, 0);
+	}
+
 	if (pid == 0)
 	{
 		execve(path, command->args, envp);

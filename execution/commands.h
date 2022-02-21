@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:38:03 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 14:37:20 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 14:48:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <fcntl.h>
 typedef enum e_command_separator
 {
 	PIPE,
