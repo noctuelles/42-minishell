@@ -6,20 +6,20 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/20 15:20:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 11:47:23 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
+#include "get_next_line.h"
 
 static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
 	command1->name = strdup("cat");
-	command1->args = malloc(sizeof(char*) * 2);
-	command1->args[0] = strdup("/usr/bin/cat");
-	command1->args[1] = NULL;
+	command1->args = malloc(sizeof(char*) * 1);
+	command1->args[0] = NULL;
 	command1->redirection_count = 0;
 	command1->redirections = NULL;
 	list1->command = command1;
@@ -29,15 +29,26 @@ static t_command_list *get_fake_command_list()
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
 	command2->name = strdup("ls");
-	command2->args = malloc(sizeof(char*) * 2);
-	command2->args[0] = strdup("/usr/bin/ls");
-	command2->args[1] = NULL;
+	command2->args = malloc(sizeof(char*) * 1);
+	command2->args[0] = NULL;
 	command2->redirection_count = 0;
 	command2->redirections = NULL;
 	list2->command = command2;
 	list2->next = NULL;
 	list2->separator = END;
 	list1->next = list2;
+
+	t_command_list *list3 = malloc(sizeof(t_command_list));
+	t_command *command3 = malloc(sizeof(t_command));
+	command3->name = strdup("ls");
+	command3->args = malloc(sizeof(char*) * 1);
+	command3->args[0] = NULL;
+	command3->redirection_count = 0;
+	command3->redirections = NULL;
+	list3->command = command3;
+	list3->next = NULL;
+	list3->separator = END;
+	//list2->next = list3;
 
 	return list1;
 }
@@ -89,6 +100,24 @@ char	*get_path_from_pwd(char *command_name)
 	return NULL;
 }
 
+void	add_path_to_args(t_command *command, char *path)
+{
+	char	**args;
+	int		length;
+	int		i;
+
+	args = command->args;
+	length = 0;
+	while(args[length])
+		length++;
+	command->args = malloc(sizeof(char *) * (length + 2));
+	command->args[0] = path;
+	i = -1;
+	while(++i < length)
+		command->args[i + 1] = args[i];
+	free(args);
+}
+
 int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 {
 	pid_t	pid;
@@ -96,7 +125,8 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 	int		wait_status;
 	
 	printf("Execute: %s\n", path);
-	if(pipe(pipefd) < 0)
+	add_path_to_args(command, path);
+	if(is_piped && pipe(pipefd) < 0)
 		return -1;
 	pid = fork();
 	if(pid == -1)
@@ -105,13 +135,15 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 	{
 		if(pid == 0)
 		{
-			close(pipefd[0]);
 			dup2(pipefd[1], 1);
+			close(pipefd[0]);
+			close(pipefd[1]);
 		}
 		else
 		{
-			close(pipefd[1]);
 			dup2(pipefd[0], 0);
+			close(pipefd[1]);
+			close(pipefd[0]);
 		}
 	}
 	if(pid == 0)
@@ -171,6 +203,7 @@ int execute_list(t_command_list **list, char **envp)
 	int count;
 	int i;
 	int	status;
+	char	*str;
 
 	count = 0;
 	command_elem = *list;
@@ -179,6 +212,13 @@ int execute_list(t_command_list **list, char **envp)
 		count += (execute(command_elem->command, command_elem->separator, envp) == 1);
 		command_elem = command_elem->next;
 	}
+	/*while(1)
+	{
+		str = get_next_line(0);
+		if(!str)
+			break;
+		free(str);
+	}*/
 	i = -1;
 	while(++i < count)
 		waitpid(-1, &status, 0);
