@@ -6,24 +6,28 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 16:30:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/21 17:25:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
+#include <readline/readline.h>
+#include <readline/history.h>
 
 static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
-	command1->name = strdup("ls");
+	command1->name = strdup("cat");
 	command1->args = malloc(sizeof(char*) * 1);
 	command1->args[0] = NULL;
-	command1->redirection_count = 0;
-	command1->redirections = NULL;
+	command1->redirection_count = 1;
+	command1->redirections = malloc(sizeof(t_redirections) * 1);
+	command1->redirections[0].type = HERE_DOC;
+	command1->redirections[0].name = strdup("eof");
 	list1->command = command1;
 	list1->next = NULL;
-	list1->separator = PIPE;
+	list1->separator = END;
 
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
@@ -35,7 +39,7 @@ static t_command_list *get_fake_command_list()
 	list2->command = command2;
 	list2->next = NULL;
 	list2->separator = END;
-	list1->next = list2;
+	//list1->next = list2;
 
 	t_command_list *list3 = malloc(sizeof(t_command_list));
 	t_command *command3 = malloc(sizeof(t_command));
@@ -84,7 +88,7 @@ char	*get_path_from_env(char *command_name)
 	return (exec_path);
 }
 
-void	add_path_to_args(t_command *command, char *path)
+void	add_command_to_args(t_command *command)
 {
 	char	**args;
 	int		length;
@@ -95,7 +99,7 @@ void	add_path_to_args(t_command *command, char *path)
 	while (args[length])
 		length++;
 	command->args = malloc(sizeof(char *) * (length + 2));
-	command->args[0] = path;
+	command->args[0] = command->name;
 	i = -1;
 	while (++i < length)
 		command->args[i + 1] = args[i];
@@ -108,7 +112,7 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 	int		pipefd[2];
 	int		wait_status;
 
-	add_path_to_args(command, path);
+	add_command_to_args(command);
 	if (is_piped && pipe(pipefd) < 0)
 		return (-1);
 	pid = fork();
@@ -134,16 +138,16 @@ int	execute_file(t_command *command, char *path, char **envp, int is_piped)
 	if(pid == 0 && strcmp(command->name, "cat") == 0)
 	{
 		//dup stdin from a file
-		int fd = open("test2", O_RDONLY);
-		dup2(fd, 0);
+		/*int fd = open("test2", O_RDONLY);
+		dup2(fd, 0);*/
 
 		//dup stdout to a file by creating it if neeeded
-		int fd2 = open("output", O_WRONLY | O_CREAT, 0777);
-		dup2(fd2, 1);
+		/*int fd2 = open("output", O_WRONLY | O_CREAT, 0777);
+		dup2(fd2, 1);*/
 
 		//dup stdout to a file by creating it if neeeded and append
-		int fd3 = open("output2", O_WRONLY | O_CREAT | O_APPEND, 0777);
-		dup2(fd3, 1);
+		/*int fd3 = open("output2", O_WRONLY | O_CREAT | O_APPEND, 0777);
+		dup2(fd3, 1);*/
 	}
 
 	if (pid == 0)
@@ -189,6 +193,34 @@ int	execute(t_command *command, t_command_separator separator_to_next, char **en
 	}
 }
 
+void	read_here_doc(t_command_list **list)
+{
+	t_command_list	*command_elem;
+	
+	command_elem = *list;
+	while (command_elem != NULL)
+	{
+		for(int i = 0; i < command_elem->command->redirection_count; i++)
+		{
+			if(command_elem->command->redirections[i].type == HERE_DOC)
+			{
+				int fd2 = open("/tmp/MinishellHereDoc", O_WRONLY | O_CREAT, 0777);
+				char *limiter = command_elem->command->redirections[i].name;
+				char *line;
+				while(1)
+				{
+					line = readline("> ");
+					if(strcmp(line, limiter) == 0)
+						break;
+					write(fd2, line, strlen(line));
+					write(fd2, "\n", 1);
+				}
+			}
+		}
+		command_elem = command_elem->next;
+	}
+}
+
 int execute_list(t_command_list **list, char **envp)
 {
 	t_command_list	*command_elem;
@@ -198,6 +230,7 @@ int execute_list(t_command_list **list, char **envp)
 	char			*str;
 
 	count = 0;
+	read_here_doc(list);
 	command_elem = *list;
 	while (command_elem != NULL)
 	{
