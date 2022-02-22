@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/22 20:13:24 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/22 20:18:30 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 {
 	char		*prev;
 	t_token		tkn;
-	uint32_t	prt_cnt;
+	int32_t	prt_cnt;
 	char		quote;
 
 	prev = str;
@@ -71,6 +71,10 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 	while (*str)
 	{
 		tkn = search_existing_token(str);
+		if (tkn.type == T_OP_PRT)
+			prt_cnt--;
+		else if (tkn.type == T_CL_PRT)
+			prt_cnt++;
 		if ((tkn.type != T_NULL) && str != prev)
 		{
 			if (!add_to_lexer(lexer, prev, str - prev, T_STRING))
@@ -105,5 +109,7 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 		if (!add_to_lexer(lexer, prev, str - prev, T_STRING))
 			return (NULL);
 	}
+	if (prt_cnt != 0)
+		return (NULL);
 	return (lexer);
 }
