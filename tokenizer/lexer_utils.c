@@ -6,13 +6,11 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/22 20:13:26 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/23 11:39:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
 #include "lexer.h"
-#include "libft.h"
 
 t_token	set_token(t_token *tkn, char *val, size_t len,
 														t_token_type type)
@@ -49,19 +47,29 @@ t_token	search_existing_token(const char *str)
 		return (set_token(&token, STR_EQUALS, 1, T_EQUALS));
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
-	else
-		return (set_token(&token, NULL, 0, T_NULL));
+	return (set_token(&token, NULL, 0, T_NULL));
 }
 
-void	display_lexer(void *content)
+void	*set_lexer_errcode(t_lexer *lexer, int errcode)
+{
+	lexer->errcode = errcode;
+	return (NULL);
+}
+
+static void	display_tokens(t_lexer *lexer)
 {
 	t_token	token;
+	size_t	i;
 
-	token = *(t_token *) content;
-	printf("\nToken value : %s\n"
-		   "Token len   : %lu\n"
-		   "Token type  : %d\n",
-		   token.val, token.len, token.type);
+	i = 0;
+	while (i < lexer->idx)
+	{
+		token = lexer->tkns[i++];
+		printf("\nToken value : %s\n"
+			   "Token len   : %lu\n"
+			   "Token type  : %d\n",
+			   token.val, token.len, token.type);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -71,10 +79,17 @@ int	main(int argc, char **argv)
 	if (argc == 1)
 		return (1);
 	if (!fill_lexer_from_str(&lexer, argv[1]))
-		puts("Unable to lex your input.");
-	else
 	{
-		ft_lstiter(lexer.tkn_lst, display_lexer);
+		puts("Unable to lex your input.");
+		if (lexer.errcode == E_MEM)
+			puts("Cannot allocate memory.");
+		else if (lexer.errcode == E_PRT)
+			puts("Parenthesis not closed");
+		else if (lexer.errcode == E_QUOTE)
+			puts("Quote not closed");
 	}
+	else
+		display_tokens(&lexer);
+	free_tkns(lexer.tkns, lexer.idx);
 	return (0);
 }
