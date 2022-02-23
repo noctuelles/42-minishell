@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 12:40:44 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/23 12:59:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ static void	display_tokens(t_lexer *lexer)
 	while (i < lexer->idx)
 	{
 		token = lexer->tkns[i++];
-		printf("\nToken value : %s\n"
+		printf("Token value : \"%s\"\n"
 			   "Token len   : %lu\n"
-			   "Token type  : %d\n",
+			   "Token type  : %d\n\n",
 			   token.val, token.len, token.type);
 	}
 }
@@ -90,7 +90,12 @@ int	main(int argc, char **argv)
 			puts("Quote not closed");
 	}
 	else
+	{
+		remove_quote_from_tkns(&lexer);
+		puts("\nTokens output - the quote \"<string>\" is not part of the token.\n"
+			 "It's only to make it fancy.\n");
 		display_tokens(&lexer);
+	}
 	free_tkns(lexer.tkns, lexer.idx);
 	return (0);
 }
