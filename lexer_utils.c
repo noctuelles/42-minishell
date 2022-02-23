@@ -6,11 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 11:45:44 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/23 12:40:44 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdio.h>
 
 t_token	set_token(t_token *tkn, char *val, size_t len,
 														t_token_type type)
