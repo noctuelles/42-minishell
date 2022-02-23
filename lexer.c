@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 12:43:12 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/23 12:43:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 		}
 		else if (*str == SQUOTE || *str == DQUOTE)
 		{
-			if (handle_escaping(lexer, &str) == -1)
+			if (handle_escaping(&str) == -1)
 				return (set_lexer_errcode(lexer, E_QUOTE));
 		}
 		else
