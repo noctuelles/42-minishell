@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 11:45:39 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/23 12:43:12 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 	return (lexer->tkns);
 }
 
-static int	handle_escaping(t_lexer *lexer, char **str)
+static int	handle_escaping(char **str)
 {
 	char	*pstr;
 	char	quote;
