@@ -6,83 +6,101 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:30:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/25 02:06:28 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/25 12:55:32 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
+#include "minishell.h"
 
-typedef struct s_env_var
+t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 {
-	char	*name;
-	char	*value;
-	t_bool	inherit;
-} t_env_var;
+	t_var	*var;
+	t_dlist	*elem;
 
-typedef struct s_minishell
-{
-	t_dlist	*dlst_var;
-} t_minishell;
-
-t_dlist	*add_env_var(t_dlist **lst_var, char *name, char *value, t_bool inherit)
-{
-	t_env_var	*env_var;
-	t_dlist		*elem;
-
-	env_var = (t_env_var *) malloc(sizeof(t_env_var));
-	if (!env_var)
+	var = (t_var *) malloc(sizeof(t_var));
+	if (!var)
 		return (NULL);
-	elem = ft_dlstnew(env_var);
+	elem = ft_dlstnew(var);
 	if (!elem)
 	{
-		free(env_var);
+		free(var);
 		return (NULL);
 	}
-	env_var->name = name;
-	env_var->value = value;
-	env_var->inherit = inherit;
-	elem->content = (void *) env_var;
+	var->name = add_var.name;
+	var->value = add_var.value;
+	var->inherit = add_var.inherit;
+	var->env_var = add_var.env_var;
+	elem->content = (void *) var;
 	ft_dlstadd_back(lst_var, elem);
 }
 
-static void	free_env_var(void *dlst_content)
+void	free_var(void *dlst_content)
 {
-	t_env_var	*env_var;
+	t_var	*var;
 
-	env_var = (t_env_var *) dlst_content;
-	if (env_var->inherit == FALSE)
+	var = (t_var *) dlst_content;
+	if (var->inherit == FALSE)
 	{
-		free(env_var->name);
-		free(env_var->content);
+		free(var->name);
+		free(var->value);
 	}
-	free(env_var);
+	free(var);
 }
 
-void	del_env_var(t_dlist **lst_var, char *name)
+void	del_var(t_dlist **lst_var, char *name)
 {
 	t_dlist		*elem;
-	t_env_var	*env_var;
+	t_var	*var;
 
 	elem = *lst_var;
 	while (elem)
 	{
-		env_var = (t_env_var *) elem->content;
-		if (ft_strcmp(env_var->name, name) == 0)
+		var = (t_var *) elem->content;
+		if (ft_strcmp(var->name, name) == 0)
 			break ;
 		elem = elem->next;
 	}
-	ft_dlstdelone(lst_var, elem, &free_env_var);
+	ft_dlstdelone(lst_var, elem, &free_var);
 }
 
-char	*get_env_var_value(t_dlist *lst_var, char *name)
+void	import_var(t_dlist **lst_var, char **envp)
 {
-	t_env_var	*env_var;
+	size_t	i;
+	size_t	j;
+	t_var	var;
+
+	i = 0;
+	while (envp[i])
+	{
+		j = 0;
+		while (envp[i][j] != '\0')
+		{
+			if (envp[i][j] == '=')
+			{
+				var.name = &envp[i][0];
+				var.value = &envp[i][j + 1];
+				envp[i][j] = '\0';
+			}
+			j++;
+		}
+		var.inherit = TRUE;
+		var.env_var = TRUE;
+		add_var(lst_var, var);
+		i++;
+	}
+}
+
+char	*get_var_value(t_dlist *lst_var, char *name)
+{
+	t_var	*var;
 
 	while (lst_var)
 	{
-		env_var = (t_env_var *) lst_var->content;
-		if (ft_strcmp(env_var->name, name) == 0)
-			return (env_var->value);
+		var = (t_var *) lst_var->content;
+		if (ft_strcmp(var->name, name) == 0)
+			return (var->value);
 		lst_var = lst_var->next;
 	}
 	return (NULL);
