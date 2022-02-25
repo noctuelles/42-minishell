@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:30:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/25 12:55:32 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/25 17:44:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 		return (NULL);
 	}
 	var->name = add_var.name;
+	var->name_len = ft_strlen(add_var.name);
 	var->value = add_var.value;
+	var->value_len = ft_strlen(add_var.value);
 	var->inherit = add_var.inherit;
 	var->env_var = add_var.env_var;
 	elem->content = (void *) var;
@@ -92,7 +94,7 @@ void	import_var(t_dlist **lst_var, char **envp)
 	}
 }
 
-char	*get_var_value(t_dlist *lst_var, char *name)
+t_var	*get_var(t_dlist *lst_var, char *name)
 {
 	t_var	*var;
 
@@ -100,7 +102,7 @@ char	*get_var_value(t_dlist *lst_var, char *name)
 	{
 		var = (t_var *) lst_var->content;
 		if (ft_strcmp(var->name, name) == 0)
-			return (var->value);
+			return (var);
 		lst_var = lst_var->next;
 	}
 	return (NULL);

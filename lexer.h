@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 12:59:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/25 18:59:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	*set_lexer_errcode(t_lexer *lexer, int errcode);
 /* lexer_post_process.c */
 
 void	remove_quote_from_tkns(t_lexer *lexer);
-void	expand_var_from_tkns(t_lexer *lexer);
+void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
 
 /* lexer.c */
 

@@ -6,12 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 12:59:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:47:41 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include <stdio.h>
+#include "minishell.h"
 
 t_token	set_token(t_token *tkn, char *val, size_t len,
 														t_token_type type)
@@ -66,17 +67,19 @@ static void	display_tokens(t_lexer *lexer)
 	while (i < lexer->idx)
 	{
 		token = lexer->tkns[i++];
-		printf("Token value : \"%s\"\n"
+		printf("Token value : %s\n"
 			   "Token len   : %lu\n"
 			   "Token type  : %d\n\n",
 			   token.val, token.len, token.type);
 	}
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_lexer	lexer = {0};
+	t_dlist	*lst_var = NULL;
 
+	import_var(&lst_var, envp);
 	if (argc == 1)
 		return (1);
 	if (!fill_lexer_from_str(&lexer, argv[1]))
@@ -91,11 +94,14 @@ int	main(int argc, char **argv)
 	}
 	else
 	{
+		puts("\nTokens output. -- before expansion \n");
+		display_tokens(&lexer);
+		puts("\nTokens output. -- after expansion and quote removal \n");
+		expand_var_from_tkns(lst_var, &lexer);
 		remove_quote_from_tkns(&lexer);
-		puts("\nTokens output - the quote \"<string>\" is not part of the token.\n"
-			 "It's only to make it fancy.\n");
 		display_tokens(&lexer);
 	}
+	ft_dlstclear(&lst_var, free_var);
 	free_tkns(lexer.tkns, lexer.idx);
 	return (0);
 }

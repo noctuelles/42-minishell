@@ -6,11 +6,34 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/23 12:43:45 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/25 19:47:40 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+
+/* add_to_lexer() add to the lexer the lexicon define by three properties :
+ *
+ * -> It's value.
+ * -> His lenght.
+ * -> His type.
+ *
+ * The lexicon array (ref. as the tokens array) is dynamically allocated,
+ * check the file lexer_memutils.c :
+ *
+ *      -> It has a base size of 2 tokens. It realloc the array if we're getting
+ *      out of bound by a factor of 2.
+ *      We're calling grow_tkns_array only if if we haven't allocated tkns,
+ *      or if we're in the situation described below.
+ *
+ *      Arrays is better than linked list : in the parsing phase, looking at the
+ *      next token or the previous token will be easier with array than with
+ *      list, and faster. We sacrifice a bit of memory for convenience and
+ *      speed.
+ *
+ * If the token a String (not an existing token), we're calling ft_strndup to
+ * duplicate the token.
+ *  */
 
 static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 															t_token_type type)
@@ -39,6 +62,11 @@ static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 	return (lexer->tkns);
 }
 
+/* handle_escaping() skip all character beetween the quote, thus avoiding
+ * interpreting meta characters.
+ * It returns -1 if the quote isn't finished, and 0 if the quote is 
+ * successfully terminated.*/
+
 static int	handle_escaping(char **str)
 {
 	char	*pstr;
@@ -55,6 +83,11 @@ static int	handle_escaping(char **str)
 	return (0);
 }
 
+/* add_token() add the token tkn to the array of tokens.
+ * In this function, tkn is obviously a know token.
+ * It also increment or decrement a counter that keep track of how many
+ * parenthesis has been open / close. */
+
 static int	add_token(t_lexer *lexer, t_token tkn, char **str)
 {
 	*str += tkn.len;
@@ -70,6 +103,10 @@ static int	add_token(t_lexer *lexer, t_token tkn, char **str)
 	lexer->prev = *str;
 	return (0);
 }
+
+/* finish_lexing ends the fill_lexer_from_str routine.
+ * If a word is remaining at the end of the string str, it adds it to the lexer.
+ * It also checks the parenthesis counter, if it's not 0, set the error code. */
 
 static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
 {
