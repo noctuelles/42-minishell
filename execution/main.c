@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 17:52:56 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/21 17:25:19 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/26 10:51:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ static t_command_list *get_fake_command_list()
 {
 	t_command_list *list1 = malloc(sizeof(t_command_list));
 	t_command *command1 = malloc(sizeof(t_command));
-	command1->name = strdup("cat");
+	command1->name = strdup("truc");
 	command1->args = malloc(sizeof(char*) * 1);
 	command1->args[0] = NULL;
-	command1->redirection_count = 1;
+	command1->redirection_count = 0;
 	command1->redirections = malloc(sizeof(t_redirections) * 1);
 	command1->redirections[0].type = HERE_DOC;
 	command1->redirections[0].name = strdup("eof");
 	list1->command = command1;
 	list1->next = NULL;
-	list1->separator = END;
+	list1->separator = PIPE;
 
 	t_command_list *list2 = malloc(sizeof(t_command_list));
 	t_command *command2 = malloc(sizeof(t_command));
@@ -39,7 +39,7 @@ static t_command_list *get_fake_command_list()
 	list2->command = command2;
 	list2->next = NULL;
 	list2->separator = END;
-	//list1->next = list2;
+	list1->next = list2;
 
 	t_command_list *list3 = malloc(sizeof(t_command_list));
 	t_command *command3 = malloc(sizeof(t_command));
@@ -215,6 +215,7 @@ void	read_here_doc(t_command_list **list)
 					write(fd2, line, strlen(line));
 					write(fd2, "\n", 1);
 				}
+				close(fd2);
 			}
 		}
 		command_elem = command_elem->next;
