@@ -21,4 +21,6 @@ Si la command est pipée mais qu elle a des redirections (<, <<, >, >>), les red
 Si la commande est pipée, lancer directement la prochaine commande
 Si la commande est suivie d un And ou un Or, attendre la fin de la commande et procéder à la suite de la commande selon le resultat du wait
 
+/!\ Si la commande est une builtin et qu elle n est pas lancée dans une série de pipe ==> le programme n est pas fork. Une builtine pipée ne pourra pas modifier l environnement (cd .. | ls, ne modifiera pas le chemin courant)
+
 Une fois toutes les commandes lancées, attendre la fin de tous les child, mettre a jour le status de $? et afficher un prompt
