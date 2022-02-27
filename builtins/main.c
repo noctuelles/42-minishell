@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 13:57:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 17:27:56 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 18:44:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	ft_unset(int argc, char **argv, t_env **env);
 int	ft_pwd(int argc, char **argv, t_env **env);
 int	ft_export(int argc, char **argv, t_env **env);
 int	ft_echo(int argc, char **argv, t_env **env);
+int	ft_cd(int argc, char **argv, t_env **env);
 
 int main(int argc, char **argv, char **envp)
 {
@@ -83,5 +84,14 @@ int main(int argc, char **argv, char **envp)
 	args[3] = strdup("ca");
 	args[4] = strdup("va");
 	ft_echo(5, args, &env);
+	*/
+
+	/* CD test
+	printf("%s\n", get_value(&env, "PWD"));
+	char **args = malloc(sizeof(char*) * 2);
+	args[0] = strdup("../test");
+	args[1] = strdup("awdwas");
+	ft_cd(2, args, &env);
+	printf("%s\n", get_value(&env, "PWD"));
 	*/
 }

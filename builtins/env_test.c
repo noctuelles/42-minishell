@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 14:13:37 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 17:06:19 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 18:42:11 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,23 @@ void add_var(t_env **env_list, t_env *add_elem)
 			elem = elem->next;
 		}
 		elem->next = add_elem;
+	}
+}
+
+void	env_update(t_env **env, char *name, char *value)
+{
+	t_env	*elem;
+
+	elem = *env;
+	while(elem != NULL)
+	{
+		if(strcmp(elem->name, name) == 0)
+		{
+			free(elem->value);
+			elem->value = value;
+			return ;
+		}
+		elem = elem->next;
 	}
 }
 
