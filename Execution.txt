@@ -1,0 +1,22 @@
+Série de commandes. Pour chaque commande:
+- Redirection d entreée (stdin, here_doc, fichier)
+- Commande
+- Arguments
+- Redirection de sortie (stdout, fichier, fichier en append)
+- Separation avec prochaine commande (pipe, and, or, last)
+
+Si commande contient '/', => executer directement
+Sinon, chercher dans builtins
+Sinon, chercher dans PATH
+
+Si la commande a une redirection d entrée depuis un fichier, dup2 la stdin du child process sur le fd en question
+Si la commande a une redirection de sortie sur un fichier, dup2 la stdout du child process sur le fd en question
+Si la commande est pipée, dup2 la stdout du child process dans un pipe, dup2 la stdin du parent (donc du prochain fork) sur le pipe
+Si la command est pipée mais qu elle a des redirections (<, <<, >, >>), les redirections prennent la prorité sur le pipe:
+	- En cas de > ou >>, une stdin vide est envoyée directement à la prochaine commande (cat > test | wc   =>  affiche le resultat de wc ("0 0 0") avant d attendre cat)
+	- En cas de < ou <<, la commande avec une redirection utilise cela comme stdin et pas le pipe (ls | cat < test  =>  affiche uniquement le résultat de cat)
+
+Si la commande est pipée, lancer directement la prochaine commande
+Si la commande est suivie d un And ou un Or, attendre la fin de la commande et procéder à la suite de la commande selon le resultat du wait
+
+Une fois toutes les commandes lancées, attendre la fin de tous les child, mettre a jour le status de $? et afficher un prompt
