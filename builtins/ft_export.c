@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 17:06:45 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 17:13:12 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	ft_export(int argc, char **argv, t_env **env)
 			env_elem = get_env_element(argv[i]);
 			if (!env_elem)
 				return 1;
-			
 		}
 		else
 		{
