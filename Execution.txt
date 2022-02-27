@@ -1,9 +1,9 @@
 Série de commandes. Pour chaque commande:
-- Redirection d entreée (stdin, here_doc, fichier)
+- Redirection d entreée (stdin, here_doc, fichier)  (seule la derniere est prise en compte)
 - Commande
 - Arguments
-- Redirection de sortie (stdout, fichier, fichier en append)
-- Separation avec prochaine commande (pipe, and, or, last)
+- Redirection de sortie (stdout, fichier, fichier en append)  (seule la derniere est prise en compte)
+- Separation avec prochaine commande (pipe, and, or)
 
 Si commande contient '/', => executer directement
 Sinon, chercher dans builtins
