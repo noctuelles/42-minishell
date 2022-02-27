@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 13:57:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 14:21:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 17:09:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 int	ft_env(int argc, char **argv, t_env **env);
 int	ft_unset(int argc, char **argv, t_env **env);
 int	ft_pwd(int argc, char **argv, t_env **env);
+int	ft_export(int argc, char **argv, t_env **env);
 
 int main(int argc, char **argv, char **envp)
 {
@@ -49,5 +50,31 @@ int main(int argc, char **argv, char **envp)
 	args[0] = strdup("pwd");
 	args[1] = NULL;
 	ft_pwd(1, args, &env);
+	*/
+
+	/* Export test
+	if(is_var_with_name(&env, "TEST"))
+		printf("%s\n", get_value(&env, "TEST"));
+	else
+		printf("Not seted var\n");
+	if(is_var_with_name(&env, "TEST2"))
+		printf("%s\n", get_value(&env, "TEST2"));
+	else
+		printf("Not seted var\n");
+	char **args = malloc(sizeof(char*) * 4);
+	args[0] = strdup("export");
+	args[1] = strdup("TEST=test");
+	args[2] = strdup("TEST2");
+	args[3] = NULL;
+	ft_export(3, args, &env);
+	printf("-------\n");
+	if(is_var_with_name(&env, "TEST"))
+		printf("%s\n", get_value(&env, "TEST"));
+	else
+		printf("Not seted var\n");
+	if(is_var_with_name(&env, "TEST2"))
+		printf("%s\n", get_value(&env, "TEST2"));
+	else
+		printf("Not seted var\n");
 	*/
 }

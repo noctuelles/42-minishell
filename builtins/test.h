@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 14:00:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 14:11:50 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 17:04:44 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char *get_value(t_env **env_list, char *name);
 t_env *get_env_list(char **envp);
 int is_var_with_name(t_env **env_list, char *name);
 void remove_var(t_env **env_list, char *name);
+void add_var(t_env **env_list, t_env *elem);
 
 #endif
