@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 18:08:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 19:15:28 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -34,6 +34,12 @@ typedef struct s_var
 	t_bool	env_var;
 }	t_var;
 
+typedef struct s_minishell
+{
+	t_dlist	*var;
+	char	**envp;
+}	t_minishell;
+
 /* var.c */
 
 t_var	*get_var(t_dlist *lst_var, char *name);
@@ -41,5 +47,9 @@ t_dlist	*add_var(t_dlist **lst_var, t_var add_var);
 void	del_var(t_dlist **lst_var, char *name);
 void	free_var(void *dlst_content);
 t_dlist	*import_var(t_dlist **lst_var, char **envp);
+
+/* var_utils.c */
+
+t_var	*update_var(t_dlist *lst_var, char *name, t_var to_update);
 
 #endif
