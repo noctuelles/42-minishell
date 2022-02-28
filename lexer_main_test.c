@@ -11,10 +11,13 @@ static void	display_tokens(t_lexer *lexer)
 	while (i < lexer->idx)
 	{
 		token = lexer->tkns[i++];
-		printf("Token value : %s\n"
-			   "Token len   : %lu\n"
-			   "Token type  : %d\n\n",
-			   token.val, token.len, token.type);
+		if (token.type != T_NULL)
+		{
+			printf("Token value : %s\n"
+				   "Token len   : %lu\n"
+				   "Token type  : %d\n\n",
+				   token.val, token.len, token.type);
+		}
 	}
 }
 
