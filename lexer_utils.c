@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/25 19:47:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:59:04 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	main(int argc, char **argv, char **envp)
 		display_tokens(&lexer);
 		puts("\nTokens output. -- after expansion and quote removal \n");
 		expand_var_from_tkns(lst_var, &lexer);
-		remove_quote_from_tkns(&lexer);
 		display_tokens(&lexer);
 	}
 	ft_dlstclear(&lst_var, free_var);

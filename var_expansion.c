@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/25 19:47:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:22:16 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #include "lexer.h"
 #include "libft.h"
 #include <stdlib.h>
-#include <assert.h>
+
+/* get_var_name_len() computes the lenght of a variable .
+ * Variable in bash can only contains alphanumerical characters, and an
+ * unlimited amount of underscore '_'. */
 
 static size_t	get_var_name_len(const char *str)
 {
@@ -38,10 +41,7 @@ static size_t	perform_expansion_cpy(char *new_str, char *str, t_var *var,
 	j = 0;
 	k = 0;
 	while (str[j] != '$')
-	{
-		puts("ok");
 		new_str[i++] = str[j++];
-	}
 	j++;
 	if (var)
 	{
@@ -70,7 +70,6 @@ static char	*include_var(char *str, t_var *var, size_t var_len, size_t *idx)
 	if (!new_str)
 		return (NULL);
 	*idx = perform_expansion_cpy(new_str, str, var, var_len);
-	//printf("New string : %s\nReturning to : \"%c\"\n", new_str, new_str[*idx]);
 	return (new_str);
 }
 
@@ -80,7 +79,6 @@ static char	*perform_expansion(t_dlist *lst_var, char *str, size_t *i)
 	char	ctemp;
 	size_t	var_len;
 
-	//puts("New dollar sign.");
 	(*i)++;
 	var_len = get_var_name_len(&str[*i]);
 	ctemp = str[*i + var_len];
@@ -88,6 +86,19 @@ static char	*perform_expansion(t_dlist *lst_var, char *str, size_t *i)
 	var = get_var(lst_var, &str[*i]);
 	str[*i + var_len] = ctemp;
 	return (include_var(str, var, var_len, i));
+}
+
+char	*ft_strdelch(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		str[i] = str[i + 1];
+		i++;
+	}
+	return (str);
 }
 
 char	*expand_tkn(t_dlist *lst_var, char *str)
@@ -99,14 +110,15 @@ char	*expand_tkn(t_dlist *lst_var, char *str)
 	can_expand = TRUE;
 	while (str[i] != '\0')
 	{
-		if (str[i] == SQUOTE)
+		if (str[i] == SQUOTE || str[i] == DQUOTE)
 		{
-			if (can_expand)
+			ft_strdelchr(&str[i]);
+			if (can_expand && str[i] == SQUOTE)
 				can_expand = FALSE;
-			else
+			else if (!can_expand && str[i] == SQUOTE)
 				can_expand = TRUE;
 		}
-		else if (str[i] == '$' && can_expand)
+		if (str[i] == '$' && can_expand)
 		{
 			str = perform_expansion(lst_var, str, &i);
 			if (!str)
