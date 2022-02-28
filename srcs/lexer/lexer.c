@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:31:55 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 18:05:20 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ static int	add_token(t_lexer *lexer, t_token tkn, char **str)
 
 /* finish_lexing ends the fill_lexer_from_str routine.
  * If a word is remaining at the end of the string str, it adds it to the lexer.
- * It also checks the parenthesis counter, if it's not 0, set the error code. */
+ * It also checks the parenthesis counter, if it's not 0, set the error code.*/
 
 static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
 {

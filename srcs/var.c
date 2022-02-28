@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:30:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:47:18 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 18:05:33 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	free_var(void *dlst_content)
 void	del_var(t_dlist **lst_var, char *name)
 {
 	t_dlist		*elem;
-	t_var	*var;
+	t_var		*var;
 
 	elem = *lst_var;
 	while (elem)

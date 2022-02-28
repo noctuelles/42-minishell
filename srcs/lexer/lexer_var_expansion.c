@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:53:52 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 18:06:03 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,6 @@ static char	*perform_expansion(t_dlist *lst_var, char *str, size_t *i)
 	var = get_var(lst_var, &str[*i]);
 	str[*i + var_len] = ctemp;
 	return (include_var(str, var, var_len, i));
-}
-
-char	*ft_strdelch(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		str[i] = str[i + 1];
-		i++;
-	}
-	return (str);
 }
 
 char	*expand_tkn(t_dlist *lst_var, char *str)
