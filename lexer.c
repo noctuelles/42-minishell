@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 15:59:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 17:31:55 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,9 @@ static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
 		return (set_lexer_errcode(lexer, E_PRT));
 	return (lexer);
 }
+
+/* fill_lexer_from_str() fill the lexer from a string.
+ * It breks the string str into multiple tokens. */
 
 t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 {

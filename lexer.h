@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 15:59:00 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 17:31:54 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,13 @@ void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
 /* lexer.c */
 
 t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str);
+
+/* lexer_post_process.c */
+
+void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
+
+/* lexer_var_expansion.c */
+
+char	*expand_tkn(t_dlist *lst_var, char *str);
 
 #endif

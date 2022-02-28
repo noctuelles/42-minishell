@@ -1,5 +1,16 @@
 #include "libft.h"
 
+/* struct s_var:
+ *
+ *    name     : the name of the variable.
+ *    value    : the value of the variable.
+ *    name_len : the lenght of the variable name.
+ *    value_len: the lenght of the variable value.
+ *    inherit  : inherit from the execution environnement of the shell.
+ *    env_var  : if it's a environnement variable, thus, exported when
+ *               executing a program with the minishell.
+ */
+
 typedef struct s_var
 {
 	char	*name;
@@ -10,10 +21,10 @@ typedef struct s_var
 	t_bool	env_var;
 } t_var;
 
+/* var.c */
+
 t_var	*get_var(t_dlist *lst_var, char *name);
 t_dlist	*add_var(t_dlist **lst_var, t_var add_var);
 void	del_var(t_dlist **lst_var, char *name);
 void	free_var(void *dlst_content);
-void	import_var(t_dlist **lst_var, char **envp);
-
-char	*expand_tkn(t_dlist *lst_var, char *str);
+t_dlist	*import_var(t_dlist **lst_var, char **envp);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   var_expansion.c                                    :+:      :+:    :+:   */
+/*   lexer_var_expansion.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 15:22:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 17:53:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,11 @@ char	*expand_tkn(t_dlist *lst_var, char *str)
 	{
 		if (str[i] == SQUOTE || str[i] == DQUOTE)
 		{
-			ft_strdelchr(&str[i]);
 			if (can_expand && str[i] == SQUOTE)
 				can_expand = FALSE;
 			else if (!can_expand && str[i] == SQUOTE)
 				can_expand = TRUE;
+			ft_strdelchr(&str[i]);
 		}
 		if (str[i] == '$' && can_expand)
 		{

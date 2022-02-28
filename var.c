@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:30:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/25 17:44:46 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 17:47:18 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 	var->env_var = add_var.env_var;
 	elem->content = (void *) var;
 	ft_dlstadd_back(lst_var, elem);
+	return (*lst_var);
 }
+
+/* free_var() free a given variable.
+ * It doesn't try to free his name and value if the variable is inherited from
+ * the execution environnement. */
 
 void	free_var(void *dlst_content)
 {
@@ -51,6 +56,9 @@ void	free_var(void *dlst_content)
 	free(var);
 }
 
+/* del_var() try to delete the variable whose name is passed as an argument.
+ * If the variable doesn't exist, it does nothing. */
+
 void	del_var(t_dlist **lst_var, char *name)
 {
 	t_dlist		*elem;
@@ -61,20 +69,26 @@ void	del_var(t_dlist **lst_var, char *name)
 	{
 		var = (t_var *) elem->content;
 		if (ft_strcmp(var->name, name) == 0)
-			break ;
+		{
+			ft_dlstdelone(lst_var, elem, &free_var);
+			return ;
+		}
 		elem = elem->next;
 	}
-	ft_dlstdelone(lst_var, elem, &free_var);
 }
 
-void	import_var(t_dlist **lst_var, char **envp)
+/* import_var() imports all environnement variable from envp.
+ * envp is considered to be the paremeters implicitly passed to main()
+ * routine. */
+
+t_dlist	*import_var(t_dlist **lst_var, char **envp)
 {
 	size_t	i;
 	size_t	j;
 	t_var	var;
 
 	i = 0;
-	while (envp[i])
+	while (envp[i] != NULL)
 	{
 		j = 0;
 		while (envp[i][j] != '\0')
@@ -89,10 +103,15 @@ void	import_var(t_dlist **lst_var, char **envp)
 		}
 		var.inherit = TRUE;
 		var.env_var = TRUE;
-		add_var(lst_var, var);
+		if (!add_var(lst_var, var))
+			return (NULL);
 		i++;
 	}
+	return (*lst_var);
 }
+
+/* get_var() returns a pointer to a shell variable, searching by it's name.
+ * If the variable doesn't exist, the function return NULL. */
 
 t_var	*get_var(t_dlist *lst_var, char *name)
 {
