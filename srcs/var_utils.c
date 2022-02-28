@@ -6,12 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 19:00:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 19:15:22 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/28 20:21:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
+#include <stdlib.h> 
 
 t_var	*update_var(t_dlist *lst_var, char *name, t_var to_update)
 {
