@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/01 15:02:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:51:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -33,6 +33,15 @@ typedef struct s_var
 	t_bool	inherit;
 	t_bool	env_var;
 }	t_var;
+
+/* struct s_minishell:
+ *
+ *    ## ENVIRONNEMENT & VARIABLES ##
+ *
+ *    vars        : linked list containing shell and environnement variable.
+ *    envp        : char ** mean to be passed to exec() family function.
+ *    update_envp : if envp need to be updated, this variable should be TRUE.
+ */
 
 typedef struct s_minishell
 {
