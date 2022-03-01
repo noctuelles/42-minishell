@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 20:10:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:28:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,26 @@ static char	*fill_envp_str(char **str, t_var var)
 	return (*str);
 }
 
-char	**gen_envp(t_dlist *lst)
+char	**free_envp(char **envp, size_t i)
+{
+	size_t	n;
+
+	n = 0;
+	if (i == 0)
+	{
+		while (envp[n])
+			free(envp[n++]);
+	}
+	else
+	{
+		while (n < i)
+			free(envp[n++]);
+	}
+	free(envp);
+	return (NULL);
+}
+
+char	**export_env(t_dlist *lst)
 {
 	size_t	envp_size;
 	size_t	i;
@@ -60,10 +79,10 @@ char	**gen_envp(t_dlist *lst)
 	while (lst)
 	{
 		var = * (t_var *) lst->content;
-		if (var.env_var)
+		if (var.env_var == TRUE)
 		{
 			if (!fill_envp_str(&envp[i], var))
-				return (NULL);
+				return (free_envp(envp, i));
 		}
 		i++;
 		lst = lst->next;
