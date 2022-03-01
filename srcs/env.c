@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/01 15:28:05 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:55:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	get_env_var_nbr(t_dlist *lst)
 	nbr = 0;
 	while (lst)
 	{
-		var = * (t_var *) lst->content;
+		var = *(t_var *) lst->content;
 		if (var.env_var == TRUE)
 			nbr++;
 		lst = lst->next;
@@ -78,7 +78,7 @@ char	**export_env(t_dlist *lst)
 	i = 0;
 	while (lst)
 	{
-		var = * (t_var *) lst->content;
+		var = *(t_var *) lst->content;
 		if (var.env_var == TRUE)
 		{
 			if (!fill_envp_str(&envp[i], var))
