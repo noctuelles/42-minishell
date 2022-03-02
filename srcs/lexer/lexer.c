@@ -46,7 +46,7 @@ static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 		if (!lexer->tkns)
 			return (NULL);
 	}
-	if (type == T_STRING)
+	if (type == T_WORD)
 	{
 		str = ft_strndup(val, len);
 		if (!str)
@@ -112,7 +112,7 @@ static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
 {
 	if (lexer->prev != str)
 	{
-		if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_STRING))
+		if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
 			return (set_lexer_errcode(lexer, E_MEM));
 	}
 	if (lexer->prt_cnt != 0)
@@ -133,7 +133,7 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 		tkn = search_existing_token(str);
 		if ((tkn.type != T_NULL) && str != lexer->prev)
 		{
-			if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_STRING))
+			if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
 				return (set_lexer_errcode(lexer, E_MEM));
 		}
 		if (tkn.type != T_NULL)

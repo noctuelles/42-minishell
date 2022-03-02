@@ -38,7 +38,7 @@ typedef enum e_token_type
 	T_REDIR,
 	T_OP_PRT,
 	T_CL_PRT,
-	T_STRING,
+	T_WORD,
 	T_EQUALS,
 	T_BREAK,
 	T_NULL

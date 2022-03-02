@@ -27,7 +27,7 @@ void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer)
 	i = 0;
 	while (i < lexer->idx)
 	{
-		if (lexer->tkns[i].type == T_STRING)
+		if (lexer->tkns[i].type == T_WORD)
 		{
 			lexer->tkns[i].val = expand_tkn(lst_var, lexer->tkns[i].val);
 			lexer->tkns[i].len = ft_strlen(lexer->tkns[i].val);

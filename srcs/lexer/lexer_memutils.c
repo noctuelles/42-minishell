@@ -20,7 +20,7 @@ void	free_tkns(t_token *tkns, size_t size)
 	i = 0;
 	while (i < size)
 	{
-		if (tkns[i].type == T_STRING)
+		if (tkns[i].type == T_WORD)
 			free(tkns[i].val);
 		i++;
 	}
