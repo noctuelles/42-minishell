@@ -1,7 +1,5 @@
                        /* Minishell grammar */
 
-<complete_command>	::=		<pipeline>
-
 <pipeline>			::=		<simple_command>
 					  |		<pipeline>		<PIPE>			<simple_command>
 
