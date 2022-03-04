@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:31:54 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:35:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # define STR_RD_STDIN_HEREDOC "<<"
 # define STR_OP_PRT           "("
 # define STR_CL_PRT           ")"
-# define STR_EQUALS           "="
 # define STR_SP               " "
 
 # define SQUOTE               '\''

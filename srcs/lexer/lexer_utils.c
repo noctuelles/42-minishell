@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:58:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:36:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ t_token	search_existing_token(const char *str)
 		return (set_token(&token, STR_OP_PRT, 1, T_OP_PRT));
 	else if (ft_strncmp(str, STR_CL_PRT, 1) == 0)
 		return (set_token(&token, STR_CL_PRT, 1, T_CL_PRT));
-	else if (ft_strncmp(str, STR_EQUALS, 1) == 0)
-		return (set_token(&token, STR_EQUALS, 1, T_EQUALS));
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));

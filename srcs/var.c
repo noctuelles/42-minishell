@@ -1,10 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   var.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*   var.c                                              :+:      :+:    :+:   */ /*                                                    +:+ +:+         +:+     */ /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */ /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:30:54 by plouvel           #+#    #+#             */
 /*   Updated: 2022/03/01 15:01:01 by plouvel          ###   ########.fr       */
 /*                                                                            */
@@ -33,7 +30,6 @@ t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 	var->value = add_var.value;
 	var->value_len = ft_strlen(add_var.value);
 	var->inherit = add_var.inherit;
-	var->env_var = add_var.env_var;
 	elem->content = (void *) var;
 	ft_dlstadd_back(lst_var, elem);
 	return (*lst_var);
@@ -102,7 +98,6 @@ t_dlist	*import_var(t_dlist **lst_var, char **envp)
 			j++;
 		}
 		var.inherit = TRUE;
-		var.env_var = TRUE;
 		if (!add_var(lst_var, var))
 			return (NULL);
 		i++;
