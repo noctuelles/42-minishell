@@ -6,29 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/01 15:55:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:42:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
 #include <stdlib.h> 
-
-static size_t	get_env_var_nbr(t_dlist *lst)
-{
-	size_t	nbr;
-	t_var	var;
-
-	nbr = 0;
-	while (lst)
-	{
-		var = *(t_var *) lst->content;
-		if (var.env_var == TRUE)
-			nbr++;
-		lst = lst->next;
-	}
-	return (nbr);
-}
 
 static char	*fill_envp_str(char **str, t_var var)
 {
@@ -66,24 +50,19 @@ char	**free_envp(char **envp, size_t i)
 
 char	**export_env(t_dlist *lst)
 {
-	size_t	envp_size;
 	size_t	i;
 	t_var	var;
 	char	**envp;
 
-	envp_size = get_env_var_nbr(lst);
-	envp = (char **) malloc((envp_size + 1) * sizeof(char *));
+	envp = (char **) malloc((ft_dlstsize(lst) + 1) * sizeof(char *));
 	if (!envp)
 		return (NULL);
 	i = 0;
 	while (lst)
 	{
 		var = *(t_var *) lst->content;
-		if (var.env_var == TRUE)
-		{
-			if (!fill_envp_str(&envp[i], var))
-				return (free_envp(envp, i));
-		}
+		if (!fill_envp_str(&envp[i], var))
+			return (free_envp(envp, i));
 		i++;
 		lst = lst->next;
 	}

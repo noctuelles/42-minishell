@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/01 15:51:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:35:02 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -31,7 +31,6 @@ typedef struct s_var
 	size_t	name_len;
 	size_t	value_len;
 	t_bool	inherit;
-	t_bool	env_var;
 }	t_var;
 
 /* struct s_minishell:
