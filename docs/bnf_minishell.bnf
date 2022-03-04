@@ -1,7 +1,7 @@
                        /* Minishell grammar */
 
 <pipeline>			::=		<simple_command>
-					  |		<pipeline>		<PIPE>			<simple_command>
+					  |		<pipeline>		'|'				<simple_command>
 
 <simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
 					  |		<cmd_prefix>	<word>
@@ -11,8 +11,6 @@
 
 <cmd_prefix>		::=		<io_redirect>
 					  |		<cmd_prefix>	<io_redirect>
-					  |		<assignment>
-					  |		<cmd_prefix>	<assignment>
 
 <cmd_suffix>		::=		<io_redirect>
 					  |		<cmd_suffix>	<io_redirect>
@@ -22,29 +20,8 @@
 <io_redirect>		::=		<io_file>
 					  |		<io_here>
 
-<io_file>			::=		<LESS>			<word>
-					  |		<GREATER>		<word>
-					  |		<DGREATER>		<word>
+<io_file>			::=		'<'				<word>
+					  |		'>'				<word>
+					  |		'>>'			<word>
 
-<io_here>			::=		<DLESS>			<word>
-
-<assignement>		::=		<word>			<EQUALS>		<word>
-                      |		<word>			<EQUALS>
-
-                            /* Constant */
-
-<EQUALS>			::=		'='
-
-<DLESS>				::=		'<<'
-
-<LESS>				::=		'<'
-
-<GREATER>			::=		'>'
-
-<DGREATER>			::=		'>>'
-
-<DPIPE>				::=		'||'
-
-<PIPE>				::=		'|'
-
-<DAND>				::=		'&&'
+<io_here>			::=		'<<'			<word>
