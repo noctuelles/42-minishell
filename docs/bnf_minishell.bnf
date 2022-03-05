@@ -17,11 +17,31 @@
 					  |		<word>
 					  |		<cmd_suffix>	<word>
 
-<io_redirect>		::=		<io_file>
-					  |		<io_here>
-
-<io_file>			::=		'<'				<word>
+<io_redirect>		::=		'<'				<word>
 					  |		'>'				<word>
 					  |		'>>'			<word>
+					  |		'<<'			<word>
 
-<io_here>			::=		'<<'			<word>
+/* For recursive descent parser */
+
+<pipeline>			::=		<simple_command>	'|'			<pipeline>
+					  |		<simple_command>
+
+<simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
+					  |		<cmd_prefix>	<word>
+					  |		<cmd_prefix>
+					  |		<word>			<cmd_suffix>
+					  |		<word>
+
+<cmd_prefix>		::=		<io_redirect>	<cmd_prefix>
+					  |		<io_redirect>
+
+<cmd_suffix>		::=		<io_redirect>	<cmd_suffix>
+					  |		<io_redirect>
+					  |		<word>			<cmd_suffix>
+					  |		<word>
+
+<io_redirect>		::=		'<'				<word>
+					  |		'>'				<word>
+					  |		'>>'			<word>
+					  |		'<<'			<word>
