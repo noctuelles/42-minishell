@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/05 20:02:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/07 18:08:02 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type)
 	node->type = type;
 	node->value = value;
 	return (NULL);
+}
+
+t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
+		t_ast_tree_node *right)
+{
+	if (!root)
+		return (NULL);
+	root->left = left;
+	root->right = right;
+	return (root);
 }
 
 void	ast_tree_delete_node(t_ast_tree_node *node)

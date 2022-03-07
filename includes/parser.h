@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:16:27 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/05 19:56:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/07 18:08:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,26 @@
 #include "lexer.h"
 #include "ast.h"
 
+typedef enum e_parser_errcode
+{
+	ERR_MALLOC,
+	ERR_SYNTAX,
+	NO_ERR
+}	t_parser_errcode;
+
 typedef struct	s_parser
 {
-	t_lexer	*lexer;
-	size_t	lex_idx;
+	t_lexer				*lexer;
+	size_t				lex_idx;
+	t_parser_errcode	errcode;
 }	t_parser;
 
 t_ast_tree_node	*call_production(t_parser *parser,
-		t_ast_tree_node *(*fprod)(t_parser *));
+		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
+		t_bool restore);
+t_bool	match(t_parser *parser, t_token_type type, char **value);
+void	*quit_production(t_parser *parser, t_ast_tree_node *left,
+		t_ast_tree_node *right, t_parser_errcode errcode);
 
 t_ast_tree_node	*PIPELINE(t_parser *parser);
 t_ast_tree_node	*PIPELINE1(t_parser *parser);
