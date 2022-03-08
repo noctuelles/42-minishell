@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_var_expansion.c                              :+:      :+:    :+:   */
+/*   var_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 18:06:03 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/06 14:57:25 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static size_t	get_var_name_len(const char *str)
 }
 
 static size_t	perform_expansion_cpy(char *new_str, char *str, t_var *var,
-																size_t var_len)
+															size_t var_name_len)
 {
 	size_t	i;
 	size_t	j;
@@ -49,7 +49,7 @@ static size_t	perform_expansion_cpy(char *new_str, char *str, t_var *var,
 			new_str[i++] = var->value[k++];
 	}
 	idx_ret = i - 1;
-	j += var_len;
+	j += var_name_len;
 	while (str[j] != '\0')
 		new_str[i++] = str[j++];
 	new_str[i] = '\0';
@@ -57,19 +57,20 @@ static size_t	perform_expansion_cpy(char *new_str, char *str, t_var *var,
 	return (idx_ret);
 }
 
-static char	*include_var(char *str, t_var *var, size_t var_len, size_t *idx)
+static char	*include_var(char *str, t_var *var, size_t var_name_len,
+																size_t *idx)
 {
 	char	*new_str;
 	size_t	str_len;
 
 	if (var)
-		str_len = (ft_strlen(str) - (var_len + 1)) + var->value_len;
+		str_len = (ft_strlen(str) - (var_name_len + 1)) + var->value_len;
 	else
-		str_len = ft_strlen(str) - (var_len + 1);
+		str_len = ft_strlen(str) - (var_name_len + 1);
 	new_str = (char *) malloc((str_len + 1) * sizeof(char));
 	if (!new_str)
 		return (NULL);
-	*idx = perform_expansion_cpy(new_str, str, var, var_len);
+	*idx = perform_expansion_cpy(new_str, str, var, var_name_len);
 	return (new_str);
 }
 
@@ -77,15 +78,15 @@ static char	*perform_expansion(t_dlist *lst_var, char *str, size_t *i)
 {
 	t_var	*var;
 	char	ctemp;
-	size_t	var_len;
+	size_t	var_name_len;
 
 	(*i)++;
-	var_len = get_var_name_len(&str[*i]);
-	ctemp = str[*i + var_len];
-	str[*i + var_len] = '\0';
+	var_name_len = get_var_name_len(&str[*i]);
+	ctemp = str[*i + var_name_len];
+	str[*i + var_name_len] = '\0';
 	var = get_var(lst_var, &str[*i]);
-	str[*i + var_len] = ctemp;
-	return (include_var(str, var, var_len, i));
+	str[*i + var_name_len] = ctemp;
+	return (include_var(str, var, var_name_len, i));
 }
 
 char	*expand_tkn(t_dlist *lst_var, char *str)

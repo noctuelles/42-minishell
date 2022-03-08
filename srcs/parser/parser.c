@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/07 17:22:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/08 18:59:42 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,32 @@ void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 
 t_bool	match(t_parser *parser, t_token_type type, char **value)
 {
+	if (parser->lex_idx >= parser->lexer->idx)
+		return (FALSE);
 	if (parser->lexer->tkns[parser->lex_idx].type == type)
 	{
-		if (*value != NULL)
-			*value = parser->lexer->tkns[parser->lex_idx].val;
+		if (value != NULL)
+				*value = parser->lexer->tkns[parser->lex_idx].val;
 		parser->lex_idx++;
 		return (TRUE);
 	}
 	parser->lex_idx++;
 	return (FALSE);
+}
+
+#include <stdio.h>
+
+t_ast_tree_node	*parse(t_lexer *lexer)
+{
+	t_parser		parser;
+	t_ast_tree_node	*root;
+
+	parser.lexer = lexer;
+	parser.errcode = NO_ERR;
+	root = PIPELINE(&parser);
+	if (!root)
+		puts("Parsing failed.");
+	else
+		puts("Parsing sucess!");
+	return (root);
 }

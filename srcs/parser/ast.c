@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/07 18:08:02 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/08 18:11:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type)
 	node->right = NULL;
 	node->type = type;
 	node->value = value;
-	return (NULL);
+	return (node);
 }
 
 t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,

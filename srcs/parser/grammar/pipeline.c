@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/07 18:07:59 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/08 19:08:42 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@ t_ast_tree_node	*PIPELINE(t_parser *parser)
 	t_ast_tree_node	*rslt;
 
 	if (call_production(parser, &PIPELINE1, &rslt, TRUE) != NULL)
+	{
+	puts("not a multiple pipeline");
 		return (rslt);
+	}
 	if (call_production(parser, &PIPELINE2, &rslt, TRUE) != NULL)
+	{
+	puts("not a multiple pipeline");
 		return (rslt);
+	}
 	return (quit_production(parser, NULL, NULL, ERR_SYNTAX));
 }
 

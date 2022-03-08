@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/07 18:08:05 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/08 17:19:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ typedef enum e_token_type
 	T_PIPE,
 	T_LOG_AND,
 	T_LOG_OR,
-	T_REDIR,
+	T_LESS,
+	T_DLESS,
+	T_GRT,
+	T_DGRT,
 	T_OP_PRT,
 	T_CL_PRT,
 	T_WORD,

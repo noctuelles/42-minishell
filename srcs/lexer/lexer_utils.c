@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/04 17:36:17 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/08 17:20:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ t_token	search_existing_token(const char *str)
 	else if (ft_strncmp(str, STR_LOG_AND, 2) == 0)
 		return (set_token(&token, STR_LOG_AND, 2, T_LOG_AND));
 	else if (ft_strncmp(str, STR_RD_FILE_APN, 2) == 0)
-		return (set_token(&token, STR_RD_FILE_APN, 2, T_REDIR));
+		return (set_token(&token, STR_RD_FILE_APN, 2, T_DGRT));
 	else if (ft_strncmp(str, STR_RD_STDIN_HEREDOC, 2) == 0)
-		return (set_token(&token, STR_RD_STDIN_HEREDOC, 2, T_REDIR));
+		return (set_token(&token, STR_RD_STDIN_HEREDOC, 2, T_DLESS));
 	else if (ft_strncmp(str, STR_PIPE, 1) == 0)
 		return (set_token(&token, STR_PIPE, 1, T_PIPE));
 	else if (ft_strncmp(str, STR_RD_FILE, 1) == 0)
-		return (set_token(&token, STR_RD_FILE, 1, T_REDIR));
+		return (set_token(&token, STR_RD_FILE, 1, T_GRT));
 	else if (ft_strncmp(str, STR_RD_STDIN, 1) == 0)
-		return (set_token(&token, STR_RD_STDIN, 1, T_REDIR));
+		return (set_token(&token, STR_RD_STDIN, 1, T_LESS));
 	else if (ft_strncmp(str, STR_OP_PRT, 1) == 0)
 		return (set_token(&token, STR_OP_PRT, 1, T_OP_PRT));
 	else if (ft_strncmp(str, STR_CL_PRT, 1) == 0)
