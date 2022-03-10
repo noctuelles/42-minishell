@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/08 18:59:42 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/10 16:15:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,17 @@
 
 t_ast_tree_node	*call_production(t_parser *parser,
 		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		t_bool restore)
+		size_t save)
 {
-	size_t			idx_save;
+	parser->lex_idx = save;
+	*root = fprod(parser);
+	return (*root);
+}
 
-	if (restore == TRUE)
-	{
-		idx_save = parser->lex_idx;
-		*root = fprod(parser);
-		parser->lex_idx = idx_save;
-	}
-	else
-		*root = fprod(parser);
+t_ast_tree_node	*call_term(t_parser *parser,
+		t_ast_tree_node *(fterm)(t_parser *), t_ast_tree_node **root)
+{
+	*root = fterm(parser);
 	return (*root);
 }
 
@@ -52,10 +51,10 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 	{
 		if (value != NULL)
 				*value = parser->lexer->tkns[parser->lex_idx].val;
-		parser->lex_idx++;
+		parser->lex_idx += 1;
 		return (TRUE);
 	}
-	parser->lex_idx++;
+	parser->lex_idx += 1;
 	return (FALSE);
 }
 
@@ -67,11 +66,12 @@ t_ast_tree_node	*parse(t_lexer *lexer)
 	t_ast_tree_node	*root;
 
 	parser.lexer = lexer;
+	parser.lex_idx = 0;
 	parser.errcode = NO_ERR;
 	root = PIPELINE(&parser);
-	if (!root)
-		puts("Parsing failed.");
+	if (root == NULL)
+		printf("\x1b[1;31mParsing failed. Near : %s, token  %lu.\n", parser.lexer->tkns[parser.lex_idx - 1].val, parser.lex_idx - 1);
 	else
-		puts("Parsing sucess!");
+		puts("\x1b[1;32mParsing sucess!");
 	return (root);
 }

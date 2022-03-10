@@ -6,12 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/08 17:20:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/10 18:02:51 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
+#include <stdlib.h>
 
 t_token	set_token(t_token *tkn, char *val, size_t len,
 														t_token_type type)
@@ -20,6 +21,20 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 	tkn->len = len;
 	tkn->type = type;
 	return (*tkn);
+}
+
+void	free_lexer(t_lexer *lexer)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < lexer->idx)
+	{
+		if (lexer->tkns[i].type == T_WORD)
+			free(lexer->tkns[i].val);
+		i++;
+	}
+	free(lexer->tkns);
 }
 
 t_token	search_existing_token(const char *str)

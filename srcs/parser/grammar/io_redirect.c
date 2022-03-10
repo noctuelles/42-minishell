@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 17:09:20 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/08 21:44:54 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/09 19:46:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 
 t_ast_tree_node	*IO_REDIRECT(t_parser *parser)
 {
-	t_ast_tree_node	*rslt;
+	t_ast_tree_node	*node;
+	size_t			save;
 
-	if (call_production(parser, &IO_REDIRECT1, &rslt, TRUE) != NULL)
-		return (rslt);
-	if (call_production(parser, &IO_REDIRECT2, &rslt, TRUE) != NULL)
-		return (rslt);
-	if (call_production(parser, &IO_REDIRECT3, &rslt, TRUE) != NULL)
-		return (rslt);
-	if (call_production(parser, &IO_REDIRECT4, &rslt, TRUE) != NULL)
-		return (rslt);
+	save = parser->lex_idx;
+	if (call_production(parser, &IO_REDIRECT1, &node, save) != NULL)
+		return (node);
+	if (call_production(parser, &IO_REDIRECT2, &node, save) != NULL)
+		return (node);
+	if (call_production(parser, &IO_REDIRECT3, &node, save) != NULL)
+		return (node);
+	if (call_production(parser, &IO_REDIRECT4, &node, save) != NULL)
+		return (node);
 	return (NULL);
 }
 

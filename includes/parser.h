@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:16:27 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/08 17:42:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/09 16:13:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ typedef struct	s_parser
 
 t_ast_tree_node	*call_production(t_parser *parser,
 		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		t_bool restore);
+		size_t save);
+t_ast_tree_node	*call_term(t_parser *parser,
+		t_ast_tree_node *(*fterm)(t_parser *), t_ast_tree_node **root);
 t_bool	match(t_parser *parser, t_token_type type, char **value);
 void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		t_ast_tree_node *right, t_parser_errcode errcode);

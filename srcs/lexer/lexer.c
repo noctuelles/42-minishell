@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/07 16:13:18 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/10 15:47:33 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
 	}
 	if (lexer->prt_cnt != 0)
 		return (set_lexer_errcode(lexer, E_PRT));
+	add_to_lexer(lexer, NULL, 0, T_NULL);
 	return (lexer);
 }
 

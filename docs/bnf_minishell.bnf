@@ -25,7 +25,7 @@
 /* For recursive descent parser */
 
 <pipeline>			::=		<simple_command>	'|'			<pipeline>
-					  |		<simple_command>
+					  |		<simple_command>	'ε'
 
 <simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
 					  |		<cmd_prefix>	<word>

@@ -14,14 +14,14 @@ void	print_tokens(t_lexer lexer)
 int main(int argc, char **argv)
 {
 	(void) argc;
-	(void) argv;
 	t_lexer	lexer = {0};
 	t_ast_tree_node	*root;
 
-	char *str = strdup("echo bonjour | file1 -ls -la");
+	char *str = argv[1];
 	fill_lexer_from_str(&lexer, str);
 	print_tokens(lexer);
 	root = parse(&lexer);
 	(void) root;
+	free_lexer(&lexer);
 	return (0);
 }

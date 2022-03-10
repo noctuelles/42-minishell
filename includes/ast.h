@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/08 17:16:13 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/10 17:48:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ typedef enum	s_node_type
 	NODE_COMMAND,
 	NODE_COMMAND_IMMEDIATE,
 	NODE_COMMAND_PREFIX_IO,
+	NODE_COMMAND_PREFIX,
 	NODE_COMMAND_SUFFIX_IO,
+	NODE_COMMAND_SUFFIX,
 	NODE_COMMAND_SUFFIX_WORD,
-	NODE_COMMAND_SUFFIX_WORD_LIST,
 	NODE_IO_REDIRECT_STDIN,
 	NODE_IO_REDIRECT_FILE,
 	NODE_IO_REDIRECT_FILE_APPEND,
