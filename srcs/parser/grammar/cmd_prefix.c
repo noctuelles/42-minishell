@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 15:53:44 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 17:50:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 16:40:42 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,5 @@ t_ast_tree_node	*CMD_PREFIX1(t_parser *parser)
 
 t_ast_tree_node	*CMD_PREFIX2(t_parser *parser)
 {
-	t_ast_tree_node	*io_redirect;
-	t_ast_tree_node	*rslt;
-
-	if (call_term(parser, &IO_REDIRECT, &io_redirect) == NULL)
-		return (NULL);
-	rslt = ast_tree_create_node(NULL, NODE_COMMAND_PREFIX);
-	if (!rslt)
-		return (quit_production(parser, io_redirect, NULL, NO_ERR));
-	ast_tree_attach(rslt, io_redirect, NULL);
-	return (rslt);
+	return (IO_REDIRECT(parser));
 }
