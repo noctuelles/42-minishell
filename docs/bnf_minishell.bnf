@@ -48,8 +48,8 @@
 
 /* For recursive descent parser (minishell bonuses) */
 
-<andor>				::=		<pipeline>				'&&'				<andor>
-							<pipeline>				'||'				<andor>
+<cmd_list>			::=		<pipeline>				'&&'				<cmd_list>
+							<pipeline>				'||'				<cmd_list>
 							<pipeline>
 
 <pipeline>			::=		<command>				'|'					<pipeline>

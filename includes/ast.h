@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/11 13:13:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 16:04:58 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef enum	s_node_type
 	NODE_PIPE,
 	NODE_COMMAND,
 	NODE_EMPTY_COMMAND,
+	NODE_COMMAND_LIST_OR,
+	NODE_COMMAND_LIST_AND,
 	NODE_COMMAND_IMMEDIATE,
 	NODE_COMMAND_PREFIX,
 	NODE_COMMAND_SUFFIX,

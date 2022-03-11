@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:16:27 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/09 16:13:05 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 16:07:47 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ t_bool	match(t_parser *parser, t_token_type type, char **value);
 void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		t_ast_tree_node *right, t_parser_errcode errcode);
 t_ast_tree_node	*parse(t_lexer *lexer);
+
+t_ast_tree_node	*CMD_LIST(t_parser *parser);
+t_ast_tree_node	*CMD_LIST1(t_parser *parser);
+t_ast_tree_node	*CMD_LIST2(t_parser *parser);
+t_ast_tree_node	*CMD_LIST3(t_parser *parser);
 
 t_ast_tree_node	*PIPELINE(t_parser *parser);
 t_ast_tree_node	*PIPELINE1(t_parser *parser);
