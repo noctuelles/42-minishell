@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	print_tokens(lexer);
 	root = parse(&lexer);
 	(void) root;
+	//ast_tree_print_graph(root);
 	free_lexer(&lexer);
 	return (0);
 }
