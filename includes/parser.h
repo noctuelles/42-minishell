@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:16:27 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/11 16:07:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 17:37:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,10 @@ t_ast_tree_node	*CMD_LIST(t_parser *parser);
 t_ast_tree_node	*CMD_LIST1(t_parser *parser);
 t_ast_tree_node	*CMD_LIST2(t_parser *parser);
 t_ast_tree_node	*CMD_LIST3(t_parser *parser);
+
+t_ast_tree_node	*CMD(t_parser *parser);
+t_ast_tree_node	*CMD1(t_parser *parser);
+t_ast_tree_node	*CMD2(t_parser *parser);
 
 t_ast_tree_node	*PIPELINE(t_parser *parser);
 t_ast_tree_node	*PIPELINE1(t_parser *parser);

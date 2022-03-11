@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 15:54:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/11 16:06:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 17:41:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_ast_tree_node	*CMD_LIST(t_parser *parser)
 	
 	save = parser->lex_idx;
 	if (call_production(parser, CMD_LIST1, &node, save) != NULL)
+		return (node);
+	if (call_production(parser, CMD_LIST2, &node, save) != NULL)
 		return (node);
 	return (NULL);
 }

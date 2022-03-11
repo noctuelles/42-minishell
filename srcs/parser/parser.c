@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 16:15:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 17:44:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_ast_tree_node	*parse(t_lexer *lexer)
 	parser.lexer = lexer;
 	parser.lex_idx = 0;
 	parser.errcode = NO_ERR;
-	root = PIPELINE(&parser);
+	root = CMD_LIST(&parser);
 	if (root == NULL)
 		printf("\x1b[1;31mParsing failed. Near : %s, token  %lu.\n", parser.lexer->tkns[parser.lex_idx - 1].val, parser.lex_idx - 1);
 	else

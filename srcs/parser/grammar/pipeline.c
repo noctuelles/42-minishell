@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 17:57:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/11 17:51:36 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_ast_tree_node	*PIPELINE(t_parser *parser)
 		return (node);
 	if (call_production(parser, &PIPELINE2, &node, save) != NULL)
 		return (node);
-	return (quit_production(parser, NULL, NULL, ERR_SYNTAX));
+	return (NULL);
 }
 
 /* PIPELINE1() production rule no 1. */
@@ -52,13 +52,13 @@ t_ast_tree_node	*PIPELINE2(t_parser *parser)
 	t_ast_tree_node	*rslt;
 
 	rslt = SIMPLE_CMD(parser);
-	if (rslt)
+	/*if (rslt)
 	{
 		if (match(parser, T_NULL, NULL) == FALSE)
 		{
 			ast_tree_delete_node(rslt);
 			return (NULL);
 		}
-	}
+	}*/
 	return (rslt);
 }
