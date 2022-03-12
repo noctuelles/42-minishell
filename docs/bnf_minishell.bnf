@@ -27,17 +27,19 @@
 <pipeline>			::=		<simple_command>	'|'			<pipeline>
 					  |		<simple_command>	'ε'
 
-<simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
-					  |		<cmd_prefix>	<word>
-					  |		<cmd_prefix>
+<simple_command>	::=		<io_list>	<word>			<cmd_suffix>
+					  |		<io_list>	<word>
+					  |		<io_list>
 					  |		<word>			<cmd_suffix>
 					  |		<word>
 
-<cmd_prefix>		::=		<io_redirect>	<cmd_prefix>
+<io_list>			::=		<io_redirect>	<io_list>
 					  |		<io_redirect>
 
-<cmd_suffix>		::=		<io_redirect>	<cmd_suffix>
-					  |		<io_redirect>
+/* echo >file1 bonjour */
+
+<cmd_suffix>		::=		<io_list>		<cmd_suffix>
+					  |		<io_list>
 					  |		<word>			<cmd_suffix>
 					  |		<word>
 

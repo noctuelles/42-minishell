@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 16:38:20 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/11 16:43:31 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/12 15:09:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,24 @@ t_ast_tree_node	*CMD_SUFFIX(t_parser *parser)
 
 t_ast_tree_node	*CMD_SUFFIX1(t_parser *parser)
 {
-	t_ast_tree_node	*io_redirect;
+	t_ast_tree_node	*io_list;
 	t_ast_tree_node	*cmd_suffix;
 	t_ast_tree_node	*rslt;
 
-	if (call_term(parser, &IO_REDIRECT, &io_redirect) == NULL)
+	if (call_term(parser, IO_LIST, &io_list) == NULL)
 		return (NULL);
-	if (call_term(parser, &CMD_SUFFIX, &cmd_suffix) == NULL)
-		return (quit_production(parser, io_redirect, NULL, NO_ERR));
+	if (call_term(parser, CMD_SUFFIX, &cmd_suffix) == NULL)
+		return (quit_production(parser, io_list, NULL, NO_ERR));
 	rslt = ast_tree_create_node(NULL, NODE_COMMAND_SUFFIX);
 	if (!rslt)
-		return (quit_production(parser, io_redirect, cmd_suffix, ERR_MALLOC));
-	ast_tree_attach(rslt, io_redirect, cmd_suffix);
+		return (quit_production(parser, io_list, cmd_suffix, NO_ERR));
+	ast_tree_attach(rslt, io_list, cmd_suffix);
 	return (rslt);
 }
 
 t_ast_tree_node	*CMD_SUFFIX2(t_parser *parser)
 {
-	return (IO_REDIRECT(parser));
+	return (IO_LIST(parser));
 }
 
 t_ast_tree_node	*CMD_SUFFIX3(t_parser *parser)

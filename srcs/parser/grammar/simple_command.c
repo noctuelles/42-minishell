@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/11 16:41:59 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/12 14:45:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,42 +36,42 @@ t_ast_tree_node	*SIMPLE_CMD1(t_parser *parser)
 {
 	char			*cmd_name;
 	t_ast_tree_node	*cmd_suffix;
-	t_ast_tree_node	*cmd_prefix;
+	t_ast_tree_node	*io_list;
 	t_ast_tree_node	*rslt;
 
-	if (call_term(parser, CMD_PREFIX, &cmd_prefix) == NULL)
+	if (call_term(parser, IO_LIST, &io_list) == NULL)
 		return (NULL);
 	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, cmd_prefix, NULL, NO_ERR));
+		return (quit_production(parser, io_list, NULL, NO_ERR));
 	if (call_term(parser, CMD_SUFFIX, &cmd_suffix) == NULL)
-		return (quit_production(parser, cmd_prefix, NULL, NO_ERR));
+		return (quit_production(parser, io_list, NULL, NO_ERR));
 	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
 	if (!rslt)
-		return (quit_production(parser, cmd_prefix, cmd_suffix, ERR_MALLOC));
-	ast_tree_attach(rslt, cmd_prefix, cmd_suffix);
+		return (quit_production(parser, io_list, cmd_suffix, ERR_MALLOC));
+	ast_tree_attach(rslt, io_list, cmd_suffix);
 	return (rslt);
 }
 
 t_ast_tree_node	*SIMPLE_CMD2(t_parser *parser)
 {
 	char			*cmd_name;
-	t_ast_tree_node	*cmd_prefix;
+	t_ast_tree_node	*io_list;
 	t_ast_tree_node	*rslt;
 
-	if (call_term(parser, &CMD_PREFIX, &cmd_prefix) == NULL)
+	if (call_term(parser, &IO_LIST, &io_list) == NULL)
 		return (NULL);
 	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, cmd_prefix, NULL, NO_ERR));
+		return (quit_production(parser, io_list, NULL, NO_ERR));
 	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
 	if (!rslt)
-		return (quit_production(parser, cmd_prefix, NULL, ERR_MALLOC));
-	ast_tree_attach(rslt, cmd_prefix, NULL);
+		return (quit_production(parser, io_list, NULL, ERR_MALLOC));
+	ast_tree_attach(rslt, io_list, NULL);
 	return (rslt);
 }
 
 t_ast_tree_node	*SIMPLE_CMD3(t_parser *parser)
 {
-	return (CMD_PREFIX(parser));
+	return (IO_LIST(parser));
 }
 
 t_ast_tree_node	*SIMPLE_CMD4(t_parser *parser)
