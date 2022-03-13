@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/02/27 18:43:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/02/27 18:46:29 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ int	ft_cd(int argc, char **argv, t_env **env)
 		env_update(env, "PWD", pwd);
 		return 0;
 	}
-	perror("cd: path error");
+	perror("");
 	return 1;
 }

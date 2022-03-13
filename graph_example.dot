@@ -1,0 +1,6 @@
+digraph G {
+	PIPE->"COMMAND = cat"->"IO_HERE_DOC=eof";
+	PIPE->"PIPE (2)"->"COMMAND = wc (1)"->"SUFFIX=-l";
+		"PIPE (2)"->"PIPE (3)"->"COMMAND = wc (2)"->"IO_FILE = test";
+		"PIPE (3)"->"COMMAND_IMMEDIATE = ls";
+}
