@@ -1,7 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */ /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -43,6 +42,15 @@ t_ast_tree_node	*parse(t_lexer *lexer);
 t_ast_tree_node	*PIPELINE(t_parser *parser);
 t_ast_tree_node	*PIPELINE1(t_parser *parser);
 t_ast_tree_node	*PIPELINE2(t_parser *parser);
+
+t_ast_tree_node	*AND_OR(t_parser *parser);
+t_ast_tree_node	*AND_OR1(t_parser *parser);
+t_ast_tree_node	*AND_OR2(t_parser *parser);
+t_ast_tree_node	*AND_OR3(t_parser *parser);
+
+t_ast_tree_node	*CMD(t_parser *parser);
+t_ast_tree_node	*CMD1(t_parser *parser);
+t_ast_tree_node	*CMD2(t_parser *parser);
 
 t_ast_tree_node *SIMPLE_CMD(t_parser *parser);
 t_ast_tree_node *SIMPLE_CMD1(t_parser *parser);

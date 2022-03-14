@@ -54,17 +54,15 @@
 
 /* For recursive descent parser (minishell bonuses) */
 
-<pipeline>			::=		<command>	'|'			<pipeline>
-					  |		<command>	'ε'
-
-<command>			::=		<simple_command>
-					  |		<compound_command>
-
-<compound_command>	::=		'('		<and_or>	')'
-
 <and_or>			::=		<pipeline>		'&&'		<and_or>
 					  |		<pipeline>		'||'		<and_or>
-					  |		<pipeline>
+					  |		<pipeline>		'ε'
+
+<command>			::=		<simple_command>
+					  |		'('		<and_or>	')'
+
+<pipeline>			::=		<command>	'|'			<pipeline>
+					  |		<command>
 
 <simple_command>	::=		<io_list>	<word>			<cmd_suffix>
 					  |		<io_list>	<word>
