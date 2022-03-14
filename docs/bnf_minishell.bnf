@@ -24,8 +24,14 @@
 
 /* For recursive descent parser (no minishell bonus) */
 
-<pipeline>			::=		<simple_command>	'|'			<pipeline>
-					  |		<simple_command>	'ε'
+<command>			::=		'('		<simple_command>	')'
+					  |		'('		<compound_command>	')'
+					  |		<simple_command>
+
+<compound_command>	::=		<command>			'||'		<compound_command>
+					  |		<command>			'&&'		<compound_command>
+					  |		<command>			'|'			<compound_command>
+					  |		<command>
 
 <simple_command>	::=		<io_list>	<word>			<cmd_suffix>
 					  |		<io_list>	<word>
@@ -35,8 +41,6 @@
 
 <io_list>			::=		<io_redirect>	<io_list>
 					  |		<io_redirect>
-
-/* echo >file1 bonjour */
 
 <cmd_suffix>		::=		<io_list>		<cmd_suffix>
 					  |		<io_list>
@@ -50,34 +54,36 @@
 
 /* For recursive descent parser (minishell bonuses) */
 
-<cmd_list>			::=		<pipeline>				'&&'				<cmd_list>
-							<pipeline>				'||'				<cmd_list>
-							<pipeline>				'ε'
+<pipeline>			::=		<command>	'|'			<pipeline>
+					  |		<command>	'ε'
 
-<pipeline>			::=		<command>				'|'					<pipeline>
-					  |		<command>
+<command>			::=		<simple_command>
+					  |		<compound_command>
 
-<command>			::=		'('						<command>			')'				/* This is also called a subshell */
-							<simple_command>
+<compound_command>	::=		'('		<and_or>	')'
 
-<simple_command>	::=		<cmd_prefix>			<word>				<cmd_suffix>
-					  |		<cmd_prefix>			<word>
-					  |		<cmd_prefix>
-					  |		<word>					<cmd_suffix>
+<and_or>			::=		<pipeline>		'&&'		<and_or>
+					  |		<pipeline>		'||'		<and_or>
+					  |		<pipeline>
+
+<simple_command>	::=		<io_list>	<word>			<cmd_suffix>
+					  |		<io_list>	<word>
+					  |		<io_list>
+					  |		<word>			<cmd_suffix>
 					  |		<word>
 
-<cmd_prefix>		::=		<io_redirect>			<cmd_prefix>
+<io_list>			::=		<io_redirect>	<io_list>
 					  |		<io_redirect>
 
-<cmd_suffix>		::=		<io_redirect>			<cmd_suffix>
-					  |		<io_redirect>
-					  |		<word>					<cmd_suffix>
+<cmd_suffix>		::=		<io_list>		<cmd_suffix>
+					  |		<io_list>
+					  |		<word>			<cmd_suffix>
 					  |		<word>
 
-<io_redirect>		::=		'<'						<word>
-					  |		'>'						<word>
-					  |		'>>'					<word>
-					  |		'<<'					<word>
+<io_redirect>		::=		'<'				<word>
+					  |		'>'				<word>
+					  |		'>>'			<word>
+					  |		'<<'			<word>
 
 /* These production are not used in the parser : only here to describe what a word is */
 
