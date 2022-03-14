@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 21:47:44 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/14 12:30:00 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/14 17:25:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ void replace_by_path(t_command *command)
 {
 	while(command != NULL)
 	{
+		command->original_name = command->name;
 		if (strchr(command->name, '/') == NULL)
 		{
 			if (is_builtin(command->name))
@@ -213,7 +214,7 @@ void	add_command_to_args(t_command *command)
 	while (args[length])
 		length++;
 	command->args = malloc(sizeof(char *) * (length + 2));
-	command->args[0] = command->name;
+	command->args[0] = command->original_name;
 	i = -1;
 	while (++i < length)
 		command->args[i + 1] = args[i];
@@ -248,9 +249,19 @@ int	execute_file(t_command *command, char **envp)
 		}
 	}
 
-	//For debug redirection
-	if(pid == 0 && strcmp(command->name, "cat") == 0)
+	
+	if(pid == 0)
 	{
+		if(command->io_in_redirect != NULL)
+		{
+			int fd = open(command->io_in_redirect, O_RDONLY);
+			dup2(fd, 0);
+		}
+		if(command->io_out_redirect != NULL)
+		{
+			int fd = open(command->io_out_redirect, O_WRONLY | O_CREAT, 0777);
+			dup2(fd, 1);
+		}
 		//dup stdin from a file
 		/*int fd = open("test2", O_RDONLY);
 		dup2(fd, 0);*/
@@ -264,7 +275,7 @@ int	execute_file(t_command *command, char **envp)
 		dup2(fd3, 1);*/
 	}
 
-	if (pid == 0)
+	if (pid == 0 && command->name != NULL)
 	{
 		execve(command->name, command->args, envp);
 		perror("Execution error");

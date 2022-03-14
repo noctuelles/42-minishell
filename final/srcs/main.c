@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/14 12:24:55 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/14 19:14:47 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,27 +66,27 @@ int main(int argc, char **argv, char **envp)
 	//ast_tree_print_graph(root);
 	printf("\e[0m\n");
 
-	//print(root, 0);
-	t_command *first = parse_commands(root);
-	replace_by_path(first);
-
-	int count = 0;
-	while(first != NULL)
+	if(root != NULL)
 	{
-		if(first->name != NULL)
+		//print(root, 0);
+		t_command *first = parse_commands(root);
+		replace_by_path(first);
+
+		int count = 0;
+		while(first != NULL)
 		{
 			execute_file(first, envp);
 			count++;
+			first = first->next;
 		}
-		first = first->next;
+		int i = -1;
+		int status;
+		while (++i < count)
+		{
+			waitpid(-1, &status, 0);
+			close(0);
+		}
+		free_lexer(&lexer);
 	}
-	int i = -1;
-	int status;
-	while (++i < count)
-	{
-		waitpid(-1, &status, 0);
-		close(0);
-	}
-	free_lexer(&lexer);
 	return (0);
 }
