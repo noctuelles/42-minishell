@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/13 21:51:25 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/14 12:24:55 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ void print(t_ast_tree_node *root, int spaces)
 	}
 }
 
-int main()
+t_command *parse_commands(t_ast_tree_node *root);
+void replace_by_path(t_command *command);
+int	execute_file(t_command *command, char **envp);
+
+int main(int argc, char **argv, char **envp)
 {
 	t_lexer	lexer = {0};
 	t_ast_tree_node	*root;
@@ -57,13 +61,32 @@ int main()
 		
 	add_history(str);
 	fill_lexer_from_str(&lexer, str);
-	print_tokens(lexer);
+	//print_tokens(lexer);
 	root = parse(&lexer);
 	//ast_tree_print_graph(root);
-	printf("\e[0m");
+	printf("\e[0m\n");
 
-	print(root, 0);
+	//print(root, 0);
+	t_command *first = parse_commands(root);
+	replace_by_path(first);
 
+	int count = 0;
+	while(first != NULL)
+	{
+		if(first->name != NULL)
+		{
+			execute_file(first, envp);
+			count++;
+		}
+		first = first->next;
+	}
+	int i = -1;
+	int status;
+	while (++i < count)
+	{
+		waitpid(-1, &status, 0);
+		close(0);
+	}
 	free_lexer(&lexer);
 	return (0);
 }
