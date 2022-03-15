@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:53:36 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 16:01:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,7 @@ void	replace_by_path(t_command *command)
 		command->original_name = command->name;
 		if (strchr(command->name, '/') == NULL)
 		{
-			if (is_builtin(command->name))
-			{
-				printf("builtin\n");
-			}
-			else
+			if (!is_builtin(command->name))
 			{
 				path = get_path_from_env(command->name);
 				if (path == NULL)

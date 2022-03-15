@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:09:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 16:01:30 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,20 +78,25 @@ int	execute_file(t_command *command, char **envp)
 	int		pipefd[2];
 	int		wait_status;
 
-	add_command_to_args(command);
-	if (command->is_piped && pipe(pipefd) < 0)
-		return (-1);
-	pid = fork();
-	if (pid == -1)
-		return (-1);
-	dup_for_pipe(command, pid, pipefd);
-	dup_for_redirections(command, pid);
-	if (pid == 0 && command->name != NULL)
+	if(!is_builtin(command->original_name))
 	{
-		execve(command->name, command->args, envp);
-		perror("Execution error");
-		close_all_error(command, errno);
+		add_command_to_args(command);
+		if (command->is_piped && pipe(pipefd) < 0)
+			return (-1);
+		pid = fork();
+		if (pid == -1)
+			return (-1);
+		dup_for_pipe(command, pid, pipefd);
+		dup_for_redirections(command, pid);
+		if (pid == 0 && command->name != NULL)
+		{
+			execve(command->name, command->args, envp);
+			perror("Execution error");
+			close_all_error(command, errno);
+		}
+		else
+			return (1);
 	}
 	else
-		return (1);
+		printf("Builtin\n");
 }
