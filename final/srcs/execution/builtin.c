@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 14:52:25 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:51:35 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int	is_builtin(char *str)
 	if(strcmp(str, "env") == 0)
 		return 1;
 	if(strcmp(str, "exit") == 0)
-		return 1;
+		exit(0);
 	return 0;
 }

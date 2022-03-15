@@ -1,0 +1,1 @@
+<< eof cat > f1     ---> cat: ''$'\300\215\375\336\001''V': No such file or directory
