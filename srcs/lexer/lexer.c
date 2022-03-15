@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 15:47:33 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:37:06 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,23 +107,24 @@ static int	add_token(t_lexer *lexer, t_token tkn, char **str)
  * If a word is remaining at the end of the string str, it adds it to the lexer.
  * It also checks the parenthesis counter, if it's not 0, set the error code.*/
 
-static t_lexer	*finish_lexing(t_lexer *lexer, char *str)
+static int	finish_lexing(t_lexer *lexer, char *str)
 {
 	if (lexer->prev != str)
 	{
 		if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
-			return (set_lexer_errcode(lexer, E_MEM));
+			return (ERR_MEM);
 	}
 	if (lexer->prt_cnt != 0)
-		return (set_lexer_errcode(lexer, E_PRT));
-	add_to_lexer(lexer, NULL, 0, T_NULL);
-	return (lexer);
+		return (ERR_PRT);
+	if (!add_to_lexer(lexer, NULL, 0, T_NULL))
+		return (ERR_MEM);
+	return (ERR_NO);
 }
 
 /* fill_lexer_from_str() fill the lexer from a string.
  * It breks the string str into multiple tokens. */
 
-t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
+int fill_lexer_from_str(t_lexer *lexer, char *str)
 {
 	t_token		tkn;
 
@@ -134,17 +135,17 @@ t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str)
 		if ((tkn.type != T_NULL) && str != lexer->prev)
 		{
 			if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
-				return (set_lexer_errcode(lexer, E_MEM));
+				return (ERR_MEM);
 		}
 		if (tkn.type != T_NULL)
 		{
 			if (add_token(lexer, tkn, &str) == -1)
-				return (set_lexer_errcode(lexer, E_MEM));
+				return (ERR_MEM);
 		}
 		else if (*str == SQUOTE || *str == DQUOTE)
 		{
 			if (handle_escaping(&str) == -1)
-				return (set_lexer_errcode(lexer, E_QUOTE));
+				return (ERR_QUOTE);
 		}
 		else
 			str++;

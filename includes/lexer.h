@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 18:03:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:39:00 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 # define STR_OP_PRT           "("
 # define STR_CL_PRT           ")"
 # define STR_SP               " "
+
+# define STR_INVALID_PRT     "invalid parenthesis use"
+# define STR_INVALID_QUOTE   "quote not closed"
+# define STR_LEXICAL_ERR     "lexical error"
 
 # define SQUOTE               '\''
 # define DQUOTE               '"'
@@ -48,10 +52,11 @@ typedef enum e_token_type
 
 typedef enum e_errcode
 {
-	E_MEM,
-	E_QUOTE,
-	E_PRT
-}				t_errcode;
+	ERR_NO,
+	ERR_MEM,
+	ERR_QUOTE,
+	ERR_PRT
+}				t_lexer_errcode;
 
 typedef struct s_token
 {
@@ -63,7 +68,6 @@ typedef struct s_token
 typedef struct s_lexer
 {
 	t_token			*tkns;
-	int				errcode;
 	size_t			size;
 	size_t			idx;
 	unsigned int	prt_cnt;
@@ -81,7 +85,8 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
 void	free_lexer(t_lexer *lexer);
 t_token	search_existing_token(const char *str);
-void	*set_lexer_errcode(t_lexer *lexer, int errcode);
+void	print_parse_exception(const char *errmsg, const char *precision);
+char	*get_lexer_error(int errcode);
 
 /* lexer_post_process.c */
 
@@ -90,7 +95,7 @@ void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
 
 /* lexer.c */
 
-t_lexer	*fill_lexer_from_str(t_lexer *lexer, char *str);
+int	fill_lexer_from_str(t_lexer *lexer, char *str);
 
 /* lexer_post_process.c */
 

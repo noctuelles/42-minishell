@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   complete_command.c                                 :+:      :+:    :+:   */
+/*   simple_command_appendix.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/15 10:28:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:56:58 by plouvel          ###   ########.fr       */
+/*   Created: 2022/03/15 17:23:50 by plouvel           #+#    #+#             */
+/*   Updated: 2022/03/15 17:24:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast.h"
 #include "parser.h"
+#include "ast.h"
 
-t_ast_tree_node	*complete_cmd(t_parser *parser)
+t_ast_tree_node	*simple_cmd5(t_parser *parser)
 {
+	char			*cmd_name;
 	t_ast_tree_node	*rslt;
 
-	rslt = and_or(parser);
-	if (rslt)
-	{
-		if (match(parser, T_NULL, NULL) == FALSE)
-		{
-			if (parser->errcode == NO_ERR)
-				return (quit_production(parser, rslt, NULL,
-						ERR_UNEXCEPTED_EOF));
-			else
-				return (quit_production(parser, rslt, NULL, parser->errcode));
-		}
-	}
+	if (match(parser, T_WORD, &cmd_name) == FALSE)
+		return (quit_production(parser, NULL, NULL, ERR_EXCEPTED_COMMAND));
+	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND_IMMEDIATE);
+	if (!rslt)
+		return (quit_production(parser, NULL, NULL, ERR_MALLOC));
 	return (rslt);
 }

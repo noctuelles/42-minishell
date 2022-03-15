@@ -6,13 +6,14 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/10 18:02:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:38:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "minishell.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 t_token	set_token(t_token *tkn, char *val, size_t len,
 														t_token_type type)
@@ -35,6 +36,7 @@ void	free_lexer(t_lexer *lexer)
 		i++;
 	}
 	free(lexer->tkns);
+	free(lexer);
 }
 
 t_token	search_existing_token(const char *str)
@@ -64,8 +66,24 @@ t_token	search_existing_token(const char *str)
 	return (set_token(&token, NULL, 0, T_NULL));
 }
 
-void	*set_lexer_errcode(t_lexer *lexer, int errcode)
+void	print_parse_exception(const char *errmsg, const char *precision)
 {
-	lexer->errcode = errcode;
-	return (NULL);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(errmsg, STDERR_FILENO);
+	if (precision != NULL)
+	{
+		ft_putstr_fd(": near '", STDERR_FILENO);
+		ft_putstr_fd(precision, STDERR_FILENO);
+		ft_putstr_fd("'", STDERR_FILENO);
+	}
+	ft_putstr_fd(".\n", STDERR_FILENO);
+}
+
+char	*get_lexer_error(int errcode)
+{
+	if (errcode == ERR_PRT)
+		return (STR_INVALID_PRT);
+	else if (errcode == ERR_QUOTE)
+		return (STR_INVALID_QUOTE);
+	return (STR_LEXICAL_ERR);
 }

@@ -1,100 +1,74 @@
-                       /* Minishell grammar */
+                       /* Minishell grammar in Backus-Naur Form*/
 
-<pipeline>			::=		<simple_command> |		<pipeline>		'|'				<simple_command>
+/* Epsilon character ε means end of the token stream. */
 
-<simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
-					  |		<cmd_prefix>	<word>
-					  |		<cmd_prefix>
-					  |		<word>			<cmd_suffix>
-					  |		<word>
+/* For recursive descent parser (no minishell bonus). */
 
-<cmd_prefix>		::=		<io_redirect>
-					  |		<cmd_prefix>	<io_redirect>
+<pipeline>			::=		<simple_command>	'|'			<pipeline>
+					  |		<simple_command>	'ε'
 
-<cmd_suffix>		::=		<io_redirect>
-					  |		<cmd_suffix>	<io_redirect>
-					  |		<word>
-					  |		<cmd_suffix>	<word>
-
-<io_redirect>		::=		'<'				<word>
-					  |		'>'				<word>
-					  |		'>>'			<word>
-					  |		'<<'			<word>
-
-/* For recursive descent parser (no minishell bonus) */
-
-<command>			::=		'('		<simple_command>	')'
-					  |		'('		<compound_command>	')'
-					  |		<simple_command>
-
-<compound_command>	::=		<command>			'||'		<compound_command>
-					  |		<command>			'&&'		<compound_command>
-					  |		<command>			'|'			<compound_command>
-					  |		<command>
-
-<simple_command>	::=		<io_list>	<word>			<cmd_suffix>
-					  |		<io_list>	<word>
+<simple_command>	::=		<io_list>			<word>		<cmd_suffix>
+					  |		<io_list>			<word>
 					  |		<io_list>
-					  |		<word>			<cmd_suffix>
+					  |		<word>				<cmd_suffix>
 					  |		<word>
 
-<io_list>			::=		<io_redirect>	<io_list>
+<io_list>			::=		<io_redirect>		<io_list>
 					  |		<io_redirect>
 
-<cmd_suffix>		::=		<io_list>		<cmd_suffix>
+<cmd_suffix>		::=		<io_list>			<cmd_suffix>
 					  |		<io_list>
-					  |		<word>			<cmd_suffix>
+					  |		<word>				<cmd_suffix>
 					  |		<word>
 
-<io_redirect>		::=		'<'				<word>
-					  |		'>'				<word>
-					  |		'>>'			<word>
-					  |		'<<'			<word>
+<io_redirect>		::=		'<'					<word>
+					  |		'>'					<word>
+					  |		'>>'				<word>
+					  |		'<<'				<word>
 
-/* For recursive descent parser (minishell bonuses) */
+/* For recursive descent parser (minishell bonuses). */
 
-<complete_command>	::=		<and_or>		'epsilon'
+<complete_command>	::=		<and_or>			'ε'
 
-<and_or>			::=		<pipeline>		'&&'		<and_or>
-					  |		<pipeline>		'||'		<and_or>
+<and_or>			::=		<pipeline>			'&&'		<and_or>
+					  |		<pipeline>			'||'		<and_or>
 					  |		<pipeline>
 
 <command>			::=		<simple_command>
 					  |		'('		<and_or>	')'
 
-<pipeline>			::=		<command>	'|'			<pipeline>
+<pipeline>			::=		<command>			'|'			<pipeline>
 					  |		<command>
 
-<simple_command>	::=		<io_list>	<word>			<cmd_suffix>
-					  |		<io_list>	<word>
+<simple_command>	::=		<io_list>			<word>		<cmd_suffix>
+					  |		<io_list>			<word>
 					  |		<io_list>
-					  |		<word>			<cmd_suffix>
+					  |		<word>				<cmd_suffix>
 					  |		<word>
 
-<io_list>			::=		<io_redirect>	<io_list>
+<io_list>			::=		<io_redirect>		<io_list>
 					  |		<io_redirect>
 
-<cmd_suffix>		::=		<io_list>		<cmd_suffix>
+<cmd_suffix>		::=		<io_list>			<cmd_suffix>
 					  |		<io_list>
-					  |		<word>			<cmd_suffix>
+					  |		<word>				<cmd_suffix>
 					  |		<word>
 
-<io_redirect>		::=		'<'				<word>
-					  |		'>'				<word>
-					  |		'>>'			<word>
-					  |		'<<'			<word>
+<io_redirect>		::=		'<'					<word>
+					  |		'>'					<word>
+					  |		'>>'				<word>
+					  |		'<<'				<word>
 
 /* These production are not used in the parser : only here to describe what a word is */
 
 <word>				::=		<letter>
-							<word>					<letter>
+							<word>				<letter>
 
 <letter>			::=		'!'
 					  | '#'
 					  | '$'
 					  | '%'
 					  | '&'
-					  | '*'
 					  | '+'
 					  | ','
 					  | '-'
