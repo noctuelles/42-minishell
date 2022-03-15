@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 14:55:39 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:50:09 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ void	replace_by_path(t_command *command)
 			{
 				path = get_path_from_env(command->name);
 				if (path == NULL)
-					printf("\n%s: command not found\n", command->name);
+					printf("%s: command not found\n", command->name);
 				command->name = path;
 			}
 		}
 		else
 		{
 			if (access(command->name, F_OK) != 0)
-				printf("\nMinishell: %s: %s\n", command->name, strerror(errno));
+				printf("Minishell: %s: %s\n", command->name, strerror(errno));
 		}
 		command = command->next;
 	}

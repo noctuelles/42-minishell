@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:29:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:48:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv, char **envp)
 		//print_tokens(lexer);
 		root = parse(&lexer);
 		//ast_tree_print_graph(root);
-		printf("\e[0m\n");
+		//printf("\e[0m\n");
 
 		if(root != NULL)
 		{

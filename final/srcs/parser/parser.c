@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/12 15:30:36 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/15 15:48:17 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ t_ast_tree_node	*parse(t_lexer *lexer)
 	parser.lex_idx = 0;
 	parser.errcode = NO_ERR;
 	root = PIPELINE(&parser);
-	if (root == NULL)
+	/*if (root == NULL)
 		printf("\x1b[1;31mParsing failed. Near : %s, token  %lu.\n", parser.lexer->tkns[parser.lex_idx - 1].val, parser.lex_idx - 1);
 	else
-		puts("\x1b[1;32mParsing sucess!");
+		puts("\x1b[1;32mParsing sucess!");*/
 	return (root);
 }
