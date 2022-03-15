@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:18:48 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:29:54 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv, char **envp)
 		t_ast_tree_node	*root;
 
 		
-		char *str  = readline("> ");
+		char *str  = readline("PROMPT$ ");
 		if(str == NULL)
 			exit(0);
 			

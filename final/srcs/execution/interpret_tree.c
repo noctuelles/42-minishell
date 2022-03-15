@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:08:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:35:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include <readline/readline.h>
 
 void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 {
@@ -72,6 +73,31 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 			command->error = true;
 		}
 		command->out_name = node->value;
+	}
+	if (node->type == NODE_IO_REDIRECT_HERE_DOC && !command->error)
+	{
+		int pipefd[2];
+		if(pipe(pipefd) < 0)
+		{
+			printf("Pipe error\n");
+			exit(1);
+		}
+		while(1)
+		{
+			char *line = readline("> ");
+			if(line != NULL)
+			{
+				if(strcmp(line, node->value) != 0)
+				{
+					write(pipefd[1], line, strlen(line));
+					write(pipefd[1], "\n", 1);
+				}
+				else
+					break;
+			}
+		}
+		close(pipefd[1]);
+			command->io_in_redirect = pipefd[0];
 	}
 	if (node->left != NULL && !command->error)
 		parse_tree(node->left, command, args);
