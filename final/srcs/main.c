@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/14 19:14:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 14:49:12 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "execution.h"
 
 void	print_tokens(t_lexer lexer)
 {
@@ -46,10 +47,6 @@ void print(t_ast_tree_node *root, int spaces)
 		print(root->right, spaces + 1);
 	}
 }
-
-t_command *parse_commands(t_ast_tree_node *root);
-void replace_by_path(t_command *command);
-int	execute_file(t_command *command, char **envp);
 
 int main(int argc, char **argv, char **envp)
 {
