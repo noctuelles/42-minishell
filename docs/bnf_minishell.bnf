@@ -1,7 +1,6 @@
                        /* Minishell grammar */
 
-<pipeline>			::=		<simple_command>
-					  |		<pipeline>		'|'				<simple_command>
+<pipeline>			::=		<simple_command> |		<pipeline>		'|'				<simple_command>
 
 <simple_command>	::=		<cmd_prefix>	<word>			<cmd_suffix>
 					  |		<cmd_prefix>	<word>
@@ -54,9 +53,11 @@
 
 /* For recursive descent parser (minishell bonuses) */
 
+<complete_command>	::=		<and_or>		'epsilon'
+
 <and_or>			::=		<pipeline>		'&&'		<and_or>
 					  |		<pipeline>		'||'		<and_or>
-					  |		<pipeline>		'ε'
+					  |		<pipeline>
 
 <command>			::=		<simple_command>
 					  |		'('		<and_or>	')'

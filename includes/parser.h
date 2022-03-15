@@ -39,6 +39,8 @@ void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		t_ast_tree_node *right, t_parser_errcode errcode);
 t_ast_tree_node	*parse(t_lexer *lexer);
 
+t_ast_tree_node	*COMPLETE_CMD(t_parser *parser);
+
 t_ast_tree_node	*PIPELINE(t_parser *parser);
 t_ast_tree_node	*PIPELINE1(t_parser *parser);
 t_ast_tree_node	*PIPELINE2(t_parser *parser);

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 14:54:31 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/14 15:05:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:29:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,5 @@ t_ast_tree_node	*AND_OR2(t_parser *parser)
 
 t_ast_tree_node	*AND_OR3(t_parser *parser)
 {
-	return (PIPELINE(parser));
+	return(PIPELINE(parser));
 }
