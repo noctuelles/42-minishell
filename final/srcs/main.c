@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 14:49:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:18:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,40 +50,47 @@ void print(t_ast_tree_node *root, int spaces)
 
 int main(int argc, char **argv, char **envp)
 {
-	t_lexer	lexer = {0};
-	t_ast_tree_node	*root;
+	while(1)
+		{
+		t_lexer	lexer = {0};
+		t_ast_tree_node	*root;
 
-	
-	char *str  = readline("> ");
 		
-	add_history(str);
-	fill_lexer_from_str(&lexer, str);
-	//print_tokens(lexer);
-	root = parse(&lexer);
-	//ast_tree_print_graph(root);
-	printf("\e[0m\n");
+		char *str  = readline("> ");
+		if(str == NULL)
+			exit(0);
+			
+		add_history(str);
+		fill_lexer_from_str(&lexer, str);
+		//print_tokens(lexer);
+		root = parse(&lexer);
+		//ast_tree_print_graph(root);
+		printf("\e[0m\n");
 
-	if(root != NULL)
-	{
-		//print(root, 0);
-		t_command *first = parse_commands(root);
-		replace_by_path(first);
+		if(root != NULL)
+		{
+			int save_stdin = dup(0);
+			//print(root, 0);
+			t_command *first = parse_commands(root);
+			replace_by_path(first);
 
-		int count = 0;
-		while(first != NULL)
-		{
-			execute_file(first, envp);
-			count++;
-			first = first->next;
+			int count = 0;
+			while(first != NULL)
+			{
+				execute_file(first, envp);
+				count++;
+				first = first->next;
+			}
+			int i = -1;
+			int status;
+			while (++i < count)
+			{
+				waitpid(-1, &status, 0);
+				close(0);
+			}
+			free_lexer(&lexer);
+			dup2(save_stdin, 0);
 		}
-		int i = -1;
-		int status;
-		while (++i < count)
-		{
-			waitpid(-1, &status, 0);
-			close(0);
-		}
-		free_lexer(&lexer);
 	}
 	return (0);
 }
