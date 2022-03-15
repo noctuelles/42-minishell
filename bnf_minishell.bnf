@@ -24,6 +24,18 @@
 
 /* For recursive descent parser (no minishell bonus) */
 
+
+
+
+
+
+
+
+
+
+
+
+
 <pipeline>			::=		<simple_command>	'|'			<pipeline>
 					  |		<simple_command>	'ε'
 
@@ -47,6 +59,27 @@
 					  |		'>'				<word>
 					  |		'>>'			<word>
 					  |		'<<'			<word>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* For recursive descent parser (minishell bonuses) */
 
