@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:59:05 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 11:00:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,7 @@ void	ast_tree_delete_node(t_ast_tree_node *node)
 		ast_tree_delete_node(node->left);
 	if (node->right != NULL)
 		ast_tree_delete_node(node->right);
+	if (node->value != NULL)
+		free(node->value);
 	free(node);
 }

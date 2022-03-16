@@ -6,18 +6,18 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 16:38:20 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:51:36 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 14:51:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "parser.h"
+#include <stdlib.h>
 
 t_ast_tree_node	*cmd_suffix(t_parser *parser)
 {
 	t_ast_tree_node	*node;
 	size_t			save;
-
 	save = parser->lex_idx;
 	if (call_production(parser, &cmd_suffix1, &node, save) != NULL)
 		return (node);
@@ -61,7 +61,10 @@ t_ast_tree_node	*cmd_suffix3(t_parser *parser)
 	if (match(parser, T_WORD, &arg) == FALSE)
 		return (NULL);
 	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
+	{
+		free(arg);
 		return (NULL);
+	}
 	rslt = ast_tree_create_node(arg, NODE_COMMAND_SUFFIX);
 	if (!rslt)
 		return (quit_production(parser, node_cmd_suffix, NULL, ERR_MALLOC));

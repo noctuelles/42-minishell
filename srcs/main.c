@@ -47,5 +47,7 @@ int main(int argc, char **argv)
 	root = parse_from_lexer(lexer);
 	(void) root;
 	free_lexer(lexer);
+	if (root)
+		ast_tree_delete_node(root);
 	return (0);
 }

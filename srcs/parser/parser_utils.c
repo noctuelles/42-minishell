@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:16:55 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 10:02:35 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 	if (parser->lexer->tkns[parser->lex_idx].type == type)
 	{
 		if (value != NULL)
-				*value = parser->lexer->tkns[parser->lex_idx].val;
+		{
+				*value = ft_strdup(parser->lexer->tkns[parser->lex_idx].val);
+				if (!(*value))
+				{
+					parser->errcode = ERR_MALLOC;
+					return (FALSE);
+				}
+		}
 		parser->lex_idx += 1;
 		return (TRUE);
 	}
@@ -54,7 +61,7 @@ void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		ast_tree_delete_node(left);
 	if (right != NULL)
 		ast_tree_delete_node(right);
-	if (errcode != NO_ERR)
+	if (errcode != NO_ERR && parser->errcode != ERR_MALLOC)
 		parser->errcode = errcode;
 	return (NULL);
 }

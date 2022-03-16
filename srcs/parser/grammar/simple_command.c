@@ -6,12 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:49:52 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 15:04:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "ast.h"
+#include <stdlib.h>
 
 t_ast_tree_node	*simple_cmd(t_parser *parser)
 {
@@ -84,7 +85,10 @@ t_ast_tree_node	*simple_cmd4(t_parser *parser)
 	if (match(parser, T_WORD, &cmd_name) == FALSE)
 		return (quit_production(parser, NULL, NULL, ERR_EXCEPTED_COMMAND));
 	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
+	{
+		free(cmd_name);
 		return (NULL);
+	}
 	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
 	if (!rslt)
 		return (quit_production(parser, node_cmd_suffix, NULL, ERR_MALLOC));
