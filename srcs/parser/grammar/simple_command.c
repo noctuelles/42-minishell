@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/16 15:04:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 18:40:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ t_ast_tree_node	*simple_cmd1(t_parser *parser)
 	if (match(parser, T_WORD, &cmd_name) == FALSE)
 		return (quit_production(parser, node_io_list, NULL, NO_ERR));
 	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
+	{
+		free(cmd_name);
 		return (quit_production(parser, node_io_list, NULL, NO_ERR));
+	}
 	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
 	if (!rslt)
 		return (quit_production(parser, node_io_list, node_cmd_suffix,

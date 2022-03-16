@@ -47,7 +47,7 @@ char	*get_parse_error(t_parser_errcode errcode);
 
 /* parser.c */
 
-t_ast_tree_node	*parse_from_lexer(t_lexer *lexer);
+t_ast_tree_node	*parse(char *str);
 
 /* Prototype for each production rules : */
 
