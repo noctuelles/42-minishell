@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 14:08:34 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 17:21:05 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 			perror("cd: get working directory error");
 			return 1;
 		}
-		get_var(env, "OLD_PWD")->value = old_pwd;
+		if(get_var(env, "OLDPWD") != NULL)
+			get_var(env, "OLDPWD")->value = old_pwd;
+		else
+			import_one_var(&env, strcat(strdup("OLDPWD="), old_pwd));
 		get_var(env, "PWD")->value = pwd;
 		return 0;
 	}

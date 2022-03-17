@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 16:08:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 17:15:39 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int main(int argc, char **argv, char **envp)
 			int save_stdin = dup(0);
 			//print(root, 0);
 			t_command *first = parse_commands(root, vars);
-			printf("%p\n", first);
 			int forking = 1;
 			if(first->next == NULL && is_builtin(first->name))
 				forking = 0;

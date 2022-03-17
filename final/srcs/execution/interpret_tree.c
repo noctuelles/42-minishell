@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 16:08:37 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 17:13:00 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped)
 	}
 	command->args[i] = NULL;
 	command->next = NULL;
+	return (command);
 }
 
 void	add_command(t_command *cmd, t_command **lst)
@@ -169,7 +170,6 @@ t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false);
-		printf("%p\n", first);
 	}
 	else
 	{
