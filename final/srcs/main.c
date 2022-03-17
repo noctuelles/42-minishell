@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:48:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 16:08:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "execution.h"
+#include "minishell.h"
 
 void	print_tokens(t_lexer lexer)
 {
@@ -50,6 +51,10 @@ void print(t_ast_tree_node *root, int spaces)
 
 int main(int argc, char **argv, char **envp)
 {
+	t_dlist *vars = NULL;
+	
+	vars = import_var(&vars, envp);
+	
 	while(1)
 		{
 		t_lexer	lexer = {0};
@@ -71,13 +76,16 @@ int main(int argc, char **argv, char **envp)
 		{
 			int save_stdin = dup(0);
 			//print(root, 0);
-			t_command *first = parse_commands(root);
-			replace_by_path(first);
-
+			t_command *first = parse_commands(root, vars);
+			printf("%p\n", first);
+			int forking = 1;
+			if(first->next == NULL && is_builtin(first->name))
+				forking = 0;
+			replace_by_path(first, vars);
 			int count = 0;
 			while(first != NULL)
 			{
-				execute_file(first, envp);
+				execute_file(first, envp, vars, forking);
 				count++;
 				first = first->next;
 			}

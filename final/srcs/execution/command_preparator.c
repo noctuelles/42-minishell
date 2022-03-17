@@ -6,15 +6,16 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 16:01:04 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 16:01:13 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "minishell.h"
 
-char	*get_path_from_env(char *command_name)
+char	*get_path_from_env(char *command_name, t_dlist *vars)
 {
-	char	*path = strdup("/usr/sbin:/usr/bin");
+	char	*path = strdup(get_var(vars, "PATH")->value);
 	int		found;
 	char	*exec_path;
 
@@ -44,7 +45,7 @@ char	*get_path_from_env(char *command_name)
 	return (exec_path);
 }
 
-void	replace_by_path(t_command *command)
+void	replace_by_path(t_command *command, t_dlist *vars)
 {
 	char	*path;
 
@@ -55,7 +56,7 @@ void	replace_by_path(t_command *command)
 		{
 			if (!is_builtin(command->name))
 			{
-				path = get_path_from_env(command->name);
+				path = get_path_from_env(command->name, vars);
 				if (path == NULL)
 					printf("Minishell: %s: command not found\n", command->name);
 				command->name = path;
@@ -85,5 +86,6 @@ void	add_command_to_args(t_command *command)
 	i = -1;
 	while (++i < length)
 		command->args[i + 1] = args[i];
+	command->args[i + 1] = NULL;
 	free(args);
 }

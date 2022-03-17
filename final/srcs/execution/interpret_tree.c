@@ -6,12 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/15 15:35:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/17 16:08:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include <readline/readline.h>
+#include "minishell.h"
 
 void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 {
@@ -160,13 +161,16 @@ void	add_command(t_command *cmd, t_command **lst)
 	}
 }
 
-t_command	*parse_commands(t_ast_tree_node *root)
+t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 {
 	t_command	*first;
 
 	first = NULL;
 	if (root->type == NODE_COMMAND)
+	{
 		first = parse_command(root, false);
+		printf("%p\n", first);
+	}
 	else
 	{
 		while (root->type == NODE_PIPE)

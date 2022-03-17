@@ -105,6 +105,45 @@ t_dlist	*import_var(t_dlist **lst_var, char **envp)
 	return (*lst_var);
 }
 
+t_dlist	*import_one_var(t_dlist **lst_var, char *value)
+{
+	size_t	j;
+	t_var	var;
+
+
+		j = 0;
+		while (value[j] != '\0')
+		{
+			if (value[j] == '=')
+			{
+				var.name = &value[0];
+				var.value = &value[j + 1];
+				value[j] = '\0';
+			}
+			j++;
+		}
+		var.inherit = TRUE;
+		if (!add_var(lst_var, var))
+			return (NULL);
+	
+	return (*lst_var);
+}
+
+t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
+{
+	size_t	j;
+	t_var	var;
+
+
+	var.name = name;
+	var.value = strdup("");
+	var.inherit = TRUE;
+	if (!add_var(lst_var, var))
+		return (NULL);
+	
+	return (*lst_var);
+}
+
 /* get_var() returns a pointer to a shell variable, searching by it's name.
  * If the variable doesn't exist, the function return NULL. */
 
