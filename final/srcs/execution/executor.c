@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 15:17:52 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:16:09 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ int exec_builtin(char *str, char **argv, t_dlist *env);
 
 int	execute_file(t_command *command, char **envp, t_dlist *vars, int forking)
 {
+	(void)envp;
 	pid_t	pid;
 	int		pipefd[2];
-	int		wait_status;
 
 	add_command_to_args(command);
 	if(forking)
@@ -99,6 +99,7 @@ int	execute_file(t_command *command, char **envp, t_dlist *vars, int forking)
 					execve(command->name, command->args, export_env(vars));
 					perror("Execution error");
 					close_all_error(command, errno);
+					return (1);
 				}
 				else
 				{

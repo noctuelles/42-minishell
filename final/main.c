@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 17:15:39 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:16:54 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void print(t_ast_tree_node *root, int spaces)
 
 int main(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
 	t_dlist *vars = NULL;
 	
 	vars = import_var(&vars, envp);
@@ -60,8 +62,29 @@ int main(int argc, char **argv, char **envp)
 		t_lexer	lexer = {0};
 		t_ast_tree_node	*root;
 
-		
-		char *str  = readline("PROMPT$ ");
+
+		char *USER = get_var(vars, "USER")->value;
+		if(!USER)
+		{
+			printf("USER variable not found\n");
+			return 1;
+		}
+		char *PWD = get_var(vars, "PWD")->value;
+		if(!PWD)
+		{
+			printf("PWD variable not found\n");
+			return 1;
+		}
+
+		char *prompt = malloc(sizeof(char) * (ft_strlen(USER) + ft_strlen(PWD) + 6));
+		prompt[0] = '\0';
+		strcat(prompt, USER);
+		strcat(prompt, "@");
+		strcat(prompt, PWD);
+		strcat(prompt, " > ");
+
+		char *str = readline(prompt);
+		free(prompt);
 		if(str == NULL)
 			exit(0);
 			

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 14:27:53 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:14:58 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 int	ft_export(int argc, char **argv, t_dlist *env)
 {
 	int	i;
-	t_var	var;
 
 	if(argc < 2)
 	{

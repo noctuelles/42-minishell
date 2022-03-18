@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_dlstadd_back.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 00:46:30 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:48:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/17 13:41:17 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
+#include <stdio.h>
 void	ft_dlstadd_back(t_dlist **dlst, t_dlist *new)
 {
 	t_dlist	*elem;
@@ -19,7 +19,9 @@ void	ft_dlstadd_back(t_dlist **dlst, t_dlist *new)
 	if (!dlst)
 		return ;
 	if (!*dlst)
+	{
 		*dlst = new;
+	}
 	else
 	{
 		elem = *dlst;

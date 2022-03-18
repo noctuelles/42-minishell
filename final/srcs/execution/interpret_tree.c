@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 17:13:00 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:16:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void	add_command(t_command *cmd, t_command **lst)
 
 t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 {
+	(void)vars;
 	t_command	*first;
 
 	first = NULL;

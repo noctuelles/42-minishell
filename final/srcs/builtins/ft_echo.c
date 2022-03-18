@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:17:43 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 14:14:58 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:14:25 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 int	ft_echo(int argc, char **argv, t_dlist *env)
 {
+	(void) env;
 	int	is_option;
 	int	i;
 

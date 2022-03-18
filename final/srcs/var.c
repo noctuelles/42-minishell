@@ -131,7 +131,6 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
 {
-	size_t	j;
 	t_var	var;
 
 

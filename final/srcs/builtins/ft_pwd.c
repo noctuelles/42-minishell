@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 14:19:13 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 14:28:09 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/18 12:15:21 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,8 @@
 
 int	ft_pwd(int argc, char **argv, t_dlist *env)
 {
+	(void)argc;
+	(void)argv;
 	printf("%s\n", get_var(env, "PWD")->value);
+	return 0;
 }

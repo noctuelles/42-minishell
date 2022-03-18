@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/04 17:35:02 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/17 14:30:28 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include "libft.h"
+# include <string.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 /* struct s_var:
  *
@@ -64,5 +70,8 @@ t_var	*update_var(t_dlist *lst_var, char *name, t_var to_update);
 /* env.c */
 
 char	**export_env(t_dlist *lst);
+
+t_dlist	*import_one_var(t_dlist **lst_var, char *value);
+t_dlist	*import_empty_var(t_dlist **lst_var, char *name);
 
 #endif
