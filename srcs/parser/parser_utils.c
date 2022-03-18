@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/16 10:02:35 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 18:48:35 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,4 @@ void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 	if (errcode != NO_ERR && parser->errcode != ERR_MALLOC)
 		parser->errcode = errcode;
 	return (NULL);
-}
-
-char	*get_parse_error(t_parser_errcode errcode)
-{
-	if (errcode == ERR_UNEXCEPTED_IO_TOKEN)
-		return ("excepted filename for redirection");
-	else if (errcode == ERR_UNEXCEPTED_IO_HEREDOC_TOKEN)
-		return ("excepted here-doc delimiter");
-	else if (errcode == ERR_UNEXCEPTED_EOF)
-		return ("unexcepted end-of-file or token");
-	else if (errcode == ERR_EXCEPTED_COMMAND)
-		return ("excepted command");
-	else
-		return ("syntax error");
 }

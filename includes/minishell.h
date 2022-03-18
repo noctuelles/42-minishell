@@ -6,12 +6,21 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/04 17:35:02 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 20:01:04 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
 
 # include "libft.h"
+# include "lexer.h"
+# include "parser.h"
+
+# define SHELL_NAME             "minishell"
+
+# define STR_PARSE_ERROR        SHELL_NAME ": %s: near token '%s'.\n"
+# define STR_ERROR              SHELL_NAME ": %s.\n"
+# define STR_ERROR_M            SHELL_NAME ": %s: %s.\n"
+# define STR_MALLOC             "malloc"
 
 /* struct s_var:
  *
@@ -64,5 +73,11 @@ t_var	*update_var(t_dlist *lst_var, char *name, t_var to_update);
 /* env.c */
 
 char	**export_env(t_dlist *lst);
+
+/* io_utils.c */
+
+void	print_minishell_exception(const char *submsg, const char *msg);
+char	*get_parser_error(t_parser_errcode errcode);
+char	*get_lexer_error(t_lexer_errcode errcode);
 
 #endif

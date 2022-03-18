@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 16:39:00 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 18:46:44 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
 void	free_lexer(t_lexer *lexer);
 t_token	search_existing_token(const char *str);
-void	print_parse_exception(const char *errmsg, const char *precision);
-char	*get_lexer_error(int errcode);
 
 /* lexer_post_process.c */
 
