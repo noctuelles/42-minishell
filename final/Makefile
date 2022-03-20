@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/03/18 12:18:12 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/03/20 13:20:28 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -136,7 +136,7 @@ endif
 ifeq (noflag, $(filter noflag,$(MAKECMDGOALS)))
 	CFLAGS	+=	-Wall -Wextra
 else
-	CFLAGS	+=	-Wall -Wextra -Werror
+	CFLAGS	+=	-Wall -Wextra -Werror -g3
 endif
 ifeq (debug, $(filter debug,$(MAKECMDGOALS)))
 	CFLAGS	+=	-g3

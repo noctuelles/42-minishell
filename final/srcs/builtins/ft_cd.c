@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 17:21:05 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/20 13:23:09 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 			get_var(env, "OLDPWD")->value = old_pwd;
 		else
 			import_one_var(&env, strcat(strdup("OLDPWD="), old_pwd));
-		get_var(env, "PWD")->value = pwd;
+		get_var(env, "OLDPWD")->value_len = strlen(old_pwd);
+		if(get_var(env, "PWD") != NULL)
+			get_var(env, "PWD")->value = pwd;
+		else
+			import_one_var(&env, strcat(strdup("PWD="), pwd));
+		get_var(env, "PWD")->value_len = strlen(pwd);
 		return 0;
 	}
 	perror("");
