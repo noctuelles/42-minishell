@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/18 12:16:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/21 21:32:41 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 {
 	t_args	*elem;
 
-	if (node->type == NODE_COMMAND_SUFFIX && !command->error)
+	if (node->type == NODE_COMMAND_SUFFIX && node->value != NULL && !command->error)
 	{
 		if (*args == NULL)
 		{

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/18 12:40:26 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/21 18:50:12 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,31 +84,30 @@ int	execute_file(t_command *command, char **envp, t_dlist *vars, int forking)
 	add_command_to_args(command);
 	if(forking)
 	{
-		
-			if (command->is_piped && pipe(pipefd) < 0)
-				return (-1);
-			pid = fork();
-			if (pid == -1)
-				return (-1);
-			dup_for_pipe(command, pid, pipefd);
-			dup_for_redirections(command, pid);
-			if (pid == 0 && command->name != NULL)
+		if (command->is_piped && pipe(pipefd) < 0)
+			return (-1);
+		pid = fork();
+		if (pid == -1)
+			return (-1);
+		dup_for_pipe(command, pid, pipefd);
+		dup_for_redirections(command, pid);
+		if (pid == 0 && command->name != NULL)
+		{
+			if(!is_builtin(command->original_name))
 			{
-				if(!is_builtin(command->original_name))
-				{
-					execve(command->name, command->args, export_env(vars));
-					perror("Execution error");
-					close_all_error(command, errno);
-					return (1);
-				}
-				else
-				{
-					exec_builtin(command->name, command->args, vars);
-					exit(0);
-				}
+				execve(command->name, command->args, export_env(vars));
+				perror("Execution error");
+				close_all_error(command, errno);
+				return (1);
 			}
 			else
-				return (1);
+			{
+				exec_builtin(command->name, command->args, vars);
+				exit(0);
+			}
+		}
+		else
+			return (1);
 	}
 	else
 		return(exec_builtin(command->name, command->args, vars));
