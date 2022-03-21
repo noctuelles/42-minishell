@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 16:38:52 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/16 18:30:35 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,19 +64,6 @@ t_token	search_existing_token(const char *str)
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));
-}
-
-void	print_parse_exception(const char *errmsg, const char *precision)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(errmsg, STDERR_FILENO);
-	if (precision != NULL)
-	{
-		ft_putstr_fd(": near '", STDERR_FILENO);
-		ft_putstr_fd(precision, STDERR_FILENO);
-		ft_putstr_fd("'", STDERR_FILENO);
-	}
-	ft_putstr_fd(".\n", STDERR_FILENO);
 }
 
 char	*get_lexer_error(int errcode)
