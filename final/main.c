@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/18 12:16:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/21 18:11:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,77 @@ void print(t_ast_tree_node *root, int spaces)
 	}
 }
 
+void treat_result(int pid, int wait_status, int *pipeline_result)
+{
+	if(WIFEXITED(wait_status))
+	{
+		*pipeline_result = WEXITSTATUS(wait_status);
+	}
+	else if(WIFSIGNALED(wait_status))
+	{
+		fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
+		*pipeline_result = 128 + WTERMSIG(wait_status);
+	}
+}
+
+int	execute_pipeline(t_ast_tree_node *root, t_dlist *env, char **envp)
+{
+	int save_stdin = dup(0);
+	t_command *first = parse_commands(root, env);
+	int forking = 1;
+	if(first->next == NULL && is_builtin(first->name))
+		forking = 0;
+	replace_by_path(first, env);
+	int count = 0;
+	while(first != NULL)
+	{
+		execute_file(first, envp, env, forking);
+		count++;
+		first = first->next;
+	}
+	int pipeline_result = 0;
+	if(forking)
+	{
+		int i = -1;
+		int status;
+		while (++i < count)
+		{
+			int pid = waitpid(-1, &status, 0);
+			close(0);
+			treat_result(pid, status, &pipeline_result);
+		}
+	}
+	dup2(save_stdin, 0);
+	return pipeline_result;
+}
+
+char *prompt_and_read(t_dlist *vars)
+{
+	char *USER = get_var(vars, "USER")->value;
+	if(!USER)
+	{
+		printf("USER variable not found\n");
+		return NULL;
+	}
+	char *PWD = get_var(vars, "PWD")->value;
+	if(!PWD)
+	{
+		printf("PWD variable not found\n");
+		return NULL;
+	}
+	char *prompt = malloc(sizeof(char) * (ft_strlen(USER) + ft_strlen(PWD) + 6));
+	if(!prompt)
+		return NULL;
+	prompt[0] = '\0';
+	strcat(prompt, USER);
+	strcat(prompt, "@");
+	strcat(prompt, PWD);
+	strcat(prompt, " > ");
+	char *str = readline(prompt);
+	free(prompt);
+	return str;
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -58,68 +129,20 @@ int main(int argc, char **argv, char **envp)
 	vars = import_var(&vars, envp);
 	
 	while(1)
-		{
+	{
 		t_lexer	lexer = {0};
 		t_ast_tree_node	*root;
-
-
-		char *USER = get_var(vars, "USER")->value;
-		if(!USER)
-		{
-			printf("USER variable not found\n");
-			return 1;
-		}
-		char *PWD = get_var(vars, "PWD")->value;
-		if(!PWD)
-		{
-			printf("PWD variable not found\n");
-			return 1;
-		}
-
-		char *prompt = malloc(sizeof(char) * (ft_strlen(USER) + ft_strlen(PWD) + 6));
-		prompt[0] = '\0';
-		strcat(prompt, USER);
-		strcat(prompt, "@");
-		strcat(prompt, PWD);
-		strcat(prompt, " > ");
-
-		char *str = readline(prompt);
-		free(prompt);
+		char *str = prompt_and_read(vars);
 		if(str == NULL)
 			exit(0);
 			
 		add_history(str);
 		fill_lexer_from_str(&lexer, str);
-		//print_tokens(lexer);
 		root = parse(&lexer);
-		//ast_tree_print_graph(root);
-		//printf("\e[0m\n");
-
 		if(root != NULL)
 		{
-			int save_stdin = dup(0);
-			//print(root, 0);
-			t_command *first = parse_commands(root, vars);
-			int forking = 1;
-			if(first->next == NULL && is_builtin(first->name))
-				forking = 0;
-			replace_by_path(first, vars);
-			int count = 0;
-			while(first != NULL)
-			{
-				execute_file(first, envp, vars, forking);
-				count++;
-				first = first->next;
-			}
-			int i = -1;
-			int status;
-			while (++i < count)
-			{
-				waitpid(-1, &status, 0);
-				close(0);
-			}
+			execute_pipeline(root, vars, envp);
 			free_lexer(&lexer);
-			dup2(save_stdin, 0);
 		}
 	}
 	return (0);

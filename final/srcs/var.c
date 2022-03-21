@@ -121,7 +121,7 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 		}
 		j++;
 	}
-	var.inherit = TRUE;
+	var.inherit = FALSE;
 	if(get_var(*lst_var, var.name) == NULL)
 	{
 		if (!add_var(lst_var, var))
@@ -142,7 +142,7 @@ t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
 
 	var.name = name;
 	var.value = strdup("");
-	var.inherit = TRUE;
+	var.inherit = FALSE;
 	if (!add_var(lst_var, var))
 		return (NULL);
 	
