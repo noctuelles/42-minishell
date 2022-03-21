@@ -110,22 +110,28 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 	size_t	j;
 	t_var	var;
 
-
-		j = 0;
-		while (value[j] != '\0')
+	j = 0;
+	while (value[j] != '\0')
+	{
+		if (value[j] == '=')
 		{
-			if (value[j] == '=')
-			{
-				var.name = &value[0];
-				var.value = &value[j + 1];
-				value[j] = '\0';
-			}
-			j++;
+			var.name = &value[0];
+			var.value = &value[j + 1];
+			value[j] = '\0';
 		}
-		var.inherit = TRUE;
+		j++;
+	}
+	var.inherit = TRUE;
+	if(get_var(*lst_var, var.name) == NULL)
+	{
 		if (!add_var(lst_var, var))
 			return (NULL);
-	
+	}
+	else
+	{
+		get_var(*lst_var, var.name)->value = var.value;
+		get_var(*lst_var, var.name)->value_len = strlen(var.value);
+	}
 	return (*lst_var);
 }
 

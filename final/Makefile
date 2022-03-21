@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/03/20 13:20:28 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/03/21 11:53:42 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -245,15 +245,8 @@ $(OBJS_PATH)/%.o:	%$(SRCS_EXTENSION)
 			@$(call draw_bar)
 
 $(LIBFT_COMPLETE):
-ifeq ($(IS_LIBFT),true)
-			@make -C $(LIBFT_DIR) all
-			@echo "$(GREEN)Compiled libft !$(NO_COLOR)"
-endif
-$(MLX_COMPLETE):
-ifeq ($(IS_MLX),true)
-			@make -C $(MLX_DIR) all
-			@echo "$(GREEN)Compiled MLX !$(NO_COLOR)"
-endif
+		@make -C $(LIBFT_DIR) all
+		@echo "$(GREEN)Compiled libft !$(NO_COLOR)"
 			
 #Link
 -include $(OBJS_DEPEND) $(OBJ_MAIN_DEPEND)
