@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/21 21:31:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/22 14:49:18 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env, char **envp)
 
 char *prompt_and_read(t_dlist *vars)
 {
+	if(get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
+		return (readline("Minishell > "));
 	char *USER = get_var(vars, "USER")->value;
 	if(!USER)
 	{
@@ -121,6 +123,25 @@ char *prompt_and_read(t_dlist *vars)
 	return str;
 }
 
+void refill_env(t_dlist **env)
+{
+	if(get_var(*env, "PWD") == NULL)
+	{
+		char *pwd = calloc(sizeof(char), 1000);
+		pwd = getcwd(pwd, 1000);
+		if(!pwd)
+		{
+			perror("get working directory error");
+			return ;
+		}
+		t_var	var;
+		var.name = "PWD";
+		var.value = pwd;
+		var.inherit = FALSE;
+		add_var(env, var);
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -128,19 +149,18 @@ int main(int argc, char **argv, char **envp)
 	t_dlist *vars = NULL;
 	
 	vars = import_var(&vars, envp);
-	
-	while(1)
+	while (1)
 	{
 		t_lexer	lexer = {0};
 		t_ast_tree_node	*root;
 		char *str = prompt_and_read(vars);
-		if(str == NULL)
+		if (str == NULL)
 			exit(0);
-			
 		add_history(str);
 		fill_lexer_from_str(&lexer, str);
 		root = parse(&lexer);
-		if(root != NULL)
+		refill_env(&vars);
+		if (root != NULL)
 		{
 			execute_pipeline(root, vars, envp);
 			free_lexer(&lexer);

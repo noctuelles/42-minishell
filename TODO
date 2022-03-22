@@ -1,0 +1,4 @@
+Export sans arguments
+Non existence de variables dans env
+Remontée résultat pipeline
+Vérifier si les waitpid sont bons

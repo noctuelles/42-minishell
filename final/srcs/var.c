@@ -25,9 +25,9 @@ t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 		free(var);
 		return (NULL);
 	}
-	var->name = add_var.name;
+	var->name = strdup(add_var.name);
 	var->name_len = ft_strlen(add_var.name);
-	var->value = add_var.value;
+	var->value = strdup(add_var.value);
 	var->value_len = ft_strlen(add_var.value);
 	var->inherit = add_var.inherit;
 	elem->content = (void *) var;
@@ -141,7 +141,7 @@ t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
 
 
 	var.name = name;
-	var.value = strdup("");
+	var.value = "";
 	var.inherit = FALSE;
 	if (!add_var(lst_var, var))
 		return (NULL);
