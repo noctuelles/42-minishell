@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/22 14:49:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/22 15:32:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env, char **envp)
 		}
 	}
 	dup2(save_stdin, 0);
+	close(save_stdin);
 	return pipeline_result;
 }
 
@@ -99,17 +100,7 @@ char *prompt_and_read(t_dlist *vars)
 	if(get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
 		return (readline("Minishell > "));
 	char *USER = get_var(vars, "USER")->value;
-	if(!USER)
-	{
-		printf("USER variable not found\n");
-		return NULL;
-	}
 	char *PWD = get_var(vars, "PWD")->value;
-	if(!PWD)
-	{
-		printf("PWD variable not found\n");
-		return NULL;
-	}
 	char *prompt = malloc(sizeof(char) * (ft_strlen(USER) + ft_strlen(PWD) + 6));
 	if(!prompt)
 		return NULL;
