@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 16:37:06 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/23 14:09:25 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 		if (!str)
 		{
 			free_tkns(lexer->tkns, lexer->idx);
-			return (NULL); }
+			return (NULL);
+		}
 	}
 	else
 		str = val;

@@ -6,11 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/18 20:01:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/23 17:04:42 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
 
+# include <sys/types.h>
+# include <stdbool.h>
 # include "libft.h"
 # include "lexer.h"
 # include "parser.h"
@@ -21,6 +23,11 @@
 # define STR_ERROR              SHELL_NAME ": %s.\n"
 # define STR_ERROR_M            SHELL_NAME ": %s: %s.\n"
 # define STR_MALLOC             "malloc"
+# define STR_OPENDIR            "opendir"
+# define STR_READDIR            "readdir"
+# define CURRENT_DIR            "."
+
+# define ENO                    0
 
 /* struct s_var:
  *
@@ -79,5 +86,31 @@ char	**export_env(t_dlist *lst);
 void	print_minishell_exception(const char *submsg, const char *msg);
 char	*get_parser_error(t_parser_errcode errcode);
 char	*get_lexer_error(t_lexer_errcode errcode);
+
+/*******************************************************************************
+ *                              Expansion files                                *
+ ******************************************************************************/
+
+/* wildcard_expansion.c */
+
+char	*wildcard_expansion(t_token *tkn);
+
+/* wildcard_expansion_utils.c */
+
+int	add_file_to_list(t_dlist **files, char *filename, char *pattern,
+		unsigned char d_type, t_token *tkn);
+void	ascii_sort_list(t_dlist *files);
+size_t	compute_str_size(t_dlist *files);
+
+/* var_expansion.c */
+
+t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
+
+/* var_expansion_utils.c */
+
+bool	is_an_expanded_quote(t_token *tkn, size_t i_quote);
+t_var	get_var_info(char *str, t_dlist *env_var);
+ssize_t	include_variable(t_token *tkn, char **str, t_var var);
+bool	is_an_expanded_quote(t_token *tkn, size_t i_quote);
 
 #endif

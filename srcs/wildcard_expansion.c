@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/21 18:19:06 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/23 17:08:13 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*list_to_string(t_dlist *files)
 	return (str);
 }
 
-static int	scan_current_directory(char **str, char *pattern)
+static int	scan_current_directory(t_token *tkn, char **str, char *pattern)
 {
 	DIR				*dir_stream;
 	struct dirent	*dir_ent;
@@ -76,7 +76,7 @@ static int	scan_current_directory(char **str, char *pattern)
 		if (!dir_ent)
 			break ;
 		if (add_file_to_list(&files,
-					dir_ent->d_name, pattern, dir_ent->d_type) == -1)
+					dir_ent->d_name, pattern, dir_ent->d_type, tkn) == -1)
 				break ;
 	}
 	if (dir_stream && errno != ENO)
@@ -93,11 +93,11 @@ static int	scan_current_directory(char **str, char *pattern)
  * NULL.
  * This string contains each filename separated by space by ascii order. */
 
-char	*wildcard_expansion(char *pattern)
+char	*wildcard_expansion(t_token *tkn)
 {
 	char *str;
 
 	str = NULL;
-	scan_current_directory(&str, pattern);
+	scan_current_directory(tkn, &str, tkn->val);
 	return (str);
 }
