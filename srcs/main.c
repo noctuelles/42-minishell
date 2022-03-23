@@ -17,11 +17,11 @@ void	print_tokens(t_lexer lexer)
 		if (lexer.tkns[i].quote_list)
 		{
 			printf("\nQuote imported from expansion :\n");
-			while (lexer.tkns[i].quote_list)
+			/*while (lexer.tkns[i].quote_list)
 			{
 				printf("At position : %lu\n", *(size_t*)lexer.tkns[i].quote_list->content);
 				lexer.tkns[i].quote_list = lexer.tkns[i].quote_list->next;
-			}
+			}*/
 			puts("");
 		}
 	}
@@ -62,7 +62,7 @@ int main(int argc, char **argv, char **envp)
 		if (tkn->val)
 			puts(tkn->val);
 		else
-			puts("no matche");
+			puts("no matche.");
 	}
 	ft_dlstclear(&lst, free_var);
 	return (0);

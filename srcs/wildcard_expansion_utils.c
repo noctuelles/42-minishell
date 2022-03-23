@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 17:04:11 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/23 23:05:30 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,33 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	size_t	j;
 	bool	inhibit_wildcard;
 	char	quote;
+	size_t	nbr;
 
 	i = 0;
 	j = 0;
+	nbr = 0;
 	inhibit_wildcard = false;
 	quote = 0;
 	while (pattern[j] != '\0')
 	{
 		if (!inhibit_wildcard && pattern[j] == '*')
 			break ;
-		if (pattern[j] == SQUOTE || pattern[j] == DQUOTE)
+		if (pattern[j] == '\'' || pattern[j] == '"')
 		{
-			if (inhibit_wildcard && quote == pattern[j])
+			if (inhibit_wildcard && pattern[j] == quote)
 			{
-				quote = 0;
 				inhibit_wildcard = false;
+				quote = 0;
 				j++;
+				nbr++;
 				continue;
 			}
-			else if (!inhibit_wildcard && is_an_expanded_quote(tkn, j) == false)
+			if (!inhibit_wildcard && !is_an_expanded_quote(tkn->quote_list, j))
 			{
 				inhibit_wildcard = true;
 				quote = pattern[j++];
-				continue ;
+				nbr++;
+				continue;
 			}
 		}
 		if (filename[i++] != pattern[j++])

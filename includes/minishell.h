@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 17:04:42 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/23 23:05:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -108,9 +108,8 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
 
 /* var_expansion_utils.c */
 
-bool	is_an_expanded_quote(t_token *tkn, size_t i_quote);
 t_var	get_var_info(char *str, t_dlist *env_var);
 ssize_t	include_variable(t_token *tkn, char **str, t_var var);
-bool	is_an_expanded_quote(t_token *tkn, size_t i_quote);
+bool	is_an_expanded_quote(t_list *quote_list, size_t i_quote);
 
 #endif
