@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/06 14:57:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/22 22:15:39 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,30 +89,33 @@ static char	*perform_expansion(t_dlist *lst_var, char *str, size_t *i)
 	return (include_var(str, var, var_name_len, i));
 }
 
-char	*expand_tkn(t_dlist *lst_var, char *str)
+/*
+ *
+ */
+
+char	*var_expansion(char *str, t_dlist *env_var)
 {
 	size_t	i;
+	t_var	var;
 	t_bool	can_expand;
 
 	i = 0;
-	can_expand = TRUE;
+	can_expand = true;
 	while (str[i] != '\0')
 	{
-		if (str[i] == SQUOTE || str[i] == DQUOTE)
+		if (str[i] == SQUOTE)
 		{
-			if (can_expand && str[i] == SQUOTE)
-				can_expand = FALSE;
-			else if (!can_expand && str[i] == SQUOTE)
-				can_expand = TRUE;
-			ft_strdelchr(&str[i]);
+			if (can_expand)
+				can_expand = false;
+			else
+				can_expand = true;
 		}
-		if (str[i] == '$' && can_expand)
+		else if (can_expand && str[i] == '$')
 		{
-			str = perform_expansion(lst_var, str, &i);
-			if (!str)
+			var = dump_var_info(&str[i + 1], env_var);
+			i = alloc(&str, var);
+			if (i == -1)
 				return (NULL);
 		}
-		i++;
 	}
-	return (str);
 }
