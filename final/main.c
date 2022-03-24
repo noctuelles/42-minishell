@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 15:50:17 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 17:21:14 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	close(0);
 	dup2(save_stdin, 0);
 	close(save_stdin);
-	printf("Value of $? = %i\n", status);
 	return status;
 }
 
