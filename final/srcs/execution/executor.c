@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 13:53:13 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:06:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,42 +73,50 @@ void	dup_for_redirections(t_command *command, int pid)
 	}
 }
 
-int exec_builtin(char *str, char **argv, t_dlist *env);
-
-int	execute_file(t_command *command, char **envp, t_dlist *vars, int forking)
+void	error_exit(char *str, int errno_value)
 {
-	(void)envp;
+	printf("Minishell: %s: %s", str, strerror(errno_value));
+	exit(1);
+}
+
+int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
+{
 	pid_t	pid;
 	int		pipefd[2];
 
-	add_command_to_args(command);
-	if(forking)
+	if(command->name != NULL)
 	{
-		if ((command->is_piped && pipe(pipefd) < 0) || command->name == NULL)
-			return (-1);
-		pid = fork();
-		if (pid == -1)
-			return (-1);
-		dup_for_pipe(command, pid, pipefd);
-		dup_for_redirections(command, pid);
-		if (pid == 0 && command->name != NULL)
+		add_command_to_args(command);
+		if(forking)
 		{
-			if(!is_builtin(command->original_name))
+			if ((command->is_piped && pipe(pipefd) < 0))
+				error_exit("pipe error", errno);
+			pid = fork();
+			if (pid == -1)
+				error_exit("fork error", errno);
+			dup_for_pipe(command, pid, pipefd);
+			dup_for_redirections(command, pid);
+			if (pid == 0)
 			{
-				execve(command->name, command->args, export_env(vars));
-				perror("Execution error");
-				close_all_error(command, errno);
-				return (1);
+				if(!is_builtin(command->original_name))
+				{
+					execve(command->name, command->args, export_env(vars));
+					perror("Execution error");
+					close_all_error(command, errno);
+					return (1);
+				}
+				else
+					exit(exec_builtin(command->name, command->args, vars, save_stdin));
 			}
 			else
 			{
-				exec_builtin(command->name, command->args, vars);
-				exit(0);
+				command->pid = pid;
+				return (4242);
 			}
 		}
 		else
-			return (1);
+			return(exec_builtin(command->name, command->args, vars, save_stdin));
 	}
 	else
-		return(exec_builtin(command->name, command->args, vars));
+		return (127);
 }

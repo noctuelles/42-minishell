@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 15:16:41 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:06:31 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_command
 	bool is_piped;
 	struct s_command *next;
 	bool error;
+	pid_t pid;
 }	t_command;
 
 typedef struct s_args
@@ -50,7 +51,8 @@ void	add_command_to_args(t_command *command);
 char    *ft_strtrunc(char **str, const char delim);
 t_command *parse_commands(t_ast_tree_node *root, t_dlist *vars);
 void replace_by_path(t_command *command, t_dlist *vars);
-int	execute_file(t_command *command, char **envp, t_dlist *vars, int forking);
+int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin);
 int	is_builtin(char *str);
+int exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin);
 
 #endif

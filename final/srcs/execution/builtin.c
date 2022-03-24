@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/17 15:17:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:09:58 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "minishell.h"
 
 int	is_builtin(char *str)
 {
@@ -38,7 +39,7 @@ int	ft_export(int argc, char **argv, t_dlist *env);
 int	ft_pwd(int argc, char **argv, t_dlist *env);
 int	ft_unset(int argc, char **argv, t_dlist *env);
 
-int exec_builtin(char *str, char **argv, t_dlist *env)
+int exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin)
 {
 	int count = 0;
 	while(argv[count])
@@ -56,6 +57,11 @@ int exec_builtin(char *str, char **argv, t_dlist *env)
 	if(strcmp(str, "env") == 0)
 		return(ft_env(count, argv, env));
 	if(strcmp(str, "exit") == 0)
+	{
+		close(0);
+		close(save_stdin);
+		free_env(env);
 		exit(0);
+	}
 	return (0);
 }

@@ -165,3 +165,16 @@ t_var	*get_var(t_dlist *lst_var, char *name)
 	}
 	return (NULL);
 }
+
+void free_env(t_dlist *env)
+{
+	t_dlist *tmp;
+
+	while(env != NULL)
+	{
+		free_var(env->content);
+		tmp = env;
+		env = env->next;
+		free(tmp);
+	}
+}

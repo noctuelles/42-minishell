@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/22 18:04:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:06:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,51 +49,77 @@ void print(t_ast_tree_node *root, int spaces)
 	}
 }
 
-void treat_result(int pid, int wait_status, int *pipeline_result)
+void treat_result(int pid, int wait_status, int *pipeline_result, int last_pid)
 {
-	(void)pid;
 	if(WIFEXITED(wait_status))
 	{
-		*pipeline_result = WEXITSTATUS(wait_status);
+		if(last_pid != 0 && pid == last_pid)
+		{
+			*pipeline_result = WEXITSTATUS(wait_status);
+		}
 	}
 	else if(WIFSIGNALED(wait_status))
 	{
 		if(__WCOREDUMP(wait_status))
 			//fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
-		*pipeline_result = 128 + WTERMSIG(wait_status);
+		if(last_pid != 0 && pid == last_pid)
+			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
 }
 
-int	execute_pipeline(t_ast_tree_node *root, t_dlist *env, char **envp)
+void free_cmd(t_command *cmd)
+{
+	free(cmd->name);
+	free(cmd->args);
+	free(cmd->in_name);
+	free(cmd->out_name);
+	free(cmd);
+}
+
+int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 {
 	int save_stdin = dup(0);
 	t_command *first = parse_commands(root, env);
+	t_command *save;
 	int forking = 1;
 	if(first->next == NULL && is_builtin(first->name))
 		forking = 0;
 	replace_by_path(first, env);
 	int count = 0;
+	int status = 0;
+	int last_pid = 0;
 	while(first != NULL)
 	{
-		execute_file(first, envp, env, forking);
-		count++;
+		int ret = execute_file(first, env, forking, save_stdin);
+		if(ret == 4242)
+			count++;
+		if(first->next == NULL)
+		{
+			if(ret != 4242)
+				status = ret;
+			else
+				last_pid = first->pid;
+		}
+		save = first;
 		first = first->next;
+		free_cmd(save);
 	}
-	int pipeline_result = 0;
 	if(forking)
 	{
 		int i = -1;
-		int status;
+		int wait_status;
 		while (++i < count)
 		{
-			int pid = waitpid(-1, &status, 0);
+			int pid = waitpid(-1, &wait_status, 0);
 			close(0);
-			treat_result(pid, status, &pipeline_result);
+			treat_result(pid, wait_status, &status, last_pid);
 		}
 	}
+	close(0);
 	dup2(save_stdin, 0);
 	close(save_stdin);
-	return pipeline_result;
+	printf("Value of $? = %i\n", status);
+	return status;
 }
 
 char *prompt_and_read(t_dlist *vars)
@@ -154,7 +180,7 @@ int main(int argc, char **argv, char **envp)
 		refill_env(&vars);
 		if (root != NULL)
 		{
-			execute_pipeline(root, vars, envp);
+			execute_pipeline(root, vars);
 			free_lexer(&lexer);
 		}
 	}

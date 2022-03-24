@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/23 19:25:26 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:05:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 char	*get_path_from_env(char *command_name, t_dlist *vars)
 {
 	char	*path;
+	char	*cpy;
 	int		found;
 	char	*exec_path;
 
@@ -23,7 +24,8 @@ char	*get_path_from_env(char *command_name, t_dlist *vars)
 	exec_path = NULL;
 	if(get_var(vars, "PATH") != NULL)
 	{
-		path = strdup(get_var(vars, "PATH")->value);
+		cpy = strdup(get_var(vars, "PATH")->value);
+		path = cpy;
 		while (ft_strtrunc(&path, ':'))
 		{
 			if (!found)
@@ -43,6 +45,7 @@ char	*get_path_from_env(char *command_name, t_dlist *vars)
 				}
 			}
 		}
+		free(cpy);
 	}
 	return (exec_path);
 }
