@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/03/21 11:53:42 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/03/24 16:12:05 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ SRCS			=	env.c \
 						ft_env.c \
 						ft_export.c \
 						ft_pwd.c \
-						ft_unset.c) \
+						ft_unset.c \
+						ft_exit.c) \
 					$(addprefix execution/, \
 						builtin.c \
 						command_preparator.c \

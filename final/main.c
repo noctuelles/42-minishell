@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 15:06:49 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:50:17 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void treat_result(int pid, int wait_status, int *pipeline_result, int last_pid)
 	else if(WIFSIGNALED(wait_status))
 	{
 		if(__WCOREDUMP(wait_status))
-			//fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
+			fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
 		if(last_pid != 0 && pid == last_pid)
 			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
@@ -69,10 +69,7 @@ void treat_result(int pid, int wait_status, int *pipeline_result, int last_pid)
 
 void free_cmd(t_command *cmd)
 {
-	free(cmd->name);
 	free(cmd->args);
-	free(cmd->in_name);
-	free(cmd->out_name);
 	free(cmd);
 }
 

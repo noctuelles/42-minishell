@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 15:09:58 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/24 16:11:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	ft_env(int argc, char **argv, t_dlist *env);
 int	ft_export(int argc, char **argv, t_dlist *env);
 int	ft_pwd(int argc, char **argv, t_dlist *env);
 int	ft_unset(int argc, char **argv, t_dlist *env);
+int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
 int exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin)
 {
@@ -57,11 +58,6 @@ int exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin)
 	if(strcmp(str, "env") == 0)
 		return(ft_env(count, argv, env));
 	if(strcmp(str, "exit") == 0)
-	{
-		close(0);
-		close(save_stdin);
-		free_env(env);
-		exit(0);
-	}
+		ft_exit(count, argv, env, save_stdin);
 	return (0);
 }
