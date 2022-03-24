@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/21 21:32:41 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/22 18:06:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 			elem->next->value = node->value;
 		}
 	}
-	if (node->type == NODE_IO_REDIRECT_STDIN && !command->error)
+	if (node->type == NODE_IO_REDIRECT_STDIN && !command->error && node->value != NULL)
 	{
 		if (command->io_in_redirect > 0)
 			close(command->io_in_redirect);
@@ -49,7 +49,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->in_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_FILE && !command->error)
+	if (node->type == NODE_IO_REDIRECT_FILE && !command->error && node->value != NULL)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
@@ -62,7 +62,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->out_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_FILE_APPEND && !command->error)
+	if (node->type == NODE_IO_REDIRECT_FILE_APPEND && !command->error && node->value != NULL)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
@@ -75,7 +75,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->out_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_HERE_DOC && !command->error)
+	if (node->type == NODE_IO_REDIRECT_HERE_DOC && !command->error && node->value != NULL)
 	{
 		int pipefd[2];
 		if(pipe(pipefd) < 0)

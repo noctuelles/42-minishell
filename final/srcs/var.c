@@ -129,7 +129,7 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 	}
 	else
 	{
-		get_var(*lst_var, var.name)->value = var.value;
+		get_var(*lst_var, var.name)->value = strdup(var.value);
 		get_var(*lst_var, var.name)->value_len = strlen(var.value);
 	}
 	return (*lst_var);

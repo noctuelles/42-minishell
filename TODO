@@ -1,11 +1,9 @@
 # Pas fait
 	Export sans arguments
-	Gestion si non existence de variables dans env
 	Remontée résultat pipeline
 
 # A verifier
-	Pas le bon nombre de waitpid
-	Certains cas (commande qui existe pas ?) laisse l enfant en vie
 
 # Les problemes
-	Export d une variable qui existe
+	echo -nnnnn salut
+	echo -n -n -n -n -n salut

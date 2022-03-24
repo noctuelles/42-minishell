@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/22 14:44:39 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/23 19:25:26 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,32 @@
 
 char	*get_path_from_env(char *command_name, t_dlist *vars)
 {
-	char	*path = strdup(get_var(vars, "PATH")->value);
+	char	*path;
 	int		found;
 	char	*exec_path;
 
 	found = 0;
 	exec_path = NULL;
-	if (!path)
-		return (NULL);
-	while (ft_strtrunc(&path, ':'))
+	if(get_var(vars, "PATH") != NULL)
 	{
-		if (!found)
+		path = strdup(get_var(vars, "PATH")->value);
+		while (ft_strtrunc(&path, ':'))
 		{
-			exec_path = malloc(
-					sizeof(char) * (strlen(path) + strlen(command_name) + 2));
-			exec_path[0] = '\0';
-			strcat(exec_path, path);
-			strcat(exec_path, "/");
-			strcat(exec_path, command_name);
-			if (access(exec_path, F_OK) == 0)
-				found = 1;
-			else
+			if (!found)
 			{
-				free(exec_path);
-				exec_path = NULL;
+				exec_path = malloc(
+						sizeof(char) * (strlen(path) + strlen(command_name) + 2));
+				exec_path[0] = '\0';
+				strcat(exec_path, path);
+				strcat(exec_path, "/");
+				strcat(exec_path, command_name);
+				if (access(exec_path, F_OK) == 0)
+					found = 1;
+				else
+				{
+					free(exec_path);
+					exec_path = NULL;
+				}
 			}
 		}
 	}
