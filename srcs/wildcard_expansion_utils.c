@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 23:05:30 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:48:31 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,39 @@
  * The algorithm is both iterative and recursive.
  * */
 
+char next_valid_char(t_token *tkn, char *pattern, size_t j)
+{
+	while (pattern[j] && ((pattern[j] == SQUOTE || pattern[j] == DQUOTE) && !is_an_expanded_quote(tkn->quote_list, &pattern[j])))
+		j++;
+	return (pattern[j]);
+}
+
+void	check_pattern_snippet(t_token *tkn, char **pfilename, char **ppattern)
+{
+	char	*filename;
+	char	*pattern;
+	bool	inhibit_wildcard;
+	char	quote;
+
+	filename = *pfilename;
+	pattern = *ppattern;
+	inhibit_wildcard = false;
+	quote = '\0';
+	while (*pattern != '\0')
+	{
+
+	}
+}
+
 static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 {
 	size_t	i;
 	size_t	j;
 	bool	inhibit_wildcard;
 	char	quote;
-	size_t	nbr;
 
 	i = 0;
 	j = 0;
-	nbr = 0;
 	inhibit_wildcard = false;
 	quote = 0;
 	while (pattern[j] != '\0')
@@ -39,19 +61,17 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 			break ;
 		if (pattern[j] == '\'' || pattern[j] == '"')
 		{
-			if (inhibit_wildcard && pattern[j] == quote)
+			if (inhibit_wildcard && pattern[j] == quote && !is_an_expanded_quote(tkn->quote_list, &pattern[j]))
 			{
 				inhibit_wildcard = false;
 				quote = 0;
 				j++;
-				nbr++;
 				continue;
 			}
-			if (!inhibit_wildcard && !is_an_expanded_quote(tkn->quote_list, j))
+			if (!inhibit_wildcard && !is_an_expanded_quote(tkn->quote_list, &pattern[j]))
 			{
 				inhibit_wildcard = true;
 				quote = pattern[j++];
-				nbr++;
 				continue;
 			}
 		}
@@ -60,11 +80,14 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	}
 	if (filename[i] == '\0' && pattern[j] == '\0')
 		return (true);
+	else if (filename[i] != '\0' && pattern[j] == '\0')
+		return (false);
 	while (pattern[j + 1] == '*')
 		j++;
 	if (pattern[j + 1] == '\0')
 		return (true);
-	while (filename[i] && filename[i] != pattern[j + 1])
+	char c = next_valid_char(tkn, pattern, j + 1);
+	while (filename[i] && filename[i] != c)
 		i++;
 	if (filename[i] == '\0')
 		return (false);

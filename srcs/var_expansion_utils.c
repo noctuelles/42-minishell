@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 23:05:18 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/25 10:09:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,14 @@ static size_t	copy(t_token *tkn, char *old_str, char *new_str, t_var var)
 	{
 		while (var.value[k] != '\0')
 		{
+			new_str[i] = var.value[k];
 			if (var.value[k] == SQUOTE || var.value[k] == DQUOTE)
 			{
-				lst = ft_lstnew((size_t *) malloc(sizeof(size_t)));
-				* (size_t *)lst->content = i;
+				lst = ft_lstnew(&new_str[i]);
 				ft_lstadd_back(&tkn->quote_list, lst);
 			}
-			new_str[i++] = var.value[k++];
+			k++;
+			i++;
 		}
 	}
 	i_ret = i;
@@ -92,14 +93,11 @@ ssize_t	include_variable(t_token *tkn, char **str, t_var var)
 	return (i_ret);
 }
 
-bool	is_an_expanded_quote(t_list *quote_list, size_t i_quote)
+bool	is_an_expanded_quote(t_list *quote_list, char *c)
 {
-	size_t	i;
-
 	while (quote_list != NULL)
 	{
-		i = * (size_t *) quote_list->content;
-		if (i == i_quote)
+		if ((char *) quote_list->content == c)
 			return (true);
 		quote_list = quote_list->next;
 	}
