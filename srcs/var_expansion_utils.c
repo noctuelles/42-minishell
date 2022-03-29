@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 23:05:18 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/28 19:07:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,8 @@ static size_t	copy(t_token *tkn, char *old_str, char *new_str, t_var var)
 	{
 		while (var.value[k] != '\0')
 		{
-			if (var.value[k] == SQUOTE || var.value[k] == DQUOTE)
-			{
-				lst = ft_lstnew((size_t *) malloc(sizeof(size_t)));
-				* (size_t *)lst->content = i;
-				ft_lstadd_back(&tkn->quote_list, lst);
-			}
+			if (var.value[k] == '*')
+				ft_lstadd_back(&tkn->wldc_list, ft_lstnew((char *) &new_str[i]));
 			new_str[i++] = var.value[k++];
 		}
 	}

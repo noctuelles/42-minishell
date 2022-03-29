@@ -14,16 +14,6 @@ void	print_tokens(t_lexer lexer)
 	for (size_t i = 0; i < lexer.idx - 1; i++)
 	{
 		printf("< '%s' %d >\n", lexer.tkns[i].val, lexer.tkns[i].type);
-		if (lexer.tkns[i].quote_list)
-		{
-			printf("\nQuote imported from expansion :\n");
-			/*while (lexer.tkns[i].quote_list)
-			{
-				printf("At position : %lu\n", *(size_t*)lexer.tkns[i].quote_list->content);
-				lexer.tkns[i].quote_list = lexer.tkns[i].quote_list->next;
-			}*/
-			puts("");
-		}
 	}
 }
 
@@ -44,25 +34,32 @@ int main(int argc, char **argv, char **envp)
 		ast_tree_delete_node(ast_root);
 	*/
 
-	lexer = (t_lexer *) ft_calloc(1, sizeof(t_lexer));
-	if (!lexer)
-		return (1);
+
 	lst = import_var(&lst, envp);
 	while (1)
 	{
+		size_t	i = 0;
 		char *str = readline("> ");
 		add_history(str);
+		lexer = (t_lexer *) ft_calloc(1, sizeof(t_lexer));
+		if (!lexer)
+			return (1);
 
 		ret_code = fill_lexer_from_str(lexer, str);
 		print_tokens(*lexer);
-		tkn = &lexer->tkns[0];
-		var_expansion(tkn, lst);
+		while (i < lexer->idx - 1)
+		{
+			tkn = &lexer->tkns[i];
+			var_expansion(tkn, lst);
+			for (; tkn->wldc_list; tkn->wldc_list = tkn->wldc_list->next)
+			{
+				printf("wildcard at %p\n", tkn->wldc_list->content);
+			}
+			i++;
+		}
+		puts("\nAfter expansion :\n");
 		print_tokens(*lexer);
-		tkn->val = wildcard_expansion(tkn);
-		if (tkn->val)
-			puts(tkn->val);
-		else
-			puts("no matche.");
+		free_lexer(lexer);
 	}
 	ft_dlstclear(&lst, free_var);
 	return (0);
