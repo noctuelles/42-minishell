@@ -53,11 +53,12 @@ int main(int argc, char **argv, char **envp)
 			var_expansion(tkn, lst);
 			if (tkn->wldc_list)
 			{
-				for (; tkn->wldc_list; tkn->wldc_list = tkn->wldc_list->next)
+				for (t_list *list = tkn->wldc_list; list; list = list->next)
 				{
-					printf("wildcard at %p\n", tkn->wldc_list->content);
+					printf("wildcard at %p : %s\n", list->content,(char *) list->content);
 				}
 			}
+			wildcard_expansion(tkn);
 			i++;
 		}
 		puts("\nAfter expansion :\n");

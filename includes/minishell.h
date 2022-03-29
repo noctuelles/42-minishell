@@ -6,12 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/29 17:02:59 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/29 18:34:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
 
 # include <sys/types.h>
+# include <dirent.h>
 # include <stdbool.h>
 # include "libft.h"
 # include "lexer.h"
@@ -93,12 +94,11 @@ char	*get_lexer_error(t_lexer_errcode errcode);
 
 /* wildcard_expansion.c */
 
-char	*wildcard_expansion(t_token *tkn);
+t_token	*wildcard_expansion(t_token *tkn);
 
 /* wildcard_expansion_utils.c */
 
-int	add_file_to_list(t_dlist **files, char *filename, char *pattern,
-		unsigned char d_type, t_token *tkn);
+int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent);
 void	ascii_sort_list(t_dlist *files);
 size_t	compute_str_size(t_dlist *files);
 
@@ -110,6 +110,6 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
 
 t_var	get_var_info(char *str, t_dlist *env_var);
 ssize_t	include_variable(t_token *tkn, t_var var);
-bool	is_an_expanded_quote(t_list *quote_list, char *c);
+bool	is_a_intrp_wildcard(t_list *wldc_list, char *c);
 
 #endif
