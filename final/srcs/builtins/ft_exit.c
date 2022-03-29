@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 17:26:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/28 12:23:23 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
 {
-	printf("exit\n");
+	fprintf(stderr, "exit\n");
 	if(argc == 1)
 		exit(0);
 	int exit_code = 0;
@@ -28,7 +28,7 @@ int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
 		}
 		else
 		{
-			fprintf(stderr, "bash: exit: %s: numeric argument required\n", argv[1]);
+			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", argv[1]);
 			exit(1);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 17:21:14 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/29 12:42:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 #include "execution.h"
 #include "minishell.h"
 
@@ -156,6 +157,25 @@ void refill_env(t_dlist **env)
 	}
 }
 
+int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
+
+void	signal_handler_as_prompt(int signum)
+{
+	if(signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (signum == SIGQUIT)
+	{
+		write(1, "\33[2K\r", 5);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -167,9 +187,11 @@ int main(int argc, char **argv, char **envp)
 	{
 		t_lexer	lexer = {0};
 		t_ast_tree_node	*root;
+		signal(SIGINT, signal_handler_as_prompt);
+		signal(SIGQUIT, signal_handler_as_prompt);
 		char *str = prompt_and_read(vars);
 		if (str == NULL)
-			exit(0);
+			ft_exit(1, NULL, vars, 0);
 		add_history(str);
 		fill_lexer_from_str(&lexer, str);
 		root = parse(&lexer);
