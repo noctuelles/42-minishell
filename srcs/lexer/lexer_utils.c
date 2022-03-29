@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 14:09:02 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:06:51 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 	tkn->len = len;
 	tkn->type = type;
 	tkn->quote_list = NULL;
+	tkn->wldc_list = NULL;
+	tkn->quote = '\0';
 	return (*tkn);
 }
 

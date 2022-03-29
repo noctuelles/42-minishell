@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/29 16:07:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:29:55 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,52 +39,74 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	}
 }
 
-static size_t	copy(t_token *tkn, char *old_str, char *new_str, t_var var)
+static ssize_t	copy_var(t_token *tkn, char *new_str, t_var var, size_t i)
 {
-	size_t	i;
-	size_t	j;
 	size_t	k;
+	t_list	*elem;
+
+	k = 0;
+	if (!tkn->quote)
+	{
+		while (var.value[k] == ' ')
+			k++;
+	}
+	while (var.value[k] != '\0')
+	{
+		if (var.value[k] == '*' && !tkn->quote)
+		{
+			elem = ft_lstnew((char *) &new_str[i]);
+			if (!elem)
+				return (-1);
+			ft_lstadd_back(&tkn->wldc_list, elem);
+		}
+		new_str[i++] = var.value[k++];
+	}
+	return (i);
+}
+
+static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
+{
+	ssize_t	i;
+	size_t	j;
 	size_t	i_ret;
-	t_list	*lst;
 
 	i = 0;
 	j = 0;
-	k = 0;
-	while (old_str[j] != '$')
-		new_str[i++] = old_str[j++];
+	while (tkn->val[j] != '$')
+		new_str[i++] = tkn->val[j++];
 	if (var.value != NULL)
 	{
-		while (var.value[k] != '\0')
-		{
-			if (var.value[k] == '*')
-				ft_lstadd_back(&tkn->wldc_list, ft_lstnew((char *) &new_str[i]));
-			new_str[i++] = var.value[k++];
-		}
+		i = copy_var(tkn, new_str, var, i);
+		if (i == -1)
+			return (-1);
 	}
 	i_ret = i;
 	j += 1 + var.name_len;
-	while (old_str[j] != '\0')
-		new_str[i++] = old_str[j++];
+	while (tkn->val[j] != '\0')
+		new_str[i++] = tkn->val[j++];
 	new_str[i] = '\0';
-	free(old_str);
+	free(tkn->val);
 	return (i_ret);
 }
 
-ssize_t	include_variable(t_token *tkn, char **str, t_var var)
+ssize_t	include_variable(t_token *tkn, t_var var)
 {
 	char	*new_str;
 	size_t	str_len;
 	ssize_t	i_ret;
 
 	if (var.value != NULL)
-		str_len = ft_strlen(*str) - (var.name_len + 1) + var.value_len;
+		str_len = ft_strlen(tkn->val) - (var.name_len + 1) + var.value_len;
 	else
-		str_len = ft_strlen(*str) - (var.name_len + 1);
+		str_len = ft_strlen(tkn->val) - (var.name_len + 1);
 	new_str = (char *) malloc((str_len + 1) * sizeof(char));
 	if (!new_str)
 		return (-1);
-	i_ret = copy(tkn, *str, new_str, var);
-	*str = new_str;
+	i_ret = copy(tkn, new_str, var);
+	if (i_ret == -1)
+		free(new_str);
+	else
+		tkn->val = new_str;
 	return (i_ret);
 }
 

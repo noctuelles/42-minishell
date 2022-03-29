@@ -51,9 +51,12 @@ int main(int argc, char **argv, char **envp)
 		{
 			tkn = &lexer->tkns[i];
 			var_expansion(tkn, lst);
-			for (; tkn->wldc_list; tkn->wldc_list = tkn->wldc_list->next)
+			if (tkn->wldc_list)
 			{
-				printf("wildcard at %p\n", tkn->wldc_list->content);
+				for (; tkn->wldc_list; tkn->wldc_list = tkn->wldc_list->next)
+				{
+					printf("wildcard at %p\n", tkn->wldc_list->content);
+				}
 			}
 			i++;
 		}

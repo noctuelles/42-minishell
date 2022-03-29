@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/28 18:41:54 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:10:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,23 @@ static void update_quote(char *str, char *quote)
 t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 {
 	ssize_t	i;
-	char	quote;
+	t_list	*elem;
 
 	i = 0;
-	quote = '\0';
 	while (tkn->val[i] != '\0')
 	{
 		if (tkn->val[i] == SQUOTE || tkn->val[i] == DQUOTE)
-			update_quote(&tkn->val[i], &quote);
-		if (!quote && tkn->val[i] == '*')
-			ft_lstadd_back(&tkn->wldc_list, ft_lstnew((char *) &tkn->val[i]));
-		if (quote != SQUOTE && tkn->val[i] == '$')
+			update_quote(&tkn->val[i], &tkn->quote);
+		if (!tkn->quote && tkn->val[i] == '*')
 		{
-			i = include_variable(tkn, &tkn->val, get_var_info(
-						&tkn->val[i + 1], env_var));
+			elem = ft_lstnew((char *) &tkn->val[i]);
+			if (!elem)
+				return (NULL);
+			ft_lstadd_back(&tkn->wldc_list, elem);
+		}
+		if (tkn->quote != SQUOTE && tkn->val[i] == '$')
+		{
+			i = include_variable(tkn, get_var_info(&tkn->val[i + 1], env_var));
 			if (i == -1)
 				return (NULL);
 			continue ;
