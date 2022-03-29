@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/28 19:07:57 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/29 16:07:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,11 @@ ssize_t	include_variable(t_token *tkn, char **str, t_var var)
 	return (i_ret);
 }
 
-bool	is_an_expanded_quote(t_list *quote_list, size_t i_quote)
+bool	is_an_expanded_quote(t_list *quote_list, char *c)
 {
-	size_t	i;
-
 	while (quote_list != NULL)
 	{
-		i = * (size_t *) quote_list->content;
-		if (i == i_quote)
+		if ((char *) quote_list->content == c)
 			return (true);
 		quote_list = quote_list->next;
 	}
