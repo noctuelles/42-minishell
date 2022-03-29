@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/03/24 17:26:07 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/03/29 13:20:16 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS			=	env.c \
 					var_expansion.c \
 					var_utils.c \
 					var.c \
+					signals.c \
 					$(addprefix builtins/, \
 						ft_cd.c \
 						ft_echo.c \

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/24 15:09:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/29 13:21:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,7 @@ char	**export_env(t_dlist *lst);
 t_dlist	*import_one_var(t_dlist **lst_var, char *value);
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name);
 void free_env(t_dlist *env);
+
+void set_signals_as_prompt();
+void set_signals_as_here_doc();
 #endif

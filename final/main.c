@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/29 12:42:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/03/29 13:21:28 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,13 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 		first = first->next;
 		free_cmd(save);
 	}
-	if(forking)
+	int i = -1;
+	int wait_status;
+	while (++i < count)
 	{
-		int i = -1;
-		int wait_status;
-		while (++i < count)
-		{
-			int pid = waitpid(-1, &wait_status, 0);
-			close(0);
-			treat_result(pid, wait_status, &status, last_pid);
-		}
+		int pid = waitpid(-1, &wait_status, 0);
+		close(0);
+		treat_result(pid, wait_status, &status, last_pid);
 	}
 	close(0);
 	dup2(save_stdin, 0);
@@ -159,23 +156,6 @@ void refill_env(t_dlist **env)
 
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
-void	signal_handler_as_prompt(int signum)
-{
-	if(signum == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else if (signum == SIGQUIT)
-	{
-		write(1, "\33[2K\r", 5);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -187,8 +167,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		t_lexer	lexer = {0};
 		t_ast_tree_node	*root;
-		signal(SIGINT, signal_handler_as_prompt);
-		signal(SIGQUIT, signal_handler_as_prompt);
+		set_signals_as_prompt();
 		char *str = prompt_and_read(vars);
 		if (str == NULL)
 			ft_exit(1, NULL, vars, 0);
