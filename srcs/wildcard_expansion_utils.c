@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 11:12:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:31:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	}
 	if (filename[i] == '\0' && pattern[j] == '\0')
 		return (true);
+	else if (filename[i] != '\0' && pattern[j] == '\0')
+		return (false);
 	while (pattern[j + 1] == '*')
 		j++;
 	if (pattern[j + 1] == '\0')
@@ -58,6 +60,7 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 
 int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent)
 {
+	t_token	*ntkn;
 	t_dlist	*elem;
 	char	*filename_dup;
 
@@ -68,10 +71,16 @@ int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent)
 			filename_dup = ft_strdup(dir_ent->d_name);
 			if (!filename_dup)
 				return (-1);
-			elem = ft_dlstnew((void *) filename_dup);
-			if (!elem)
+			ntkn = new_token(filename_dup, ft_strlen(filename_dup), T_WORD);
+			if (!ntkn)
 			{
 				free(filename_dup);
+				return (-1);
+			}
+			elem = ft_dlstnew((void *) ntkn);
+			if (!elem)
+			{
+				free_token(ntkn);
 				return (-1);
 			}
 			ft_dlstadd_back(files, elem);
@@ -92,7 +101,8 @@ void	ascii_sort_list(t_dlist *files)
 	{
 		curr_filename = files->content;
 		while (files->prev != NULL
-				&& ft_strcmp_ignore_case(files->prev->content, curr_filename) > 0)
+				&& ft_strcmp_ignore_case
+				(files->prev->content, curr_filename) > 0)
 		{
 			files->content = files->prev->content;
 			files = files->prev;
@@ -100,22 +110,4 @@ void	ascii_sort_list(t_dlist *files)
 		files->content = curr_filename;
 		files = files->next;
 	}
-}
-
-/* compute_str_size() computes the size needed for the string size of str_size,
- * in list_to_string() function.
- * A basic strlen is done in each element of files, and one is added for the
- * extra spaces / NUL terminating character. */
-
-size_t	compute_str_size(t_dlist *files)
-{
-	size_t	str_size;
-
-	str_size = 0;
-	while (files)
-	{
-		str_size += ft_strlen(files->content) + 1;
-		files = files->next;
-	}
-	return (str_size);
 }

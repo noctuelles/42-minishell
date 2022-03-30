@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/29 18:34:46 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 16:58:41 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -94,7 +94,8 @@ char	*get_lexer_error(t_lexer_errcode errcode);
 
 /* wildcard_expansion.c */
 
-t_token	*wildcard_expansion(t_token *tkn);
+void	print_tokens(void *content);
+t_dlist	*wildcard_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn);
 
 /* wildcard_expansion_utils.c */
 

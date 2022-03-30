@@ -53,6 +53,18 @@ int main(int argc, char **argv, char **envp)
 			}
 			printf("\n");
 			ft_dlstiter(lexer->tkns, print_tokens);
+			printf("\nAfter wildcard expansion :\n");
+			t_dlist *elem;
+			elem = lexer->tkns;
+			while (elem)
+			{
+				t_token *tkn = (t_token *) elem->content;
+				if (tkn->type == T_WORD)
+					elem = wildcard_expansion(lexer, elem, tkn);
+				elem = elem->next;
+			}
+			printf("\n");
+			ft_dlstiter(lexer->tkns, print_tokens);
 			free_lexer(lexer);
 		}
 		free(str);
