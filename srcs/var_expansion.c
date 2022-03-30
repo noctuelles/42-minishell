@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/29 17:10:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 14:46:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,11 @@
 
 static void update_quote(char *str, char *quote)
 {
-	if (!*quote)
-	{
+	if (*quote == '\0')
 		*quote = *str;
-		ft_strdelchr(str);
-	}
 	else if (*str == *quote)
-	{
 		*quote = '\0';
-		ft_strdelchr(str);
-	}
+	ft_strdelchr(str);
 }
 
 t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
@@ -39,7 +34,10 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 	while (tkn->val[i] != '\0')
 	{
 		if (tkn->val[i] == SQUOTE || tkn->val[i] == DQUOTE)
+		{
 			update_quote(&tkn->val[i], &tkn->quote);
+			continue;
+		}
 		if (!tkn->quote && tkn->val[i] == '*')
 		{
 			elem = ft_lstnew((char *) &tkn->val[i]);

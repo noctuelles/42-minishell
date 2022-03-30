@@ -9,22 +9,19 @@
 #include <string.h>
 #include <unistd.h>
 
-void	print_tokens(t_lexer lexer)
+void	print_tokens(void *content)
 {
-	for (size_t i = 0; i < lexer.idx - 1; i++)
-	{
-		printf("< '%s' %d >\n", lexer.tkns[i].val, lexer.tkns[i].type);
-	}
+	t_token	*tkn;
+	
+	tkn = (t_token *) content;
+	printf("< %s >\n", tkn->val);
 }
-
 
 int main(int argc, char **argv, char **envp)
 {
 	(void) argc;
 	t_dlist	*lst;
 	t_lexer	*lexer;
-	t_token	*tkn;
-	int		ret_code;
 
 	lst = NULL;
 	/*
@@ -38,33 +35,27 @@ int main(int argc, char **argv, char **envp)
 	lst = import_var(&lst, envp);
 	while (1)
 	{
-		size_t	i = 0;
-		char *str = readline("> ");
+		char *str = readline("\n> ");
+		if (!str)
+			break ;
 		add_history(str);
-		lexer = (t_lexer *) ft_calloc(1, sizeof(t_lexer));
-		if (!lexer)
-			return (1);
-
-		ret_code = fill_lexer_from_str(lexer, str);
-		print_tokens(*lexer);
-		while (i < lexer->idx - 1)
+		lexer = lex_str(str);
+		if (lexer)
 		{
-			tkn = &lexer->tkns[i];
-			var_expansion(tkn, lst);
-			if (tkn->wldc_list)
+			printf("\n");
+			ft_dlstiter(lexer->tkns, print_tokens);
+			printf("\nAfter variable expansion :\n");
+			for (t_dlist *elem = lexer->tkns; elem; elem = elem->next)
 			{
-				for (t_list *list = tkn->wldc_list; list; list = list->next)
-				{
-					printf("wildcard at %p : %s\n", list->content,(char *) list->content);
-				}
+				t_token *tkn = (t_token *) elem->content;
+				if (tkn->type == T_WORD)
+					tkn = var_expansion(tkn, lst);
 			}
-			wildcard_expansion(tkn);
-			i++;
+			printf("\n");
+			ft_dlstiter(lexer->tkns, print_tokens);
+			free_lexer(lexer);
 		}
-		puts("\nAfter expansion :\n");
-		print_tokens(*lexer);
-		free_lexer(lexer);
+		free(str);
 	}
-	ft_dlstclear(&lst, free_var);
 	return (0);
 }

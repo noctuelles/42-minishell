@@ -6,61 +6,16 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/23 14:09:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 13:51:07 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-
-/* add_to_lexer() add to the lexer the lexicon define by three properties :
- *
- * -> It's value.
- * -> His lenght.
- * -> His type.
- *
- * The lexicon array (ref. as the tokens array) is dynamically allocated,
- * check the file lexer_memutils.c :
- *
- *      -> It has a base size of 2 tokens. It realloc the array if we're getting
- *      out of bound by a factor of 2.
- *      We're calling grow_tkns_array only if if we haven't allocated tkns,
- *      or if we're in the situation described below.
- *
- *      Arrays is better than linked list : in the parsing phase, looking at the
- *      next token or the previous token will be easier with array than with
- *      list, and faster. We sacrifice a bit of memory for convenience and
- *      speed.
- *
- * If the token a String (not an existing token), we're calling ft_strndup to
- * duplicate the token.
- *  */
-
-static t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
-															t_token_type type)
-{
-	char	*str;
-
-	if (lexer->size == 0 || lexer->idx == lexer->size)
-	{
-		lexer->tkns = grow_tkns_array(lexer);
-		if (!lexer->tkns)
-			return (NULL);
-	}
-	if (type == T_WORD)
-	{
-		str = ft_strndup(val, len);
-		if (!str)
-		{
-			free_tkns(lexer->tkns, lexer->idx);
-			return (NULL);
-		}
-	}
-	else
-		str = val;
-	set_token(&lexer->tkns[lexer->idx], str, len, type);
-	lexer->idx++;
-	return (lexer->tkns);
-}
+#include "minishell.h"
+#include "ft_dprintf.h"
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
 
 /* handle_escaping() skip all character beetween the quote, thus avoiding
  * interpreting meta characters.
@@ -83,12 +38,12 @@ static int	handle_escaping(char **str)
 	return (0);
 }
 
-/* add_token() add the token tkn to the array of tokens.
- * In this function, tkn is obviously a know token.
+/* add_static_token() add the token tkn to the array of tokens.
+ * In this function, tkn is a known token.
  * It also increment or decrement a counter that keep track of how many
  * parenthesis has been open / close. */
 
-static int	add_token(t_lexer *lexer, t_token tkn, char **str)
+static int	add_static_token(t_lexer *lexer, t_token tkn, char **str)
 {
 	*str += tkn.len;
 	if (tkn.type == T_OP_PRT)
@@ -123,9 +78,9 @@ static int	finish_lexing(t_lexer *lexer, char *str)
 }
 
 /* fill_lexer_from_str() fill the lexer from a string.
- * It breks the string str into multiple tokens. */
+ * It breaks the string str into multiple tokens. */
 
-int fill_lexer_from_str(t_lexer *lexer, char *str)
+static int fill_lexer_from_str(t_lexer *lexer, char *str)
 {
 	t_token		tkn;
 
@@ -140,7 +95,7 @@ int fill_lexer_from_str(t_lexer *lexer, char *str)
 		}
 		if (tkn.type != T_NULL)
 		{
-			if (add_token(lexer, tkn, &str) == -1)
+			if (add_static_token(lexer, tkn, &str) == -1)
 				return (ERR_MEM);
 		}
 		else if (*str == SQUOTE || *str == DQUOTE)
@@ -152,4 +107,37 @@ int fill_lexer_from_str(t_lexer *lexer, char *str)
 			str++;
 	}
 	return (finish_lexing(lexer, str));
+}
+
+/* lex_str() returns a lexer if str is a valid lexical shell syntax.
+ * If an errors occurs, all memory allocated is freed and lex_str() returns
+ * NULL. */
+
+t_lexer	*lex_str(const char *str)
+{
+	t_token	*tkn;
+	t_lexer	*lexer;
+	t_dlist	*last;
+	int		ret;
+
+	lexer = new_lexer();
+	if (!lexer)
+		return (NULL);
+	ret = fill_lexer_from_str(lexer, (char *) str);
+	if (ret != ERR_NO)
+	{
+		last = ft_dlstlast(lexer->tkns);
+		if (last)
+			tkn = (t_token *) last->content;
+		if (ret == ERR_MEM)
+			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
+		else if (last == NULL)
+			ft_dprintf(STDERR_FILENO, STR_ERROR, get_lexer_error(ret));
+		else 
+			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR, get_lexer_error(ret),
+					tkn->val);
+		free_lexer(lexer);
+		lexer = NULL;
+	}
+	return (lexer);
 }
