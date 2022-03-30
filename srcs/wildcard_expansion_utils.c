@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:47:20 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:50:50 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,10 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	return (match_pattern(tkn, &filename[i], &pattern[j + 1]));
 }
 
+/* new_file_elem() creates a new double linked list element from a dirent
+ * pointer.
+ * Malloc tkn, elem, filename_dup. */
+
 static t_dlist	*new_file_elem(struct dirent *dir_ent)
 {
 	t_token	*tkn;
@@ -79,9 +83,8 @@ static t_dlist	*new_file_elem(struct dirent *dir_ent)
  * (the pattern).
  * If so, a duplicate of the filename is perform and a new element is added to
  * the double linked list files.
- * If not, it to nothing.
- * If any allocation error occurs, it returns -1.
- * Malloc filename_dup, elem. */
+ * If not, the function return.
+ * If any allocation error occurs, it returns -1. */
 
 int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent)
 {
