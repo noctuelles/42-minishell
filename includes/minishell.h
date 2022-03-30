@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 16:58:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:40:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -111,6 +111,6 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
 
 t_var	get_var_info(char *str, t_dlist *env_var);
 ssize_t	include_variable(t_token *tkn, t_var var);
-bool	is_a_intrp_wildcard(t_list *wldc_list, char *c);
+bool	is_a_intrp_wldc(t_list *wldc_list, char *c);
 
 #endif

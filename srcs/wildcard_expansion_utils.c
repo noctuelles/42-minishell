@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:31:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:47:20 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 /* match_pattern() returns true if filename is respecting the pattern, else
  * , it returns false.
  * The algorithm is both iterative and recursive.
+ * is_a_intrp_wildcard() here checks if the wildcard is interpretable :
+ * interpretable means that the wildcard wasn't quoted.
  * */
 
 static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
@@ -29,8 +31,7 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	j = 0;
 	while (pattern[j] != '\0')
 	{
-		if (pattern[j] == '*'
-				&& is_a_intrp_wildcard(tkn->wldc_list, &pattern[j]))
+		if (pattern[j] == '*' && is_a_intrp_wldc(tkn->wldc_list, &pattern[j]))
 			break ;
 		if (filename[i++] != pattern[j++])
 			return (false);
@@ -50,6 +51,30 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	return (match_pattern(tkn, &filename[i], &pattern[j + 1]));
 }
 
+static t_dlist	*new_file_elem(struct dirent *dir_ent)
+{
+	t_token	*tkn;
+	t_dlist	*elem;
+	char	*filename_dup;
+
+	filename_dup = ft_strdup(dir_ent->d_name);
+	if (!filename_dup)
+		return (NULL);
+	tkn = new_token(filename_dup, ft_strlen(filename_dup), T_WORD);
+	if (!tkn)
+	{
+		free(filename_dup);
+		return (NULL);
+	}
+	elem = ft_dlstnew((void *) tkn);
+	if (!elem)
+	{
+		free_token(tkn);
+		return (NULL);
+	}
+	return (elem);
+}
+
 /* add_file_to_list() check if the current file is matching the token value
  * (the pattern).
  * If so, a duplicate of the filename is perform and a new element is added to
@@ -60,37 +85,23 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 
 int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent)
 {
-	t_token	*ntkn;
 	t_dlist	*elem;
-	char	*filename_dup;
 
 	if (dir_ent->d_type != DT_UNKNOWN && dir_ent->d_name[0] != '.')
 	{
 		if (match_pattern(tkn, dir_ent->d_name, tkn->val) == true)
 		{
-			filename_dup = ft_strdup(dir_ent->d_name);
-			if (!filename_dup)
-				return (-1);
-			ntkn = new_token(filename_dup, ft_strlen(filename_dup), T_WORD);
-			if (!ntkn)
-			{
-				free(filename_dup);
-				return (-1);
-			}
-			elem = ft_dlstnew((void *) ntkn);
+			elem = new_file_elem(dir_ent);
 			if (!elem)
-			{
-				free_token(ntkn);
 				return (-1);
-			}
 			ft_dlstadd_back(files, elem);
 		}
 	}
 	return (0);
 }
 
-/* ascii_sort_list() sorts the list in ascii order using insert sort
- * algorithm. */
+/* ascii_sort_list() sorts the list in ascii order (ignoring case !)
+ * using insert sort algorithm, so that the minishell behave like bash. */
 
 void	ascii_sort_list(t_dlist *files)
 {

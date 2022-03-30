@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 13:30:24 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 17:42:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,15 @@ t_token	search_existing_token(const char *str)
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));
+}
+
+bool	is_a_intrp_wildcard(t_list *wldc_list, char *c)
+{
+	while (wldc_list != NULL)
+	{
+		if ((char *) wldc_list->content == c)
+			return (true);
+		wldc_list = wldc_list->next;
+	}
+	return (false);
 }
