@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 13:19:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/29 13:54:34 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/01 17:18:55 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <signal.h>
 #include "execution.h"
 #include "minishell.h"
+
+int	g_sigint = 0;
 
 void	signal_handler_as_prompt(int signum)
 {
@@ -42,7 +44,8 @@ void	signal_handler_as_here_doc(int signum)
 {
 	if(signum == SIGINT)
 	{
-		
+		g_sigint = 1;
+		close(0);
 	}
 	else if (signum == SIGQUIT)
 	{

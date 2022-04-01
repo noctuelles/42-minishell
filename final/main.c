@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/29 13:21:28 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/01 17:22:44 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,19 @@ void free_cmd(t_command *cmd)
 	free(cmd);
 }
 
+extern int g_sigint;
+
 int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 {
 	int save_stdin = dup(0);
 	t_command *first = parse_commands(root, env);
+	if(g_sigint)
+	{
+		g_sigint = 0;
+		dup2(save_stdin, 0);
+		close(save_stdin);
+		return (130);
+	}
 	t_command *save;
 	int forking = 1;
 	if(first->next == NULL && is_builtin(first->name))
