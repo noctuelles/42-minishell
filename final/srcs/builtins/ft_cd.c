@@ -6,12 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/22 14:44:39 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:43:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
+#include <errno.h>
 
 int	ft_cd(int argc, char **argv, t_dlist *env)
 {
@@ -20,7 +21,7 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 	
 	if(argc != 2)
 	{
-		printf("%s: use with format: cd <relative or absolute path>\n", argv[0]);
+		printf("Minishell: %s: use with format: cd <relative or absolute path>\n", argv[0]);
 		return 1;
 	}
 	if(chdir(argv[1]) == 0)
@@ -30,7 +31,7 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 		pwd = getcwd(pwd, 1000);
 		if(!pwd)
 		{
-			perror("cd: get working directory error");
+			printf("Minishell: %s: %s\n", argv[0], strerror(errno));
 			return 1;
 		}
 		if(get_var(env, "OLDPWD") != NULL)
@@ -45,6 +46,6 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 		get_var(env, "PWD")->value_len = strlen(pwd);
 		return 0;
 	}
-	perror("");
+	printf("Minishell: %s: %s\n", argv[0], strerror(errno));
 	return 1;
 }
