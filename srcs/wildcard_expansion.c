@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:11:58 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/01 17:17:08 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ static struct dirent	*_readdir(DIR *dir_stream, struct dirent **dir_ent)
 	*dir_ent = readdir(dir_stream);
 	return (*dir_ent);
 }
-
-static t_dlist	*scan_current_directory(t_token *tkn)
-{
-	DIR				*dir_stream;
+static t_dlist	*scan_current_directory(t_token *tkn) { DIR				*dir_stream;
 	struct dirent	*dir_ent;
 	t_dlist			*files;
 
@@ -78,6 +75,35 @@ t_dlist	*link_files_to_tkn_list(t_lexer *lexer, t_dlist *elem, t_dlist *files)
 	return (files_last);
 }
 
+/* check_if_expandable() checks if the current token can be expanded.
+ * If the user is using the export builtin, in the variable assignation,
+ * no wildcard shall be expanded. */
+
+static bool	check_if_expandable(t_dlist *elem)
+{
+	t_token	*tkn;
+
+	while (elem->prev != NULL)
+	{
+		elem = elem->prev;
+		tkn = elem->content;
+		if (tkn->type == T_PIPE || tkn->type == T_LOG_AND
+				|| tkn->type == T_LOG_OR)
+		{
+			tkn = elem->next->content;
+			break ;
+		}
+	}
+	while (tkn->type == T_OP_PRT)
+	{
+		elem = elem->next;
+		tkn = elem->content;
+	}
+	if (ft_strcmp(tkn->val, STR_BUILTIN_EXPORT) == 0)
+		return (false);
+	return (true);
+}
+
 /* wildcard_expansion() returns a string if one or more files are matching the
  * pattern. If no files are found or an error occured, the function returns
  * NULL.
@@ -87,6 +113,11 @@ t_dlist	*wildcard_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn)
 {
 	t_dlist	*files;
 
+	if (ft_strchr(tkn->val, '=') != NULL && check_if_expandable(elem) == false)
+	{
+		printf("token %s is not expanded.\n", tkn->val);
+		return (elem);
+	}
 	files = scan_current_directory(tkn);
 	return (link_files_to_tkn_list(lexer, elem, files));
 }

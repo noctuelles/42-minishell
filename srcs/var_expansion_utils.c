@@ -6,14 +6,15 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:41:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/02 18:30:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
 
-// get_var_value will return the value if any.
+/* get_var_info() will read the variable name and return informations if
+ * the variable exist in the double linked list env_var. */
 
 t_var	get_var_info(char *str, t_dlist *env_var)
 {
@@ -39,28 +40,13 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	}
 }
 
-static ssize_t	copy_var(t_token *tkn, char *new_str, t_var var, size_t i)
+static ssize_t	copy_var(char *new_str, t_var var, size_t i)
 {
 	size_t	k;
-	t_list	*elem;
 
 	k = 0;
-	if (!tkn->quote)
-	{
-		while (var.value[k] == ' ')
-			k++;
-	}
 	while (var.value[k] != '\0')
-	{
-		if (var.value[k] == '*' && !tkn->quote)
-		{
-			elem = ft_lstnew((char *) &new_str[i]);
-			if (!elem)
-				return (-1);
-			ft_lstadd_back(&tkn->wldc_list, elem);
-		}
 		new_str[i++] = var.value[k++];
-	}
 	return (i);
 }
 
@@ -75,12 +61,8 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 	while (tkn->val[j] != '$')
 		new_str[i++] = tkn->val[j++];
 	if (var.value != NULL)
-	{
-		i = copy_var(tkn, new_str, var, i);
-		if (i == -1)
-			return (-1);
-	}
-	i_ret = i;
+		i = copy_var(new_str, var, i);
+	i_ret = i - 1;
 	j += 1 + var.name_len;
 	while (tkn->val[j] != '\0')
 		new_str[i++] = tkn->val[j++];
@@ -88,6 +70,9 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 	free(tkn->val);
 	return (i_ret);
 }
+
+/* include_variable() re-alloc a new string and perform a copy of the env
+ * variable. */
 
 ssize_t	include_variable(t_token *tkn, t_var var)
 {

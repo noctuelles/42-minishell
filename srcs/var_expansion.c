@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 14:46:57 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/02 18:31:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,35 +22,22 @@ static void update_quote(char *str, char *quote)
 		*quote = *str;
 	else if (*str == *quote)
 		*quote = '\0';
-	ft_strdelchr(str);
 }
 
 t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 {
 	ssize_t	i;
-	t_list	*elem;
 
 	i = 0;
 	while (tkn->val[i] != '\0')
 	{
 		if (tkn->val[i] == SQUOTE || tkn->val[i] == DQUOTE)
-		{
 			update_quote(&tkn->val[i], &tkn->quote);
-			continue;
-		}
-		if (!tkn->quote && tkn->val[i] == '*')
-		{
-			elem = ft_lstnew((char *) &tkn->val[i]);
-			if (!elem)
-				return (NULL);
-			ft_lstadd_back(&tkn->wldc_list, elem);
-		}
-		if (tkn->quote != SQUOTE && tkn->val[i] == '$')
+		else if (tkn->quote != SQUOTE && tkn->val[i] == '$')
 		{
 			i = include_variable(tkn, get_var_info(&tkn->val[i + 1], env_var));
 			if (i == -1)
 				return (NULL);
-			continue ;
 		}
 		i++;
 	}

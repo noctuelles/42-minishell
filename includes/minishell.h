@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:40:45 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/01 16:53:47 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -29,6 +29,8 @@
 # define CURRENT_DIR            "."
 
 # define ENO                    0
+
+# define STR_BUILTIN_EXPORT     "export"
 
 /* struct s_var:
  *
