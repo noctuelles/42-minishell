@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 13:19:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/01 17:18:55 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/04 11:45:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ void	signal_handler_as_here_doc(int signum)
 	}
 }
 
+void	signal_handler_as_parent(int signum)
+{
+	(void)signum;
+}
+
 void set_signals_as_prompt()
 {
 	signal(SIGINT, signal_handler_as_prompt);
@@ -65,4 +70,10 @@ void set_signals_as_here_doc()
 {
 	signal(SIGINT, signal_handler_as_here_doc);
 	signal(SIGQUIT, signal_handler_as_here_doc);
+}
+
+void set_signals_as_parent()
+{
+	signal(SIGINT, signal_handler_as_parent);
+	signal(SIGQUIT, signal_handler_as_parent);
 }

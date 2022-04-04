@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/01 17:22:44 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/04 11:43:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <signal.h>
 #include "execution.h"
 #include "minishell.h"
+
+extern int g_sigint;
 
 void	print_tokens(t_lexer lexer)
 {
@@ -61,8 +63,16 @@ void treat_result(int pid, int wait_status, int *pipeline_result, int last_pid)
 	}
 	else if(WIFSIGNALED(wait_status))
 	{
-		if(__WCOREDUMP(wait_status))
-			fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
+		if(WTERMSIG(wait_status) == 11)
+			fprintf(stderr, "minishell: process %i terminated by a segmentation fault\n", pid);
+		if(WTERMSIG(wait_status) == 3)
+		{
+			if(!g_sigint)
+			{
+				fprintf(stderr, "Quit\n");
+				g_sigint = 1;
+			}
+		}
 		if(last_pid != 0 && pid == last_pid)
 			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
@@ -95,6 +105,8 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	int count = 0;
 	int status = 0;
 	int last_pid = 0;
+	if(forking)
+		set_signals_as_parent();
 	while(first != NULL)
 	{
 		int ret = execute_file(first, env, forking, save_stdin);
@@ -119,6 +131,8 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 		close(0);
 		treat_result(pid, wait_status, &status, last_pid);
 	}
+	set_signals_as_prompt();
+	g_sigint = 0;
 	close(0);
 	dup2(save_stdin, 0);
 	close(save_stdin);
