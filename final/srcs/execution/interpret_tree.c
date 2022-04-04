@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/01 17:20:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/04 14:59:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		set_signals_as_prompt();
 		close(pipefd[1]);
-			command->io_in_redirect = pipefd[0];
+		command->io_in_redirect = pipefd[0];
 	}
 	if (node->left != NULL && !command->error)
 		parse_tree(node->left, command, args);
