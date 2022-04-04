@@ -37,6 +37,33 @@
  * duplicate the token.
  *  */
 
+char	*ft_strndup_wld(t_list *wldc_lst, const char *s, size_t n)
+{
+	char	*str;
+	size_t	i;
+	t_list	*elem;
+
+	if (!s || n == 0)
+		return (NULL);
+	str = (char *) malloc((n + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\0' && i < n)
+	{
+		if (s[i] == '*')
+		{
+			elem = is_intrp_wldc(wldc_lst, (char *) &s[i]);
+			if (elem)
+				elem->content = &str[i];
+		}
+		str[i] = s[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
 t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 															t_token_type type)
 {
@@ -74,7 +101,7 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 	tkn->len = len;
 	tkn->type = type;
 	tkn->quote_lst = NULL;
-	tkn->wldc_list = NULL;
+	tkn->wldc_lst = NULL;
 	tkn->quote = '\0';
 	return (*tkn);
 }
@@ -121,13 +148,13 @@ bool	is_intrp_quote(t_list *lst, char *pquote)
 	return (true);
 }
 
-bool	is_intrp_char(t_list *lst, char *c)
+t_list	*is_intrp_wldc(t_list *lst, char *c)
 {
 	while (lst != NULL)
 	{
 		if ((char *) lst->content == c)
-			return (true);
+			return (lst);
 		lst = lst->next;
 	}
-	return (false);
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/04 16:50:34 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 21:52:20 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 		if (var.value[k] ==  SQUOTE || var.value[k] == DQUOTE)
 		{
 			elem = ft_lstnew(&var.value[k]);
+			if (!elem)
+				return (-1);
 			ft_lstadd_back(quote_lst, elem);
 		}
 		new_str[i++] = var.value[k++];
@@ -69,7 +71,11 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 	while (tkn->val[j] != '$')
 		new_str[i++] = tkn->val[j++];
 	if (var.value != NULL)
+	{
 		i = copy_var(&tkn->quote_lst, new_str, var, i);
+		if (i == -1)
+			return (-1);
+	}
 	i_ret = i - 1;
 	j += 1 + var.name_len;
 	while (tkn->val[j] != '\0')
@@ -80,7 +86,8 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 }
 
 /* include_variable() re-alloc a new string and perform a copy of the env
- * variable. */
+ * variable.
+ * */
 
 ssize_t	include_variable(t_token *tkn, t_var var)
 {

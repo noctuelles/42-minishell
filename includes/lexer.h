@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/04 16:26:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 21:38:22 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_token
 	char			*val;
 	size_t			len;
 	t_list			*quote_lst;
-	t_list			*wldc_list;
+	t_list			*wldc_lst;
 	t_token_type	type;
 	char			quote;
 }				t_token;
