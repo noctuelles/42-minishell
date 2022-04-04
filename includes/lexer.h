@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 13:31:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 10:08:33 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	free_lexer(t_lexer *lexer);
 
 /* lexer_utils.c */
 
-t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
+t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 															t_token_type type);
 t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);

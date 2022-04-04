@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 13:51:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 10:08:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	add_static_token(t_lexer *lexer, t_token tkn, char **str)
 		lexer->prt_cnt--;
 	if (tkn.type != T_BREAK)
 	{
-		if (!add_to_lexer(lexer, tkn.val, tkn.len, tkn.type))
+		if (!add_to_tkns(&lexer->tkns, tkn.val, tkn.len, tkn.type))
 			return (-1);
 	}
 	lexer->prev = *str;
@@ -67,12 +67,12 @@ static int	finish_lexing(t_lexer *lexer, char *str)
 {
 	if (lexer->prev != str)
 	{
-		if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
+		if (!add_to_tkns(&lexer->tkns, lexer->prev, str - lexer->prev, T_WORD))
 			return (ERR_MEM);
 	}
 	if (lexer->prt_cnt != 0)
 		return (ERR_PRT);
-	if (!add_to_lexer(lexer, NULL, 0, T_NULL))
+	if (!add_to_tkns(&lexer->tkns, NULL, 0, T_NULL))
 		return (ERR_MEM);
 	return (ERR_NO);
 }
@@ -90,7 +90,7 @@ static int fill_lexer_from_str(t_lexer *lexer, char *str)
 		tkn = search_existing_token(str);
 		if ((tkn.type != T_NULL) && str != lexer->prev)
 		{
-			if (!add_to_lexer(lexer, lexer->prev, str - lexer->prev, T_WORD))
+			if (!add_to_tkns(&lexer->tkns, lexer->prev, str - lexer->prev, T_WORD))
 				return (ERR_MEM);
 		}
 		if (tkn.type != T_NULL)

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/02 18:38:55 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 15:07:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@ static void update_quote(char *str, char *quote)
 		*quote = '\0';
 }
 
-static t_elem	*tokenise_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn)
-{
-	t_dlist	*tkn_list;
-
-}
+t_dlist	*re_tokenize(char *str);
 
 t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 {

@@ -1,7 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */ /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -38,7 +37,7 @@
  * duplicate the token.
  *  */
 
-t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
+t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 															t_token_type type)
 {
 	char	*str;
@@ -64,7 +63,7 @@ t_token	*add_to_lexer(t_lexer *lexer, char *val, size_t len,
 		free_token(tkn);
 		return (NULL);
 	}
-	ft_dlstadd_back(&lexer->tkns, elem);
+	ft_dlstadd_back(tkns, elem);
 	return (tkn);
 }
 
@@ -104,6 +103,10 @@ t_token	search_existing_token(const char *str)
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));
+}
+
+t_token	search_token(const char *str)
+{
 }
 
 bool	is_a_intrp_wldc(t_list *wldc_list, char *c)

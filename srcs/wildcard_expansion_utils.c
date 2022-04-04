@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 17:50:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 13:30:28 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,27 @@
  * interpretable means that the wildcard wasn't quoted.
  * */
 
+bool	handle_quote(char *filename, char *pattern, size_t *pi, size_t *pj)
+{
+	size_t	i;
+	size_t	j;
+	char	quote;
+	bool	match;
+
+	i = *pi;
+	j = *pj;
+	quote = pattern[j++];
+	match = true;
+	while (pattern[j] != quote && match)
+	{
+		if (filename[i++] != pattern[j++])
+			match = false;
+	}
+	*pi = i;
+	*pj = j++;
+	return (match);
+}
+
 static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 {
 	size_t	i;
@@ -31,6 +52,11 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	j = 0;
 	while (pattern[j] != '\0')
 	{
+		if (pattern[j] == SQUOTE || pattern[j] == DQUOTE)
+		{
+			if (handle_quote(filename, pattern, &i, &j) == false)
+				return (false);
+		}
 		if (pattern[j] == '*' && is_a_intrp_wldc(tkn->wldc_list, &pattern[j]))
 			break ;
 		if (filename[i++] != pattern[j++])
