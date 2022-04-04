@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 15:06:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/04 14:14:47 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 void	file_error(t_command *command, int *error)
 {
 	*error = 1;
-	printf("Minishell: %s: %s\n", command->in_name, strerror(command->in_errno));
+	fprintf(stderr, "Minishell: %s: %s\n", command->in_name, strerror(command->in_errno));
 }
 
 void	close_all_error(t_command *command, int code)
@@ -75,7 +75,7 @@ void	dup_for_redirections(t_command *command, int pid)
 
 void	error_exit(char *str, int errno_value)
 {
-	printf("Minishell: %s: %s", str, strerror(errno_value));
+	fprintf(stderr, "Minishell: %s: %s", str, strerror(errno_value));
 	exit(1);
 }
 
