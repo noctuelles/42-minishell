@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/02 18:30:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/04 16:50:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,21 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	}
 }
 
-static ssize_t	copy_var(char *new_str, t_var var, size_t i)
+static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 {
 	size_t	k;
+	t_list	*elem;
 
 	k = 0;
 	while (var.value[k] != '\0')
+	{
+		if (var.value[k] ==  SQUOTE || var.value[k] == DQUOTE)
+		{
+			elem = ft_lstnew(&var.value[k]);
+			ft_lstadd_back(quote_lst, elem);
+		}
 		new_str[i++] = var.value[k++];
+	}
 	return (i);
 }
 
@@ -61,7 +69,7 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 	while (tkn->val[j] != '$')
 		new_str[i++] = tkn->val[j++];
 	if (var.value != NULL)
-		i = copy_var(new_str, var, i);
+		i = copy_var(&tkn->quote_lst, new_str, var, i);
 	i_ret = i - 1;
 	j += 1 + var.name_len;
 	while (tkn->val[j] != '\0')

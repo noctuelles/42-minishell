@@ -68,8 +68,6 @@ void	print_tokens(void *content)
 	ft_putchar('\n');
 }
 
-bool	handle_quote(char *filename, char *pattern, size_t *pi, size_t *pj);
-
 int main(int argc, char **argv, char **envp)
 {
 	(void) argc;

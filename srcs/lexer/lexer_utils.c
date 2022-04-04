@@ -73,6 +73,7 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 	tkn->val = val;
 	tkn->len = len;
 	tkn->type = type;
+	tkn->quote_lst = NULL;
 	tkn->wldc_list = NULL;
 	tkn->quote = '\0';
 	return (*tkn);
@@ -109,13 +110,24 @@ t_token	search_token(const char *str)
 {
 }
 
-bool	is_a_intrp_wldc(t_list *wldc_list, char *c)
+bool	is_intrp_quote(t_list *lst, char *pquote)
 {
-	while (wldc_list != NULL)
+	while (lst != NULL)
 	{
-		if ((char *) wldc_list->content == c)
+		if ((char *) lst->content == pquote)
+			return (false);
+		lst = lst->next;
+	}
+	return (true);
+}
+
+bool	is_intrp_char(t_list *lst, char *c)
+{
+	while (lst != NULL)
+	{
+		if ((char *) lst->content == c)
 			return (true);
-		wldc_list = wldc_list->next;
+		lst = lst->next;
 	}
 	return (false);
 }
