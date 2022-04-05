@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 14:05:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 14:47:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -125,8 +125,21 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
 t_var	get_var_info(char *str, t_dlist *env_var);
 ssize_t	include_variable(t_token *tkn, t_var var);
 
+/* linked_list_utils.c */
+
 t_list	*is_intrp_wldc(t_list *lst, char *c);
 bool	is_expnd_quote(t_list *lst, char *pquote);
 bool	is_rem_quote(t_list *lst, char *pquote);
+t_list	*add_to_list(t_list **list, void *content);
+
+/* var_expansion_post.c */
+
+t_dlist	*tokenize_from_tkn(t_token *old_tkn, char *str);
+
+/* var_expansion_post_utils.c */
+
+t_token	*add_to_tkns_cpy(t_lexer *lex, t_token *old_tkn);
+void	update_prev(t_lexer *lex);
+void	check_for_break(t_lexer *lex);
 
 #endif

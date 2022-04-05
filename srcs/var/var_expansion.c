@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 04:15:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 14:47:46 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 		}
 		i++;
 	}
-	t_dlist	*test = re_tokenize(tkn, tkn->val);
+	t_dlist	*test = tokenize_from_tkn(tkn, tkn->val);
 	ft_dlstiter(test, print_tokens);
 	return (tkn);
 }
