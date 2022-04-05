@@ -132,29 +132,3 @@ t_token	search_existing_token(const char *str)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));
 }
-
-t_token	search_token(const char *str)
-{
-}
-
-bool	is_intrp_quote(t_list *lst, char *pquote)
-{
-	while (lst != NULL)
-	{
-		if ((char *) lst->content == pquote)
-			return (false);
-		lst = lst->next;
-	}
-	return (true);
-}
-
-t_list	*is_intrp_wldc(t_list *lst, char *c)
-{
-	while (lst != NULL)
-	{
-		if ((char *) lst->content == c)
-			return (lst);
-		lst = lst->next;
-	}
-	return (NULL);
-}

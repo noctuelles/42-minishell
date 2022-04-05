@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 02:55:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 13:43:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LEXER_H
 
 # include "libft.h"
+# include <stdbool.h>
 
 # define STR_PIPE             "|"
 # define STR_LOG_OR           "||"
@@ -73,7 +74,10 @@ typedef struct s_lexer
 {
 	t_dlist			*tkns;
 	unsigned int	prt_cnt;
+	char			*str;
 	char			*prev;
+	t_token			tkn;
+	bool			bbreak;
 }				t_lexer;
 
 /* lexer_mem_utils.c */

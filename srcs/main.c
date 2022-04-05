@@ -103,8 +103,8 @@ int main(int argc, char **argv, char **envp)
 					tkn = var_expansion(tkn, lst);
 			}
 			printf("\n");
-			ft_dlstiter(lexer->tkns, print_tokens);
-			printf("\nAfter wildcard expansion :\n");
+			//ft_dlstiter(lexer->tkns, print_tokens);
+			/*printf("\nAfter wildcard expansion :\n");
 			t_dlist *elem;
 			elem = lexer->tkns;
 			while (elem)
@@ -115,7 +115,7 @@ int main(int argc, char **argv, char **envp)
 				elem = elem->next;
 			}
 			printf("\n");
-			ft_dlstiter(lexer->tkns, print_tokens);
+			ft_dlstiter(lexer->tkns, print_tokens);*/
 			free_lexer(lexer);
 		}
 		free(str);
