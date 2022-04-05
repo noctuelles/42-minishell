@@ -44,10 +44,10 @@ void	print_tokens(void *content)
 	if (tkn->type == T_WORD)
 	{
 		ft_printf(" Wildcards :");
-		if (tkn->wldc_list)
+		if (tkn->wldc_lst)
 		{
 			ft_putstr("\n\n");
-			for (t_list *lst = tkn->wldc_list; lst != NULL; lst = lst->next)
+			for (t_list *lst = tkn->wldc_lst; lst != NULL; lst = lst->next)
 			{
 				ft_printf("\t| {33}%p{0} : {34}'%c'{0} : ",
 						lst->content, * (char *) lst->content);

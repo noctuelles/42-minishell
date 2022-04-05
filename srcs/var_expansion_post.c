@@ -6,12 +6,23 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 10:20:58 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/04 22:10:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 03:33:50 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
+
+static inline t_list	*add_list(t_list **list, void *content)
+{
+	t_list	*elem;
+
+	elem = ft_lstnew(content);
+	if (!elem)
+		return (NULL);
+	ft_lstadd_back(list, elem);
+	return (elem);
+}
 
 static inline void	check_for_break(char c, bool *space)
 {
@@ -25,16 +36,16 @@ static inline void	handle_escaping(t_token *tkn, char **str)
 {
 	char	*pstr;
 	char	quote;
-
 	pstr = *str;
-	quote = *pstr;
-	ft_strdelchr(pstr++);
+	add_list(&tkn->rem_quote_lst, pstr);
+	quote = *pstr++;
 	while (*pstr)
 	{
 		if (*pstr == quote && is_intrp_quote(tkn->quote_lst, pstr))
 			break ;
 		pstr++;
 	}
+	add_list(&tkn->rem_quote_lst, pstr);
 	pstr++;
 	*str = pstr;
 }
@@ -47,10 +58,12 @@ static t_dlist	*clean(t_dlist **list, t_list **wldc_list)
 	return (NULL);
 }
 
-static char	*ft_strndup_wldc(t_list *wldc_lst, const char *s, size_t n)
+static char	*ft_strndup_wldc(t_token *old_tkn, const char *s, size_t n)
 {
 	char	*str;
 	size_t	i;
+	size_t	j;
+	ssize_t	offset;
 	t_list	*elem;
 
 	if (!s || n == 0)
@@ -59,29 +72,39 @@ static char	*ft_strndup_wldc(t_list *wldc_lst, const char *s, size_t n)
 	if (!str)
 		return (NULL);
 	i = 0;
+	j = 0;
+	offset = 0;
 	while (s[i] != '\0' && i < n)
 	{
 		if (s[i] == '*')
 		{
-			elem = is_intrp_wldc(wldc_lst, (char *) &s[i]);
+			elem = is_intrp_wldc(old_tkn->wldc_lst, (char *) &s[i]);
 			if (elem)
-				elem->content = &str[i];
+				elem->content = &str[i] + offset;
 		}
-		str[i] = s[i];
-		i++;
+		if (s[i] == SQUOTE || s[i] == DQUOTE)
+		{
+			if (!is_intrp_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
+			{
+				i++;
+				offset--;
+				continue;
+			}
+		}
+		str[j++] = s[i++];
 	}
-	str[i] = '\0';
+	str[j] = '\0';
 	return (str);
 }
 
-static t_token	*add_to_tkns_wldc(t_dlist **tkns, t_list **wldc_lst,
+static t_token	*add_to_tkns_wldc(t_dlist **tkns, t_token *old_tkn,
 														char *val, size_t len)
 {
 	char	*str;
 	t_dlist	*elem;
 	t_token	*tkn;
 
-	str = ft_strndup_wldc(*wldc_lst, val, len);
+	str = ft_strndup_wldc(old_tkn, val, len);
 	if (!str)
 		return (NULL);
 	tkn = new_token(str, len, T_WORD);
@@ -90,8 +113,8 @@ static t_token	*add_to_tkns_wldc(t_dlist **tkns, t_list **wldc_lst,
 		free(str);
 		return (NULL);
 	}
-	tkn->wldc_lst = *wldc_lst;
-	*wldc_lst = NULL;
+	tkn->wldc_lst = old_tkn->wldc_lst;
+	old_tkn->wldc_lst = NULL;
 	elem = ft_dlstnew((void *) tkn);
 	if (!elem)
 	{
@@ -119,23 +142,21 @@ t_dlist	*re_tokenize(t_token *old_tkn, char *str)
 	bool	bbreak;
 	char	*prev;
 	t_dlist	*list;
-	t_list	*wldc_lst;
 
 	bbreak = false;
 	prev = str;
 	list = NULL;
-	wldc_lst = NULL;
 	while (*str)
 	{
 		check_for_break(*str, &bbreak);
 		if (bbreak && str != prev)
 		{
-			if (add_to_tkns_wldc(&list, &wldc_lst, prev, str - prev) == NULL)
+			if (add_to_tkns_wldc(&list, old_tkn, prev, str - prev) == NULL)
 				return (NULL);
 		}
 		else if (*str == '*')
 		{
-			if (add_wldc_addr(&wldc_lst, str) == NULL)
+			if (add_wldc_addr(&old_tkn->wldc_lst, str) == NULL)
 				return (NULL);
 		}
 		if (bbreak)
@@ -143,14 +164,16 @@ t_dlist	*re_tokenize(t_token *old_tkn, char *str)
 			str += 1;
 			prev = str;
 		}
-		else if (*str == SQUOTE || *str == DQUOTE)
+		else if ((*str == SQUOTE || *str == DQUOTE) && is_intrp_quote(old_tkn->quote_lst, str))
+		{
 			handle_escaping(old_tkn, &str);
+		}
 		else
 			str++;
 	}
 	if (prev != str)
 	{
-		if (add_to_tkns_wldc(&list, &wldc_lst, prev, str - prev) == NULL)
+		if (add_to_tkns_wldc(&list, old_tkn, prev, str - prev) == NULL)
 			return (NULL);
 	}
 	return (list);
