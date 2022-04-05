@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 14:47:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 16:09:26 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -101,6 +101,14 @@ void	print_minishell_exception(const char *submsg, const char *msg);
 char	*get_parser_error(t_parser_errcode errcode);
 char	*get_lexer_error(t_lexer_errcode errcode);
 
+/* linked_list_utils.c */
+
+t_list	*is_intrp_wldc(t_list *lst, char *c);
+bool	is_expnd_quote(t_list *lst, char *pquote);
+bool	is_rem_quote(t_list *lst, char *pquote);
+t_list	*add_to_list(t_list **list, void *content);
+t_dlist	*insert_list(t_dlist **main_lst, t_dlist *to_insert, t_dlist *elem);
+
 /*******************************************************************************
  *                              Expansion files                                *
  ******************************************************************************/
@@ -108,7 +116,7 @@ char	*get_lexer_error(t_lexer_errcode errcode);
 /* wildcard_expansion.c */
 
 void	print_tokens(void *content);
-t_dlist	*wildcard_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn);
+t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn);
 
 /* wildcard_expansion_utils.c */
 
@@ -118,19 +126,13 @@ size_t	compute_str_size(t_dlist *files);
 
 /* var_expansion.c */
 
-t_token	*var_expansion(t_token *tkn, t_dlist *env_var);
+t_dlist	*var_expansion(t_dlist **tkns, t_dlist *elem,
+		t_token *tkn, t_dlist *env_var);
 
 /* var_expansion_utils.c */
 
 t_var	get_var_info(char *str, t_dlist *env_var);
 ssize_t	include_variable(t_token *tkn, t_var var);
-
-/* linked_list_utils.c */
-
-t_list	*is_intrp_wldc(t_list *lst, char *c);
-bool	is_expnd_quote(t_list *lst, char *pquote);
-bool	is_rem_quote(t_list *lst, char *pquote);
-t_list	*add_to_list(t_list **list, void *content);
 
 /* var_expansion_post.c */
 

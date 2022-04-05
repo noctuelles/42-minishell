@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 14:47:46 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 16:03:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ static void update_quote(char *str, char *quote)
  *	If include_variable fails, the lexer entire lexer should be free.
  */
 
-t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
+t_dlist	*var_expansion(t_dlist **tkns, t_dlist *elem,
+		t_token *tkn, t_dlist *env_var)
 {
 	ssize_t	i;
+	t_dlist	*subtkns;
 
 	i = 0;
 	while (tkn->val[i] != '\0')
@@ -45,7 +47,8 @@ t_token	*var_expansion(t_token *tkn, t_dlist *env_var)
 		}
 		i++;
 	}
-	t_dlist	*test = tokenize_from_tkn(tkn, tkn->val);
-	ft_dlstiter(test, print_tokens);
-	return (tkn);
+	subtkns = tokenize_from_tkn(tkn, tkn->val);
+	if (!subtkns)
+		return (NULL);
+	return (insert_list(tkns, subtkns, elem));
 }

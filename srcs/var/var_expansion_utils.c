@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 02:52:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 16:08:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 	{
 		if (var.value[k] ==  SQUOTE || var.value[k] == DQUOTE)
 		{
-			elem = ft_lstnew((void *) &new_str[i]);
+			elem = add_to_list(quote_lst, (void *) &new_str[i]);
 			if (!elem)
 				return (-1);
-			ft_lstadd_back(quote_lst, elem);
 		}
 		new_str[i++] = var.value[k++];
 	}

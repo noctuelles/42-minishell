@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/01 17:17:08 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 15:57:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,6 @@ static t_dlist	*scan_current_directory(t_token *tkn) { DIR				*dir_stream;
 	return (files);
 }
 
-t_dlist	*link_files_to_tkn_list(t_lexer *lexer, t_dlist *elem, t_dlist *files)
-{
-	t_dlist	*files_last;
-
-	if (!files)
-		return (elem);
-	files_last = ft_dlstlast(files);
-	if (elem->prev)
-	{
-		elem->prev->next = files;
-		files->prev = elem->prev;
-	}
-	else
-		lexer->tkns = files;
-	if (elem->next)
-	{
-		elem->next->prev = files_last;
-		files_last->next = elem->next;
-	}
-	free_token(elem->content);
-	free(elem);
-	return (files_last);
-}
-
 /* check_if_expandable() checks if the current token can be expanded.
  * If the user is using the export builtin, in the variable assignation,
  * no wildcard shall be expanded. */
@@ -109,7 +85,7 @@ static bool	check_if_expandable(t_dlist *elem)
  * NULL.
  * This string contains each filename separated by space by ascii order. */
 
-t_dlist	*wildcard_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn)
+t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn)
 {
 	t_dlist	*files;
 
@@ -119,5 +95,5 @@ t_dlist	*wildcard_expansion(t_lexer *lexer, t_dlist *elem, t_token *tkn)
 		return (elem);
 	}
 	files = scan_current_directory(tkn);
-	return (link_files_to_tkn_list(lexer, elem, files));
+	return (insert_list(tkns, files, elem));
 }

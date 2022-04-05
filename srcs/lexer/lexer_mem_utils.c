@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 03:06:11 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 15:44:12 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	free_token(void *tkn)
 			ft_lstclear(&ptkn->wldc_lst, NULL);
 		if (ptkn->quote_lst)
 			ft_lstclear(&ptkn->quote_lst, NULL);
+		if (ptkn->rem_quote_lst)
+			ft_lstclear(&ptkn->rem_quote_lst, NULL);
 		free(ptkn->val);
 	}
 	free(ptkn);

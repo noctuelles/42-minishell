@@ -40,16 +40,16 @@ void	print_tokens(void *content)
 	t_token	*tkn;
 	
 	tkn = (t_token *) content;
-	ft_printf("< {32}%s{0} > Type <{1;36}%s{0}>", tkn->val, get_type(tkn->type));
+	ft_printf("\t< {32}%s{0} > {1}Type{0} <{1;36}%s{0}>", tkn->val, get_type(tkn->type));
 	if (tkn->type == T_WORD)
 	{
-		ft_printf(" Wildcards :");
+		ft_printf(" {4;1}Wildcards{0} :");
 		if (tkn->wldc_lst)
 		{
 			ft_putstr("\n\n");
 			for (t_list *lst = tkn->wldc_lst; lst != NULL; lst = lst->next)
 			{
-				ft_printf("\t| {33}%p{0} : {34}'%c'{0} : ",
+				ft_printf("\t\t| {33}%p{0} : {34}'%c'{0} : ",
 						lst->content, * (char *) lst->content);
 				ft_putchar('"');
 				for (size_t i = 0; tkn->val[i]; i++)
@@ -63,26 +63,21 @@ void	print_tokens(void *content)
 			}
 		}
 		else
-			ft_printf("\n\n\t| {31}None.{0}\n");
+			ft_printf("\n\n\t\t| {31}None.{0}\n");
 	}
+	else
+		ft_putchar('\n');
 	ft_putchar('\n');
 }
 
 int main(int argc, char **argv, char **envp)
 {
 	(void) argc;
+	(void) argv;
 	t_dlist	*lst;
 	t_lexer	*lexer;
 
 	lst = NULL;
-	/*
-	lst = NULL;
-	ast_root = parse(argv[1]);
-	if (ast_root)
-		ast_tree_delete_node(ast_root);
-	*/
-
-
 	lst = import_var(&lst, envp);
 	while (1)
 	{
@@ -100,25 +95,26 @@ int main(int argc, char **argv, char **envp)
 			{
 				t_token *tkn = (t_token *) elem->content;
 				if (tkn->type == T_WORD)
-					tkn = var_expansion(tkn, lst);
+					elem = var_expansion(&lexer->tkns, elem, tkn, lst);
 			}
 			printf("\n");
-			//ft_dlstiter(lexer->tkns, print_tokens);
-			/*printf("\nAfter wildcard expansion :\n");
+			ft_dlstiter(lexer->tkns, print_tokens);
+			ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
 			t_dlist *elem;
 			elem = lexer->tkns;
 			while (elem)
 			{
 				t_token *tkn = (t_token *) elem->content;
 				if (tkn->type == T_WORD)
-					elem = wildcard_expansion(lexer, elem, tkn);
+					elem = wildcard_expansion(&lexer->tkns, elem, tkn);
 				elem = elem->next;
 			}
 			printf("\n");
-			ft_dlstiter(lexer->tkns, print_tokens);*/
+			ft_dlstiter(lexer->tkns, print_tokens);
 			free_lexer(lexer);
 		}
 		free(str);
 	}
+	ft_dlstclear(&lst, free_var);
 	return (0);
 }
