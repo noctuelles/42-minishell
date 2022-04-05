@@ -81,7 +81,7 @@ int main(int argc, char **argv, char **envp)
 	lst = import_var(&lst, envp);
 	while (1)
 	{
-		char *str = readline("\n> ");
+		char *str = readline("\n" "\e[1;97m" "prompt> " "\e[0m");
 		if (!str)
 			break ;
 		add_history(str);
@@ -100,14 +100,11 @@ int main(int argc, char **argv, char **envp)
 			printf("\n");
 			ft_dlstiter(lexer->tkns, print_tokens);
 			ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
-			t_dlist *elem;
-			elem = lexer->tkns;
-			while (elem)
+			for (t_dlist *elem = lexer->tkns; elem; elem = elem->next)
 			{
 				t_token *tkn = (t_token *) elem->content;
 				if (tkn->type == T_WORD)
 					elem = wildcard_expansion(&lexer->tkns, elem, tkn);
-				elem = elem->next;
 			}
 			printf("\n");
 			ft_dlstiter(lexer->tkns, print_tokens);
