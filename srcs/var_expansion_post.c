@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 10:20:58 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 03:33:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 04:25:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,42 +58,40 @@ static t_dlist	*clean(t_dlist **list, t_list **wldc_list)
 	return (NULL);
 }
 
-static char	*ft_strndup_wldc(t_token *old_tkn, const char *s, size_t n)
+static void	copy(t_token *old_tkn, const char *s, char *str, size_t n)
 {
-	char	*str;
+	t_list	*elem;
 	size_t	i;
 	size_t	j;
-	ssize_t	offset;
-	t_list	*elem;
 
-	if (!s || n == 0)
-		return (NULL);
-	str = (char *) malloc((n + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
 	i = 0;
 	j = 0;
-	offset = 0;
 	while (s[i] != '\0' && i < n)
 	{
 		if (s[i] == '*')
 		{
 			elem = is_intrp_wldc(old_tkn->wldc_lst, (char *) &s[i]);
 			if (elem)
-				elem->content = &str[i] + offset;
+				elem->content = &str[j];
 		}
-		if (s[i] == SQUOTE || s[i] == DQUOTE)
-		{
-			if (!is_intrp_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
-			{
+		if ((s[i] == SQUOTE || s[i] == DQUOTE)
+				&& !is_intrp_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
 				i++;
-				offset--;
-				continue;
-			}
-		}
-		str[j++] = s[i++];
+		else
+			str[j++] = s[i++];
 	}
 	str[j] = '\0';
+}
+
+static char	*ft_strndup_wldc(t_token *old_tkn, const char *s, size_t n)
+{
+	char	*str;
+
+	if (!s || n == 0)
+		return (NULL);
+	str = (char *) malloc((n - ft_lstsize(old_tkn->rem_quote_lst) + 1)
+			* sizeof(char));
+	copy(old_tkn, s, str, n);
 	return (str);
 }
 

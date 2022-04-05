@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 03:23:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 04:15:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ static void update_quote(char *str, char *quote)
 	else if (*str == *quote)
 		*quote = '\0';
 }
-
-t_dlist	*re_tokenize(t_token *old_tkn, char *str);
 
 /*
  *	If include_variable fails, the lexer entire lexer should be free.
