@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:53:12 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 23:45:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static char	*ft_strndup_tkn(t_token *old_tkn, const char *s, size_t n)
 		return (NULL);
 	str = (char *) malloc((n - ft_lstsize(old_tkn->rem_quote_lst) + 1)
 			* sizeof(char));
+	if (!str)
+		return (NULL);
 	copy(old_tkn, s, str, n);
 	return (str);
 }

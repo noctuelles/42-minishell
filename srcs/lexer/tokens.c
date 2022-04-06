@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 15:36:06 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/07 00:14:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,17 @@ static t_dlist	*clean(t_dlist **tkns)
 t_dlist	*get_tokens(char *str, t_dlist *env_var)
 {
 	t_dlist	*tkns;
+	t_dlist	*new_tkns;
 
 	tkns = lex_str(str);
 	if (!tkns)
 		return (NULL);
-	tkns = iter(&tkns, env_var, var_expansion);
-	if (!tkns)
+	new_tkns = iter(&tkns, env_var, var_expansion);
+	if (!new_tkns)
 		return (clean(&tkns));
-	tkns = iter(&tkns, NULL, wildcard_expansion);
-	if (!tkns)
+	tkns = new_tkns;
+	new_tkns = iter(&new_tkns, NULL, wildcard_expansion);
+	if (!new_tkns)
 		return (clean(&tkns));
-	return (tkns);
+	return (new_tkns);
 }
