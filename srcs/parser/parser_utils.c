@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/18 18:48:35 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 16:06:54 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,26 @@
 
 t_bool	match(t_parser *parser, t_token_type type, char **value)
 {
-	if (parser->lex_idx >= parser->lexer->idx)
+	t_token	*tkn;
+
+	tkn = (t_token *) parser->tkns->content;
+	if (tkn->type == T_NULL)
 		return (FALSE);
-	if (parser->lexer->tkns[parser->lex_idx].type == type)
+	if (tkn->type == type)
 	{
 		if (value != NULL)
 		{
-				*value = ft_strdup(parser->lexer->tkns[parser->lex_idx].val);
+				*value = ft_strdup(tkn->val);
 				if (!(*value))
 				{
 					parser->errcode = ERR_MALLOC;
 					return (FALSE);
 				}
 		}
-		parser->lex_idx += 1;
+		parser->tkns = parser->tkns->next;
 		return (TRUE);
 	}
-	parser->lex_idx += 1;
+	parser->tkns = parser->tkns->next;
 	return (FALSE);
 }
 
@@ -40,9 +43,9 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 
 t_ast_tree_node	*call_production(t_parser *parser,
 		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		size_t save)
+		t_dlist *save)
 {
-	parser->lex_idx = save;
+	parser->tkns = save;
 	*root = fprod(parser);
 	return (*root);
 }

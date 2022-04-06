@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/18 18:50:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 16:07:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 t_ast_tree_node	*pipeline(t_parser *parser)
 {
 	t_ast_tree_node	*node;
-	size_t			save;
+	t_dlist			*save;
 
-	save = parser->lex_idx;
+	save = parser->tkns;
 	if (call_production(parser, &pipeline1, &node, save) != NULL)
 		return (node);
 	if (call_production(parser, &pipeline2, &node, save) != NULL)

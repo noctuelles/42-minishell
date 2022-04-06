@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/30 13:29:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 15:52:30 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,22 @@
 #include <string.h>
 #include <errno.h>
 
-static t_ast_tree_node	*parse_from_lexer(t_lexer *lexer)
+static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 {
 	t_parser		parser;
 	t_ast_tree_node	*root;
 
-	parser.lexer = lexer;
-	parser.lex_idx = 0;
+	parser.tkns = tkns;
 	parser.errcode = NO_ERR;
 	root = complete_cmd(&parser);
 	if (!root)
 	{
-		if (parser.errcode == ERR_MALLOC)
+/*		if (parser.errcode == ERR_MALLOC)
 			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
 		else
 			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
 					get_parser_error(parser.errcode),
-					lexer->tkns[parser.lex_idx - 1].val);
+					lexer->tkns[parser.lex_idx - 1].val);*/
 	}
 	else
 	{
@@ -41,16 +40,12 @@ static t_ast_tree_node	*parse_from_lexer(t_lexer *lexer)
 	return (root);
 }
 
-t_ast_tree_node	*parse(char *str)
+t_ast_tree_node	*parse(t_dlist **tkns)
 {
-	t_lexer			*lexer;
 	t_ast_tree_node	*ast_root;
 
-	lexer = lex_input(str);
-	if (!lexer)
-		return (NULL);
-	ast_root = parse_from_lexer(lexer);
-	free_lexer(lexer);
+	ast_root = parse_from_tkns(*tkns);
+	ft_dlstclear(tkns, free_token);
 	if (!ast_root)
 		return (NULL);
 	return (ast_root);

@@ -34,8 +34,7 @@ typedef enum e_parser_errcode
 
 typedef struct	s_parser
 {
-	t_lexer				*lexer;
-	size_t				lex_idx;
+	t_dlist				*tkns;
 	t_parser_errcode	errcode;
 }	t_parser;
 
@@ -44,7 +43,7 @@ typedef struct	s_parser
 t_bool	match(t_parser *parser, t_token_type type, char **value);
 t_ast_tree_node	*call_production(t_parser *parser,
 		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		size_t save);
+		t_dlist *save);
 t_ast_tree_node	*call_term(t_parser *parser,
 		t_ast_tree_node *(*fterm)(t_parser *), t_ast_tree_node **root);
 void	*quit_production(t_parser *parser, t_ast_tree_node *left,
@@ -52,7 +51,7 @@ void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 
 /* parser.c */
 
-t_ast_tree_node	*parse(char *str);
+t_ast_tree_node	*parse(t_dlist **tkns);
 
 /* Prototype for each production rules : */
 
