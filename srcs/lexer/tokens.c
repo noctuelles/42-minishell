@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 14:53:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 15:36:06 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ t_dlist	*get_tokens(char *str, t_dlist *env_var)
 	if (!tkns)
 		return (NULL);
 	tkns = iter(&tkns, env_var, var_expansion);
-	if (!tkns && errno != ENO)
+	if (!tkns)
 		return (clean(&tkns));
 	tkns = iter(&tkns, NULL, wildcard_expansion);
-	if (!tkns && errno != ENO)
+	if (!tkns)
 		return (clean(&tkns));
 	return (tkns);
 }
