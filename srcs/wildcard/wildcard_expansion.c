@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:43:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:49:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ static struct dirent	*_readdir(DIR *dir_stream, struct dirent **dir_ent)
 	*dir_ent = readdir(dir_stream);
 	return (*dir_ent);
 }
+
+/* scan_current_directory() scan each files into the current working directory,
+ * and add it to the list files if a file match the pattern (the pattern is the
+ * value of the tkn).
+ * If an error occurs, it returns the value of errno, and not NULL because files
+ * can be NULL even if no error occurs.*/
 
 static int	scan_current_directory(t_dlist **files, t_token *tkn)
 {
