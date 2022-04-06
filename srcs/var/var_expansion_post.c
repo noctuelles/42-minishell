@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 10:20:58 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 14:46:46 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:55:28 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static t_list	*handle_escaping(t_token *tkn, char **str)
 {
 	char	*pstr;
 	char	quote;
+
 	pstr = *str;
 	if (add_to_list(&tkn->rem_quote_lst, pstr) == NULL)
 		return (NULL);
@@ -85,7 +86,7 @@ t_dlist	*tokenize_from_tkn(t_token *old_tkn, char *str)
 		if (lex.bbreak)
 			update_prev(&lex);
 		else if ((*lex.str == SQUOTE || *lex.str == DQUOTE)
-				&& !is_expnd_quote(old_tkn->quote_lst, lex.str))
+			&& !is_expnd_quote(old_tkn->quote_lst, lex.str))
 		{
 			if (handle_escaping(old_tkn, &lex.str) == NULL)
 				return (clean(&lex.tkns));

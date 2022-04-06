@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:19:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:55:01 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	var = get_var(env_var, str);
 	str[i] = temp;
 	if (var)
-			return (*var);
+		return (*var);
 	else
 	{
 		default_var.name_len = i;
@@ -52,7 +52,7 @@ static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 	k = 0;
 	while (var.value[k] != '\0')
 	{
-		if (var.value[k] ==  SQUOTE || var.value[k] == DQUOTE)
+		if (var.value[k] == SQUOTE || var.value[k] == DQUOTE)
 		{
 			elem = add_to_list(quote_lst, (void *) &new_str[i]);
 			if (!elem)

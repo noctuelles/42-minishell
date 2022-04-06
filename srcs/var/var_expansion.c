@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:16:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:53:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-static void update_quote(char *str, char *quote)
+static void	update_quote(char *str, char *quote)
 {
 	if (*quote == '\0')
 		*quote = *str;
@@ -63,7 +63,7 @@ t_dlist	*var_expansion(t_dlist **tkns, t_dlist *elem,
 		}
 		i++;
 	}
-	subtkns = post_process(tkns, elem, tkn); 
+	subtkns = post_process(tkns, elem, tkn);
 	if (subtkns == NULL)
 		return (NULL);
 	else

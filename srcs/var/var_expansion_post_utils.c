@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 14:44:57 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:53:12 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	copy(t_token *old_tkn, const char *s, char *str, size_t n)
 				elem->content = &str[j];
 		}
 		if ((s[i] == SQUOTE || s[i] == DQUOTE)
-				&& is_rem_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
+			&& is_rem_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
 				i++;
 		else
 			str[j++] = s[i++];
