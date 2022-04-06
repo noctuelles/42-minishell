@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 15:57:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 16:44:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ static struct dirent	*_readdir(DIR *dir_stream, struct dirent **dir_ent)
 	*dir_ent = readdir(dir_stream);
 	return (*dir_ent);
 }
-static t_dlist	*scan_current_directory(t_token *tkn) { DIR				*dir_stream;
+
+static t_dlist	*scan_current_directory(t_token *tkn) {
+	DIR				*dir_stream;
 	struct dirent	*dir_ent;
 	t_dlist			*files;
 

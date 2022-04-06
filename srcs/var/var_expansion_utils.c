@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 16:08:21 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:19:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	}
 }
 
+/* copy_var() copy the variable var into the new string.
+ * If double quote or simple quote are detected, they're flagged using a linked
+ * list. */
+
 static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 {
 	size_t	k;
@@ -52,18 +56,21 @@ static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 		{
 			elem = add_to_list(quote_lst, (void *) &new_str[i]);
 			if (!elem)
-				return (-1);
+				return (-2);
 		}
 		new_str[i++] = var.value[k++];
 	}
 	return (i);
 }
 
+/* copy() perform the copy of the old token value, and include if exist, the
+ * environnement variable var. */
+
 static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 {
 	ssize_t	i;
 	size_t	j;
-	size_t	i_ret;
+	ssize_t	i_ret;
 
 	i = 0;
 	j = 0;
@@ -72,8 +79,8 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 	if (var.value != NULL)
 	{
 		i = copy_var(&tkn->quote_lst, new_str, var, i);
-		if (i == -1)
-			return (-1);
+		if (i == -2)
+			return (-2);
 	}
 	i_ret = i - 1;
 	j += 1 + var.name_len;
@@ -85,8 +92,7 @@ static ssize_t	copy(t_token *tkn, char *new_str, t_var var)
 }
 
 /* include_variable() re-alloc a new string and perform a copy of the env
- * variable.
- * */
+ * variable into the content of the old token. */
 
 ssize_t	include_variable(t_token *tkn, t_var var)
 {
@@ -100,9 +106,9 @@ ssize_t	include_variable(t_token *tkn, t_var var)
 		str_len = ft_strlen(tkn->val) - (var.name_len + 1);
 	new_str = (char *) malloc((str_len + 1) * sizeof(char));
 	if (!new_str)
-		return (-1);
+		return (-2);
 	i_ret = copy(tkn, new_str, var);
-	if (i_ret == -1)
+	if (i_ret == -2)
 		free(new_str);
 	else
 		tkn->val = new_str;
