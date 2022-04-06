@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:38:00 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:43:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,13 @@ static bool	check_if_expandable(t_dlist *elem)
 	return (true);
 }
 
-/* wildcard_expansion() returns a string if one or more files are matching the
- * pattern. If no files are found or an error occured, the function returns
- * NULL.
- * This string contains each filename separated by space by ascii order. */
+/* wildcard_expansion() returns a pointer to the next element.
+ * If one or more files in the working directory match the pattern (the pattern
+ * is the token value), the current element in the list get replaced by a 
+ * sub-list called files.
+ * If no match are found, the function returns NULL.
+ * If an allocation error or an I/O error is found, the function returns NULL.
+ * Because both cases returns NULL, must check errno. */
 
 t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn)
 {
@@ -95,5 +98,6 @@ t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn)
 		return (elem);
 	if (scan_current_directory(&files, tkn) != 0)
 		return (NULL);
+	ft_lstclear(&tkn->wldc_lst, NULL);
 	return (insert_list(tkns, files, elem));
 }
