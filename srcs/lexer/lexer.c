@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/04 10:08:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 15:02:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,24 +109,21 @@ static int fill_lexer_from_str(t_lexer *lexer, char *str)
 	return (finish_lexing(lexer, str));
 }
 
-/* lex_str() returns a lexer if str is a valid lexical shell syntax.
- * If an errors occurs, all memory allocated is freed and lex_str() returns
- * NULL. */
+/* lex_str() returns a double linked list of tokens.
+ * If any error occurs, the function displays and adequate error message. */
 
-t_lexer	*lex_str(const char *str)
+t_dlist	*lex_str(const char *str)
 {
 	t_token	*tkn;
-	t_lexer	*lexer;
+	t_lexer	lexer;
 	t_dlist	*last;
 	int		ret;
 
-	lexer = new_lexer();
-	if (!lexer)
-		return (NULL);
-	ret = fill_lexer_from_str(lexer, (char *) str);
+	ft_memset(&lexer, 0, sizeof(lexer));
+	ret = fill_lexer_from_str(&lexer, (char *) str);
 	if (ret != ERR_NO)
 	{
-		last = ft_dlstlast(lexer->tkns);
+		last = ft_dlstlast(lexer.tkns);
 		if (last)
 			tkn = (t_token *) last->content;
 		if (ret == ERR_MEM)
@@ -136,8 +133,7 @@ t_lexer	*lex_str(const char *str)
 		else 
 			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR, get_lexer_error(ret),
 					tkn->val);
-		free_lexer(lexer);
-		lexer = NULL;
+		ft_dlstclear(&lexer.tkns, free_token);
 	}
-	return (lexer);
+	return (lexer.tkns);
 }

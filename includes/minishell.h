@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 16:09:26 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 15:13:51 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -27,7 +27,6 @@
 #define CYN "\e[0;36m"
 #define WHT "\e[0;37m"
 #define RST "\e[0m"
-
 
 # define SHELL_NAME             "minishell"
 

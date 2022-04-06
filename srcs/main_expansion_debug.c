@@ -10,6 +10,8 @@
 #include "ft_printf.h"
 #include <unistd.h>
 
+bool DEBUG = false;
+
 char *get_type(t_token_type type)
 {
 	if (type == T_PIPE)
@@ -74,44 +76,73 @@ int main(int argc, char **argv, char **envp)
 {
 	(void) argc;
 	(void) argv;
-	t_dlist	*lst;
-	t_lexer	*lexer;
+	t_dlist	*env_var;
+	t_dlist	*tkns;
 
-	lst = NULL;
-	lst = import_var(&lst, envp);
+	env_var = NULL;
+	env_var = import_var(&env_var, envp);
 	while (1)
 	{
 		char *str = readline("\n" "\e[1;97m" "prompt> " "\e[0m");
 		if (!str)
 			break ;
 		add_history(str);
-		lexer = lex_str(str);
-		if (lexer)
+		if (ft_strcmp(str, "debug") == 0)
 		{
-			ft_printf("\n{1;4;33}Initial token(s) :{0}\n\n");
-			ft_dlstiter(lexer->tkns, print_tokens);
-			ft_printf("\n{1;4;33}After variable expansion :{0}\n\n");
-			for (t_dlist *elem = lexer->tkns; elem; elem = elem->next)
+			if (!DEBUG)
 			{
-				t_token *tkn = (t_token *) elem->content;
-				if (tkn->type == T_WORD)
-					elem = var_expansion(&lexer->tkns, elem, tkn, lst);
+				ft_printf("\n{1;4}Switching to expansion debug mode.{0}\n");
+				DEBUG = true;
 			}
-			printf("\n");
-			ft_dlstiter(lexer->tkns, print_tokens);
-			ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
-			for (t_dlist *elem = lexer->tkns; elem; elem = elem->next)
+			else
 			{
-				t_token *tkn = (t_token *) elem->content;
-				if (tkn->type == T_WORD)
-					elem = wildcard_expansion(&lexer->tkns, elem, tkn);
+				ft_printf("\n{1;4}Switching to normal mode.{0}\n");
+				DEBUG = false;
 			}
-			printf("\n");
-			ft_dlstiter(lexer->tkns, print_tokens);
-			free_lexer(lexer);
+		}
+		else
+		{
+			if (DEBUG)
+			{
+				tkns = lex_str(str);
+				if (tkns)
+				{
+					ft_printf("\n{1;4;33}Initial token(s) :{0}\n\n");
+					ft_dlstiter(tkns, print_tokens);
+					ft_printf("\n{1;4;33}After variable expansion :{0}\n\n");
+					for (t_dlist *elem = tkns; elem; elem = elem->next)
+					{
+						t_token *tkn = (t_token *) elem->content;
+						if (tkn->type == T_WORD)
+							elem = var_expansion(&tkns, elem, tkn, env_var);
+					}
+					printf("\n");
+					ft_dlstiter(tkns, print_tokens);
+					ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
+					for (t_dlist *elem = tkns; elem; elem = elem->next)
+					{
+						t_token *tkn = (t_token *) elem->content;
+						if (tkn->type == T_WORD)
+							elem = wildcard_expansion(&tkns, elem, tkn);
+					}
+					printf("\n");
+					ft_dlstiter(tkns, print_tokens);
+					ft_dlstclear(&tkns, free_token);
+				}
+			}
+			else
+			{
+				tkns = get_tokens(str, env_var);
+				if (tkns)
+				{
+					ft_printf("\n{1;4;33}Token(s) :{0}\n\n");
+					ft_dlstiter(tkns, print_tokens);
+					ft_dlstclear(&tkns, free_token);
+				}
+			}
 		}
 		free(str);
 	}
-	ft_dlstclear(&lst, free_var);
+	ft_dlstclear(&env_var, free_var);
 	return (0);
 }
