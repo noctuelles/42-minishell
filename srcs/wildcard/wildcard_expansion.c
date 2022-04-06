@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:49:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:52:19 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static bool	check_if_expandable(t_dlist *elem)
 			elem = elem->prev;
 			tkn = elem->content;
 			if (tkn->type == T_PIPE || tkn->type == T_LOG_AND
-					|| tkn->type == T_LOG_OR)
+				|| tkn->type == T_LOG_OR)
 			{
 				tkn = elem->next->content;
 				break ;
@@ -81,8 +81,8 @@ static bool	check_if_expandable(t_dlist *elem)
 			elem = elem->next;
 			tkn = elem->content;
 		}
-	if (ft_strcmp(tkn->val, STR_BUILTIN_EXPORT) == 0)
-		return (false);
+		if (ft_strcmp(tkn->val, STR_BUILTIN_EXPORT) == 0)
+			return (false);
 	}
 	return (true);
 }

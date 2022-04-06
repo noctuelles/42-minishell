@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:49:55 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:51:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,7 @@ void	ascii_sort_list(t_dlist *files)
 	{
 		curr_filename = files->content;
 		while (files->prev != NULL
-				&& ft_strcmp_ignore_case
-				(files->prev->content, curr_filename) > 0)
+			&& ft_strcmp_ignore_case (files->prev->content, curr_filename) > 0)
 		{
 			files->content = files->prev->content;
 			files = files->prev;
