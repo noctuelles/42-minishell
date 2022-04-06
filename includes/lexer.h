@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 16:39:00 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/05 13:43:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LEXER_H
 
 # include "libft.h"
+# include <stdbool.h>
 
 # define STR_PIPE             "|"
 # define STR_LOG_OR           "||"
@@ -62,31 +63,37 @@ typedef struct s_token
 {
 	char			*val;
 	size_t			len;
+	t_list			*quote_lst;
+	t_list			*rem_quote_lst;
+	t_list			*wldc_lst;
 	t_token_type	type;
+	char			quote;
 }				t_token;
 
 typedef struct s_lexer
 {
-	t_token			*tkns;
-	size_t			size;
-	size_t			idx;
+	t_dlist			*tkns;
 	unsigned int	prt_cnt;
+	char			*str;
 	char			*prev;
+	t_token			tkn;
+	bool			bbreak;
 }				t_lexer;
 
-/* lexer_memutils.c */
+/* lexer_mem_utils.c */
 
-void	free_tkns(t_token *tkns, size_t size);
-t_token	*grow_tkns_array(t_lexer *lexer);
+t_token	*new_token(char *val, size_t len, t_token_type type);
+void	free_token(void *tkn);
+t_lexer	*new_lexer(void);
+void	free_lexer(t_lexer *lexer);
 
 /* lexer_utils.c */
 
+t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
+															t_token_type type);
 t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
-void	free_lexer(t_lexer *lexer);
 t_token	search_existing_token(const char *str);
-void	print_parse_exception(const char *errmsg, const char *precision);
-char	*get_lexer_error(int errcode);
 
 /* lexer_post_process.c */
 
@@ -95,7 +102,7 @@ void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
 
 /* lexer.c */
 
-int	fill_lexer_from_str(t_lexer *lexer, char *str);
+t_lexer	*lex_str(const char *str);
 
 /* lexer_post_process.c */
 

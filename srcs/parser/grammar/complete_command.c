@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 10:28:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 17:56:58 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 18:49:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_ast_tree_node	*complete_cmd(t_parser *parser)
 		{
 			if (parser->errcode == NO_ERR)
 				return (quit_production(parser, rslt, NULL,
-						ERR_UNEXCEPTED_EOF));
+						ERR_UNEXPECTED_EOF));
 			else
 				return (quit_production(parser, rslt, NULL, parser->errcode));
 		}

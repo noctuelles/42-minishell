@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/16 18:40:37 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 18:50:44 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_ast_tree_node	*simple_cmd4(t_parser *parser)
 	t_ast_tree_node	*rslt;
 
 	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, NULL, NULL, ERR_EXCEPTED_COMMAND));
+		return (quit_production(parser, NULL, NULL, ERR_EXPECTED_COMMAND));
 	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
 	{
 		free(cmd_name);

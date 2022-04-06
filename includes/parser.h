@@ -12,18 +12,24 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-#include "lexer.h"
-#include "ast.h"
+# include "lexer.h"
+# include "ast.h"
+
+# define STR_ERR_UNEXPECTED_EOF              "unexpected end-of-file or token"
+# define STR_ERR_EXPECTED_COMMAND            "expected command"
+# define STR_ERR_UNEXPECTED_IO_TOKEN         "expected filename for redirection"
+# define STR_ERR_UNEXPECTED_IO_HEREDOC_TOKEN "expected here-doc delimiter"
+# define STR_SYNTAX_ERROR                    "syntax error"
 
 typedef enum e_parser_errcode
 {
 	NO_ERR,
 	ERR_MALLOC,
 	ERR_SYNTAX,
-	ERR_UNEXCEPTED_EOF,
-	ERR_EXCEPTED_COMMAND,
-	ERR_UNEXCEPTED_IO_TOKEN,
-	ERR_UNEXCEPTED_IO_HEREDOC_TOKEN
+	ERR_UNEXPECTED_EOF,
+	ERR_EXPECTED_COMMAND,
+	ERR_UNEXPECTED_IO_TOKEN,
+	ERR_UNEXPECTED_IO_HEREDOC_TOKEN
 }	t_parser_errcode;
 
 typedef struct	s_parser
@@ -43,7 +49,6 @@ t_ast_tree_node	*call_term(t_parser *parser,
 		t_ast_tree_node *(*fterm)(t_parser *), t_ast_tree_node **root);
 void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		t_ast_tree_node *right, t_parser_errcode errcode);
-char	*get_parse_error(t_parser_errcode errcode);
 
 /* parser.c */
 

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 14:32:03 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/18 18:50:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_ast_tree_node	*pipeline1(t_parser *parser)
 	if (match(parser, T_PIPE, NULL) == FALSE)
 		return (quit_production(parser, cmd_node, NULL, NO_ERR));
 	if (call_term(parser, pipeline, &pipe_node) == NULL)
-		return (quit_production(parser, cmd_node, NULL, ERR_EXCEPTED_COMMAND));
+		return (quit_production(parser, cmd_node, NULL, ERR_EXPECTED_COMMAND));
 	rslt = ast_tree_create_node(NULL, NODE_PIPE);
 	if (!rslt)
 		return (quit_production(parser, cmd_node, pipe_node, ERR_MALLOC));

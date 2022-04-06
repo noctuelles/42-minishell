@@ -6,77 +6,15 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/16 18:31:55 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/03/30 13:29:16 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "libft.h"
-#include <stdio.h>
+#include "minishell.h"
+#include "ft_dprintf.h"
 #include <unistd.h>
-
-t_bool	is_expandable(t_node_type type)
-{
-	if (type == NODE_IO_REDIRECT_STDIN
-			|| type == NODE_IO_REDIRECT_FILE
-			|| type == NODE_IO_REDIRECT_FILE_APPEND
-			|| type == NODE_COMMAND
-			|| type == NODE_COMMAND_SUFFIX)
-		return (TRUE);
-	else
-		return (FALSE);
-}
-
-void	expand_tree_value(t_dlist *env_var, t_ast_tree_node *root)
-{
-	if (root->left != NULL)
-		expand_tree_value(env_var, root->left);
-	if (root->right != NULL)
-		expand_tree_value(env_var, root->right);
-	if (is_expandable(root->type)) 
-	{
-		// Expand the current variable.
-	}
-	else if (root->type == NODE_IO_REDIRECT_HERE_DOC)
-	{
-		// Just doing some quote removal.
-	}
-}
-
-void	print_parse_exception(const char *errmsg, const char *precision)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(errmsg, STDERR_FILENO);
-	if (precision != NULL)
-	{
-		ft_putstr_fd(": near '", STDERR_FILENO);
-		ft_putstr_fd(precision, STDERR_FILENO);
-		ft_putstr_fd("'", STDERR_FILENO);
-	}
-	ft_putstr_fd(".\n", STDERR_FILENO);
-}
-
-static t_lexer	*lex_input(char *str)
-{
-	t_lexer	*lexer;
-	int		ret_code;
-
-	lexer = (t_lexer *) ft_calloc(1, sizeof(t_lexer));
-	if (!lexer)
-		return (NULL);
-	ret_code = fill_lexer_from_str(lexer, str);
-	if (ret_code != 0)
-	{
-		if (ret_code == ERR_MEM)
-			perror("minishell");
-		else
-			print_parse_exception(get_lexer_error(ret_code),
-					lexer->tkns[lexer->idx - 1].val);
-		free_lexer(lexer);
-		lexer = NULL;
-	}
-	return (lexer);
-}
+#include <string.h>
+#include <errno.h>
 
 static t_ast_tree_node	*parse_from_lexer(t_lexer *lexer)
 {
@@ -90,10 +28,11 @@ static t_ast_tree_node	*parse_from_lexer(t_lexer *lexer)
 	if (!root)
 	{
 		if (parser.errcode == ERR_MALLOC)
-			perror("minishell");
+			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
 		else
-			print_parse_exception(get_parse_error(parser.errcode),
-				lexer->tkns[parser.lex_idx - 1].val);
+			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
+					get_parser_error(parser.errcode),
+					lexer->tkns[parser.lex_idx - 1].val);
 	}
 	else
 	{
@@ -112,5 +51,7 @@ t_ast_tree_node	*parse(char *str)
 		return (NULL);
 	ast_root = parse_from_lexer(lexer);
 	free_lexer(lexer);
+	if (!ast_root)
+		return (NULL);
 	return (ast_root);
 }
