@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 16:44:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/06 13:38:00 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,24 @@ static struct dirent	*_readdir(DIR *dir_stream, struct dirent **dir_ent)
 	return (*dir_ent);
 }
 
-static t_dlist	*scan_current_directory(t_token *tkn) {
+static int	scan_current_directory(t_dlist **files, t_token *tkn)
+{
 	DIR				*dir_stream;
 	struct dirent	*dir_ent;
-	t_dlist			*files;
 
 	errno = 0;
-	files = NULL;
 	dir_stream = opendir(CURRENT_DIR);
 	if (!dir_stream)
-		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_OPENDIR, strerror(errno));
+		return (errno);
 	while (_readdir(dir_stream, &dir_ent))
 	{
-		if (add_file_to_list(tkn, &files, dir_ent) == -1)
-				break ;
+		if (add_file_to_list(tkn, files, dir_ent) == -1)
+			break ;
 	}
-	if (dir_stream && errno != ENO)
-	{
-		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_READDIR, strerror(errno));
-		ft_dlstclear(&files, free_token);
-	}
+	if (errno != ENO)
+		ft_dlstclear(files, free_token);
 	closedir(dir_stream);
-	return (files);
+	return (errno);
 }
 
 /* check_if_expandable() checks if the current token can be expanded.
@@ -61,24 +57,27 @@ static bool	check_if_expandable(t_dlist *elem)
 {
 	t_token	*tkn;
 
-	while (elem->prev != NULL)
+	if (elem->prev != NULL)
 	{
-		elem = elem->prev;
-		tkn = elem->content;
-		if (tkn->type == T_PIPE || tkn->type == T_LOG_AND
-				|| tkn->type == T_LOG_OR)
+		while (elem->prev != NULL)
 		{
-			tkn = elem->next->content;
-			break ;
+			elem = elem->prev;
+			tkn = elem->content;
+			if (tkn->type == T_PIPE || tkn->type == T_LOG_AND
+					|| tkn->type == T_LOG_OR)
+			{
+				tkn = elem->next->content;
+				break ;
+			}
 		}
-	}
-	while (tkn->type == T_OP_PRT)
-	{
-		elem = elem->next;
-		tkn = elem->content;
-	}
+		while (tkn->type == T_OP_PRT)
+		{
+			elem = elem->next;
+			tkn = elem->content;
+		}
 	if (ft_strcmp(tkn->val, STR_BUILTIN_EXPORT) == 0)
 		return (false);
+	}
 	return (true);
 }
 
@@ -91,11 +90,10 @@ t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn)
 {
 	t_dlist	*files;
 
+	files = NULL;
 	if (ft_strchr(tkn->val, '=') != NULL && check_if_expandable(elem) == false)
-	{
-		printf("token %s is not expanded.\n", tkn->val);
 		return (elem);
-	}
-	files = scan_current_directory(tkn);
+	if (scan_current_directory(&files, tkn) != 0)
+		return (NULL);
 	return (insert_list(tkns, files, elem));
 }
