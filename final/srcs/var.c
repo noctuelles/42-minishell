@@ -10,6 +10,8 @@
 #include "libft.h"
 #include <stdlib.h>
 #include "minishell.h"
+#include <stdbool.h>
+#include <ctype.h>
 
 t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
 {
@@ -105,6 +107,37 @@ t_dlist	*import_var(t_dlist **lst_var, char **envp)
 	return (*lst_var);
 }
 
+bool	is_valid_variable_name(char *str)
+{
+	int	i;
+
+	if (!isalpha(str[0]) && str[0] != '_')
+		return (false);
+	i = -1;
+	while (str[++i])
+	{
+		if (!isalnum(str[i]) && str[i] != '_')
+			return (false);
+	}
+	return (true);
+}
+
+t_dlist	*import_in_env(t_dlist **lst_var, t_var var)
+{
+	var.inherit = FALSE;
+	if (get_var(*lst_var, var.name) == NULL)
+	{
+		if (!add_var(lst_var, var))
+			return (NULL);
+	}
+	else
+	{
+		get_var(*lst_var, var.name)->value = strdup(var.value);
+		get_var(*lst_var, var.name)->value_len = strlen(var.value);
+	}
+	return (*lst_var);
+}
+
 t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 {
 	size_t	j;
@@ -118,34 +151,28 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 			var.name = &value[0];
 			var.value = &value[j + 1];
 			value[j] = '\0';
+			break ;
 		}
 		j++;
 	}
-	var.inherit = FALSE;
-	if(get_var(*lst_var, var.name) == NULL)
+	if (!is_valid_variable_name(var.name))
 	{
-		if (!add_var(lst_var, var))
-			return (NULL);
+		fprintf(stderr, "Minishell: export: '%s=%s': not a valid identifier\n",
+			var.name, var.value);
+		return (*lst_var);
 	}
-	else
-	{
-		get_var(*lst_var, var.name)->value = strdup(var.value);
-		get_var(*lst_var, var.name)->value_len = strlen(var.value);
-	}
-	return (*lst_var);
+	return (import_in_env(lst_var, var));
 }
 
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
 {
 	t_var	var;
 
-
 	var.name = name;
 	var.value = "";
 	var.inherit = FALSE;
 	if (!add_var(lst_var, var))
 		return (NULL);
-	
 	return (*lst_var);
 }
 
@@ -166,11 +193,11 @@ t_var	*get_var(t_dlist *lst_var, char *name)
 	return (NULL);
 }
 
-void free_env(t_dlist *env)
+void	free_env(t_dlist *env)
 {
-	t_dlist *tmp;
+	t_dlist	*tmp;
 
-	while(env != NULL)
+	while (env != NULL)
 	{
 		free_var(env->content);
 		tmp = env;

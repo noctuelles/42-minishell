@@ -4,6 +4,7 @@
 		"libft.h": "c",
 		"wait.h": "c",
 		"stdio.h": "c",
-		"readline.h": "c"
+		"readline.h": "c",
+		"sstream": "c"
 	}
 }
