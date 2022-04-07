@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/04 15:02:13 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 14:25:06 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,154 +22,169 @@
 #include "execution.h"
 #include "minishell.h"
 
-extern int g_sigint;
+extern int	g_sigint;
 
-void	print_tokens(t_lexer lexer)
+void	treat_result(int pid, int wait_status, int *pipeline_result,
+	int last_pid)
 {
-	for (size_t i = 0; i < lexer.idx; i++)
-		printf("< '%s' %d >\n", lexer.tkns[i].val, lexer.tkns[i].type);
-}
-
-extern const char NODE_STR_EQU[][100] ;
-void print(t_ast_tree_node *root, int spaces)
-{
-	for(int i = 0; i < spaces; i++)
-		printf(" ");
-	printf("%s : %s\n", NODE_STR_EQU[root->type], root->value);
-	if (root->left != NULL)
+	if (WIFEXITED(wait_status))
 	{
-		for(int i = 0; i < spaces; i++)
-			printf(" ");
-		printf("Going to left:\n");
-		print(root->left, spaces + 1);
-	}
-	if (root->right != NULL)
-	{
-		for(int i = 0; i < spaces; i++)
-			printf(" ");
-		printf("Going to right:\n");
-		print(root->right, spaces + 1);
-	}
-}
-
-void treat_result(int pid, int wait_status, int *pipeline_result, int last_pid)
-{
-	if(WIFEXITED(wait_status))
-	{
-		if(last_pid != 0 && pid == last_pid)
-		{
+		if (last_pid != 0 && pid == last_pid)
 			*pipeline_result = WEXITSTATUS(wait_status);
-		}
 	}
-	else if(WIFSIGNALED(wait_status))
+	else if (WIFSIGNALED(wait_status))
 	{
-		if(WTERMSIG(wait_status) == 3)
+		if (WTERMSIG(wait_status) == 3)
 		{
-			if(!g_sigint)
+			if (!g_sigint)
 			{
 				fprintf(stderr, "Quit (core dumped)\n");
 				g_sigint = 1;
 			}
 		}
 		else if (__WCOREDUMP(wait_status))
-			fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
-		if(last_pid != 0 && pid == last_pid)
+			fprintf(stderr, "minishell: process %i terminated by a signal \
+				(%i)\n", pid, WTERMSIG(wait_status));
+		if (last_pid != 0 && pid == last_pid)
 			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
 }
 
-void free_cmd(t_command *cmd)
+void	free_cmd(t_command *cmd)
 {
 	free(cmd->args);
 	free(cmd);
 }
 
-extern int g_sigint;
-
-int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
+int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 {
-	int save_stdin = dup(0);
-	t_command *first = parse_commands(root, env);
-	if(g_sigint)
+	int			count;
+	t_command	*first;
+
+	first = *cmd;
+	count = 0;
+	if (ret == 4242)
+		count = 1;
+	if (first->next == NULL)
 	{
-		g_sigint = 0;
-		dup2(save_stdin, 0);
-		close(save_stdin);
-		return (130);
+		if (ret != 4242)
+			*status = ret;
+		else
+			*last_pid = first->pid;
 	}
-	t_command *save;
-	int forking = 1;
-	if(first->next == NULL && is_builtin(first->name))
-		forking = 0;
-	replace_by_path(first, env);
-	int count = 0;
-	int status = 0;
-	int last_pid = 0;
-	if(forking)
-		set_signals_as_parent();
-	while(first != NULL)
-	{
-		int ret = execute_file(first, env, forking, save_stdin);
-		if(ret == 4242)
-			count++;
-		if(first->next == NULL)
-		{
-			if(ret != 4242)
-				status = ret;
-			else
-				last_pid = first->pid;
-		}
-		save = first;
-		first = first->next;
-		free_cmd(save);
-	}
-	int i = -1;
-	int wait_status;
-	while (++i < count)
-	{
-		int pid = waitpid(-1, &wait_status, 0);
-		close(0);
-		treat_result(pid, wait_status, &status, last_pid);
-	}
+	*cmd = first->next;
+	free(first);
+	return (count);
+}
+
+int	end_pipeline(int save_stdin, int status)
+{
 	set_signals_as_prompt();
 	g_sigint = 0;
 	close(0);
 	dup2(save_stdin, 0);
 	close(save_stdin);
-	return status;
+	return (status);
 }
 
-char *prompt_and_read(t_dlist *vars)
+int	cancel_everything(int save_stdin)
 {
-	if(get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
+	g_sigint = 0;
+	dup2(save_stdin, 0);
+	close(save_stdin);
+	return (130);
+}
+
+int wait_for_result(int count, int last_pid)
+{
+	int	i;
+	int	pid;
+	int	wait_status;
+	int	status;
+
+	i = -1;
+	status = 0;
+	while (++i < count)
+	{
+		pid = waitpid(-1, &wait_status, 0);
+		close(0);
+		treat_result(pid, wait_status, &status, last_pid);
+	}
+	return (status);
+}
+
+void	init_variable(int *forking, int *count, int *status, int *last_pid)
+{
+	*forking = 1;
+	*count = 0;
+	*status = 0;
+	*last_pid = 0;
+}
+
+int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
+{
+	int			save_stdin;
+	int			forking;
+	int			count;
+	int			status;
+	int			last_pid;
+	t_command	*first;
+
+	init_variable(&forking, &count, &status, &last_pid);
+	save_stdin = dup(0);
+	first = parse_commands(root, env);
+	if (g_sigint)
+		return (cancel_everything(save_stdin));
+	forking = !(first->next == NULL && is_builtin(first->name));
+	replace_by_path(first, env);
+	if (forking)
+		set_signals_as_parent();
+	while (first != NULL)
+		count += treat_return_code(&first, execute_file(first, env, forking,
+					save_stdin), &status, &last_pid);
+	status = wait_for_result(count, last_pid);
+	return (end_pipeline(save_stdin, status));
+}
+
+char	*prompt_and_read(t_dlist *vars)
+{
+	char	*user;
+	char	*pwd;
+	char	*prompt;
+	char	*str;
+
+	if (get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
 		return (readline("Minishell > "));
-	char *USER = get_var(vars, "USER")->value;
-	char *PWD = get_var(vars, "PWD")->value;
-	char *prompt = malloc(sizeof(char) * (ft_strlen(USER) + ft_strlen(PWD) + 6));
-	if(!prompt)
-		return NULL;
+	user = get_var(vars, "USER")->value;
+	pwd = get_var(vars, "PWD")->value;
+	prompt = malloc(sizeof(char) * (
+				ft_strlen(user) + ft_strlen(pwd) + 6));
+	if (!prompt)
+		return (NULL);
 	prompt[0] = '\0';
-	strcat(prompt, USER);
+	strcat(prompt, user);
 	strcat(prompt, "@");
-	strcat(prompt, PWD);
+	strcat(prompt, pwd);
 	strcat(prompt, " > ");
-	char *str = readline(prompt);
+	str = readline(prompt);
 	free(prompt);
-	return str;
+	return (str);
 }
 
 void refill_env(t_dlist **env)
 {
-	if(get_var(*env, "PWD") == NULL)
+	char	*pwd;
+	t_var	var;
+
+	if (get_var(*env, "PWD") == NULL)
 	{
-		char *pwd = calloc(sizeof(char), 1000);
+		pwd = calloc(sizeof(char), 1000);
 		pwd = getcwd(pwd, 1000);
-		if(!pwd)
+		if (!pwd)
 		{
 			perror("get working directory error");
 			return ;
 		}
-		t_var	var;
 		var.name = "PWD";
 		var.value = pwd;
 		var.inherit = FALSE;
@@ -179,19 +194,32 @@ void refill_env(t_dlist **env)
 
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
+void	reset_lexer(t_lexer *lexer)
+{
+	lexer->errcode = 0;
+	lexer->idx = 0;
+	lexer->prev = 0;
+	lexer->prt_cnt = 0;
+	lexer->size = 0;
+	lexer->tkns = 0;
+}
+
 int main(int argc, char **argv, char **envp)
 {
+	t_dlist			*vars;
+	t_lexer			lexer;
+	t_ast_tree_node	*root;
+	char			*str;
+
 	(void)argc;
 	(void)argv;
-	t_dlist *vars = NULL;
-	
+	vars = NULL;
 	vars = import_var(&vars, envp);
 	while (1)
 	{
-		t_lexer	lexer = {0};
-		t_ast_tree_node	*root;
+		reset_lexer(&lexer);
 		set_signals_as_prompt();
-		char *str = prompt_and_read(vars);
+		str = prompt_and_read(vars);
 		if (str == NULL)
 			ft_exit(1, NULL, vars, 0);
 		add_history(str);
