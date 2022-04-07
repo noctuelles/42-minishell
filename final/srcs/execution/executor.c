@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/04 14:14:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:10:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 void	file_error(t_command *command, int *error)
 {
 	*error = 1;
-	fprintf(stderr, "Minishell: %s: %s\n", command->in_name, strerror(command->in_errno));
+	fprintf(stderr, "Minishell: %s: %s\n", command->in_name,
+		strerror(command->in_errno));
 }
 
 void	close_all_error(t_command *command, int code)
@@ -79,43 +80,54 @@ void	error_exit(char *str, int errno_value)
 	exit(1);
 }
 
+void	pipe_and_fork(int *pipefd[2], t_command *command, int *pid)
+{
+	if ((command->is_piped && pipe(*pipefd) < 0))
+		error_exit("pipe error", errno);
+	*pid = fork();
+	if (*pid == -1)
+		error_exit("fork error", errno);
+	dup_for_pipe(command, *pid, *pipefd);
+	dup_for_redirections(command, *pid);
+	if (*pid != 0)
+		command->pid = *pid;
+}
+
+void executing(t_command *command, t_dlist *vars, int save_stdin)
+{
+	if (!is_builtin(command->original_name))
+	{
+		execve(command->name, command->args, export_env(vars));
+		perror("Execution error");
+		close_all_error(command, errno);
+	}
+	else
+		exit(exec_builtin(command->name, command->args,
+				vars, save_stdin));
+}
+
 int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
 {
 	pid_t	pid;
 	int		pipefd[2];
 
-	if(command->name != NULL)
+	if (command->name != NULL)
 	{
 		add_command_to_args(command);
-		if(forking)
+		if (forking)
 		{
-			if ((command->is_piped && pipe(pipefd) < 0))
-				error_exit("pipe error", errno);
-			pid = fork();
-			if (pid == -1)
-				error_exit("fork error", errno);
-			dup_for_pipe(command, pid, pipefd);
-			dup_for_redirections(command, pid);
+			pipe_and_fork(&pipefd, command, &pid);
 			if (pid == 0)
 			{
-				if(!is_builtin(command->original_name))
-				{
-					execve(command->name, command->args, export_env(vars));
-					perror("Execution error");
-					close_all_error(command, errno);
-					return (1);
-				}
-				else
-					exit(exec_builtin(command->name, command->args, vars, save_stdin));
+				executing(command, vars, save_stdin);
+				return (1);
 			}
 			else
-			{
-				command->pid = pid;
 				return (4242);
-			}
 		}
 		else
-			return(exec_builtin(command->name, command->args, vars, save_stdin));
+			return (exec_builtin(command->name, command->args,
+					vars, save_stdin));
 	}
 	else
 		return (127);
