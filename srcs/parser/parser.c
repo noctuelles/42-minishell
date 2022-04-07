@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/07 16:42:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/07 18:19:55 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 	root = pipeline(&parser);
 	if (!root)
 	{
-		t_token *tkn = tkns->content;
 		if (parser.errcode == ERR_MALLOC)
 			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
 		else
 			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
-					get_parser_error(parser.errcode), tkn->val);
+					get_parser_error(parser.errcode), parser.last_used_tkn->val);
 	}
 	else
 	{

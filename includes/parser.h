@@ -35,7 +35,10 @@ typedef enum e_parser_errcode
 typedef struct	s_parser
 {
 	t_dlist				*tkns;
+	t_token				*last_used_tkn;
 	t_parser_errcode	errcode;
+	t_dlist				*cmd_stack;
+	t_dlist				*op_stack;
 }	t_parser;
 
 /* parser_utils.c */
@@ -58,6 +61,8 @@ t_ast_tree_node	*parse(t_dlist **tkns);
 t_ast_tree_node	*pipeline(t_parser *parser);
 t_ast_tree_node	*pipeline1(t_parser *parser);
 t_ast_tree_node	*pipeline2(t_parser *parser);
+t_ast_tree_node	*pipeline3(t_parser *parser);
+t_ast_tree_node	*pipeline4(t_parser *parser);
 
 t_ast_tree_node *simple_cmd(t_parser *parser);
 t_ast_tree_node *simple_cmd1(t_parser *parser);
