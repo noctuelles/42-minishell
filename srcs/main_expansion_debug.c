@@ -139,6 +139,7 @@ int main(int argc, char **argv, char **envp)
 					ft_printf("\n{1;4;33}Token(s) :{0}\n\n");
 					ft_dlstiter(tkns, print_tokens);
 					root = parse(&tkns);
+					ast_tree_delete_node(root);
 				}
 			}
 		}

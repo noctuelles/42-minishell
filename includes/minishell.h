@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 23:55:22 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/07 12:49:56 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -19,8 +19,6 @@
 # include "lexer.h"
 # include "parser.h"
 #include <errno.h>
-
-#define malloc(...) NULL 
 
 #define BLK "\e[0;30m"
 #define RED "\e[0;31m"
