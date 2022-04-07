@@ -78,6 +78,7 @@ int main(int argc, char **argv, char **envp)
 	(void) argv;
 	t_dlist	*env_var;
 	t_dlist	*tkns;
+	t_ast_tree_node *root;
 
 	env_var = NULL;
 	env_var = import_var(&env_var, envp);
@@ -137,7 +138,7 @@ int main(int argc, char **argv, char **envp)
 				{
 					ft_printf("\n{1;4;33}Token(s) :{0}\n\n");
 					ft_dlstiter(tkns, print_tokens);
-					ft_dlstclear(&tkns, free_token);
+					root = parse(&tkns);
 				}
 			}
 		}

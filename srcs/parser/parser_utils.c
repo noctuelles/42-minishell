@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 16:06:54 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/07 12:41:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 {
 	t_token	*tkn;
 
+	if (parser->tkns == NULL)
+		return (false);
 	tkn = (t_token *) parser->tkns->content;
-	if (tkn->type == T_NULL)
-		return (FALSE);
 	if (tkn->type == type)
 	{
 		if (value != NULL)
