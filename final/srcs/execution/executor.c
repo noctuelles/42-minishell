@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:53:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 14:38:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,18 @@ void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 	}
 }
 
-void	file_error(t_command *command, int *error)
+void	file_error(t_command *command, int *error, int type)
 {
+	int	err;
 	*error = 1;
+
+	err = 0;
+	if(type == 1)
+		err = command->in_errno;
+	if(type == 2)
+		err = command->out_errno;
 	fprintf(stderr, "Minishell: %s: %s\n", command->in_name,
-		strerror(command->in_errno));
+		strerror(err));
 }
 
 void	close_all_error(t_command *command, int code)
@@ -58,16 +65,22 @@ void	dup_for_redirections(t_command *command, int pid)
 		if (command->io_in_redirect != -1)
 		{
 			if (command->io_in_redirect == -2)
-				file_error(command, &error);
+				file_error(command, &error, 1);
 			else
+			{
 				dup2(command->io_in_redirect, 0);
+				close(command->io_in_redirect);
+			}
 		}
 		if (command->io_out_redirect != -1)
 		{
 			if (command->io_out_redirect == -2)
-				file_error(command, &error);
+				file_error(command, &error, 2);
 			else
+			{
 				dup2(command->io_out_redirect, 1);
+				close(command->io_out_redirect);
+			}
 		}
 		if (error)
 			close_all_error(command, -1);

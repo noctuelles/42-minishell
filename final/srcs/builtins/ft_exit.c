@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:47:55 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 14:29:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ int	end_program(int save_stdin, t_dlist *env, int exit_code)
 	return (1);
 }
 
-void	init(int *exit_code, int argc)
+void	init(int *exit_code, int argc, int save_stdin, t_dlist *env)
 {
 	*exit_code = 0;
 	fprintf(stderr, "exit\n");
 	if (argc == 1)
-		exit(0);
+		end_program(save_stdin, env, *exit_code);
 }
 
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
@@ -35,7 +35,7 @@ int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
 	int	exit_code;
 	int	i;
 
-	init(&exit_code, argc);
+	init(&exit_code, argc, save_stdin, env);
 	i = -1;
 	while (argv[1][++i])
 	{
