@@ -6,3 +6,4 @@
 	export. \ devant $
 	exit sans arg
 	exit min/max
+	echo coucou | ./minishell 

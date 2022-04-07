@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:04:35 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:49:18 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*create_path(char *path, char *command_name)
 	strcat(exec_path, path);
 	strcat(exec_path, "/");
 	strcat(exec_path, command_name);
+	return (exec_path);
 }
 
 void	not_found(char **exec_path)
@@ -52,7 +53,7 @@ char	*get_path_from_env(char *command_name, t_dlist *vars)
 				if (access(exec_path, F_OK) == 0)
 					found = 1;
 				else
-					not_found(exec_path);
+					not_found(&exec_path);
 			}
 		}
 		free(cpy);

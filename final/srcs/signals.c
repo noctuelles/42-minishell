@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 13:19:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/04 11:45:19 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:46:59 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	g_sigint = 0;
 
 void	signal_handler_as_prompt(int signum)
 {
-	if(signum == SIGINT)
+	if (signum == SIGINT)
 	{
 		write(1, "\n", 1);
 		rl_replace_line("", 0);
@@ -42,7 +42,7 @@ void	signal_handler_as_prompt(int signum)
 
 void	signal_handler_as_here_doc(int signum)
 {
-	if(signum == SIGINT)
+	if (signum == SIGINT)
 	{
 		g_sigint = 1;
 		close(0);
@@ -60,19 +60,19 @@ void	signal_handler_as_parent(int signum)
 	(void)signum;
 }
 
-void set_signals_as_prompt()
+void	set_signals_as_prompt(void)
 {
 	signal(SIGINT, signal_handler_as_prompt);
 	signal(SIGQUIT, signal_handler_as_prompt);
 }
 
-void set_signals_as_here_doc()
+void	set_signals_as_here_doc(void)
 {
 	signal(SIGINT, signal_handler_as_here_doc);
 	signal(SIGQUIT, signal_handler_as_here_doc);
 }
 
-void set_signals_as_parent()
+void	set_signals_as_parent(void)
 {
 	signal(SIGINT, signal_handler_as_parent);
 	signal(SIGQUIT, signal_handler_as_parent);

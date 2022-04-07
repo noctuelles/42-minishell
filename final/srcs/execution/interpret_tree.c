@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/04 14:59:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:55:42 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 #include <readline/readline.h>
 #include "minishell.h"
 
-extern int g_sigint;
+extern int	g_sigint;
 
-void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
+void	append_arg(t_ast_tree_node *node, t_args **el, t_args **args,
+	t_command *command)
 {
 	t_args	*elem;
 
-	if (node->type == NODE_COMMAND_SUFFIX && node->value != NULL && !command->error)
+	elem = *el;
+	if (node->type == NODE_COMMAND_SUFFIX && node->value != NULL
+		&& !command->error)
 	{
 		if (*args == NULL)
 		{
@@ -38,7 +41,12 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 			elem->next->value = node->value;
 		}
 	}
-	if (node->type == NODE_IO_REDIRECT_STDIN && !command->error && node->value != NULL)
+}
+
+void	set_io_stdin(t_ast_tree_node *node, t_command *command)
+{
+	if (node->type == NODE_IO_REDIRECT_STDIN && !command->error
+		&& node->value != NULL)
 	{
 		if (command->io_in_redirect > 0)
 			close(command->io_in_redirect);
@@ -51,7 +59,12 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->in_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_FILE && !command->error && node->value != NULL)
+}
+
+void	set_io_stdout(t_ast_tree_node *node, t_command *command)
+{
+	if (node->type == NODE_IO_REDIRECT_FILE && !command->error
+		&& node->value != NULL)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
@@ -64,11 +77,17 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->out_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_FILE_APPEND && !command->error && node->value != NULL)
+}
+
+void	set_io_stdout_append(t_ast_tree_node *node, t_command *command)
+{
+	if (node->type == NODE_IO_REDIRECT_FILE_APPEND && !command->error
+		&& node->value != NULL)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
-		command->io_out_redirect = open(node->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		command->io_out_redirect = open(node->value,
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (command->io_out_redirect < 0)
 		{
 			command->io_out_redirect = -2;
@@ -77,57 +96,82 @@ void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
 		}
 		command->out_name = node->value;
 	}
-	if (node->type == NODE_IO_REDIRECT_HERE_DOC && node->value != NULL)
+}
+
+int	treat_line(char *line, t_ast_tree_node *node, int pipefd[2])
+{
+	if (strcmp(line, node->value) != 0)
 	{
-		int pipefd[2];
-		if(pipe(pipefd) < 0)
-		{
-			printf("Pipe error\n");
-			exit(1);
-		}
-		set_signals_as_here_doc();
-		while(1)
-		{
-			char *line = readline("> ");
-			if(line != NULL)
-			{
-				if(strcmp(line, node->value) != 0)
-				{
-					write(pipefd[1], line, strlen(line));
-					write(pipefd[1], "\n", 1);
-				}
-				else
-					break;
-			}
-			else
-			{
-				if(g_sigint)
-				{
-					command->error = true;
-					printf("\n");
-					break;
-				}
-				printf("Minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", node->value);
-				break;
-			}
-		}
-		set_signals_as_prompt();
-		close(pipefd[1]);
-		command->io_in_redirect = pipefd[0];
+		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], "\n", 1);
+		return (0);
 	}
+	else
+		return (1);
+}
+
+void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (line != NULL)
+		{
+			if (treat_line(line, node, pipefd))
+				break ;
+		}
+		else
+		{
+			if (g_sigint)
+			{
+				command->error = true;
+				printf("\n");
+				break ;
+			}
+			printf("Minishell: warning: here-document delimited by end-of-file \
+				(wanted `%s')\n", node->value);
+			break ;
+		}
+	}
+}
+
+void	here_doc_logic(t_ast_tree_node *node, t_command *command)
+{
+	int		pipefd[2];
+
+	if (pipe(pipefd) < 0)
+	{
+		printf("Pipe error\n");
+		exit(1);
+	}
+	set_signals_as_here_doc();
+	here_doc_read(node, pipefd, command);
+	set_signals_as_prompt();
+	close(pipefd[1]);
+	command->io_in_redirect = pipefd[0];
+}
+
+void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
+{
+	t_args	*elem;
+
+	append_arg(node, &elem, args, command);
+	set_io_stdin(node, command);
+	set_io_stdout(node, command);
+	set_io_stdout_append(node, command);
+	if (node->type == NODE_IO_REDIRECT_HERE_DOC && node->value != NULL)
+		here_doc_logic(node, command);
 	if (node->left != NULL && !command->error)
 		parse_tree(node->left, command, args);
 	if (node->right != NULL && !command->error)
 		parse_tree(node->right, command, args);
 }
 
-t_command	*parse_command(t_ast_tree_node *node, bool piped)
+t_command	*prepare_command(bool piped, t_ast_tree_node *node, t_args **args)
 {
 	t_command	*command;
-	t_args		*args;
-	int			length;
-	t_args		*elem;
-	int			i;
 
 	command = calloc(sizeof(t_command), 1);
 	command->is_piped = piped;
@@ -135,19 +179,19 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped)
 	command->io_in_redirect = -1;
 	command->io_out_redirect = -1;
 	command->error = false;
-	args = NULL;
+	*args = NULL;
 	if (node->left != NULL)
-		parse_tree(node->left, command, &args);
+		parse_tree(node->left, command, args);
 	if (node->right != NULL)
-		parse_tree(node->right, command, &args);
-	length = 0;
-	elem = args;
-	while (elem)
-	{
-		length++;
-		elem = elem->next;
-	}
-	command->args = calloc(sizeof(char *), length + 1);
+		parse_tree(node->right, command, args);
+	return (command);
+}
+
+void	set_args(t_command *command, t_args *args)
+{
+	int		i;
+	t_args	*elem;
+
 	i = 0;
 	while (args)
 	{
@@ -158,6 +202,25 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped)
 		i++;
 	}
 	command->args[i] = NULL;
+}
+
+t_command	*parse_command(t_ast_tree_node *node, bool piped)
+{
+	t_command	*command;
+	t_args		*args;
+	int			length;
+	t_args		*elem;
+
+	command = prepare_command(piped, node, &args);
+	length = 0;
+	elem = args;
+	while (elem)
+	{
+		length++;
+		elem = elem->next;
+	}
+	command->args = calloc(sizeof(char *), length + 1);
+	set_args(command, args);
 	command->next = NULL;
 	return (command);
 }
@@ -179,9 +242,9 @@ void	add_command(t_command *cmd, t_command **lst)
 
 t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 {
-	(void)vars;
 	t_command	*first;
 
+	(void)vars;
 	first = NULL;
 	if (root->type == NODE_COMMAND)
 	{

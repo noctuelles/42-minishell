@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:10:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:53:10 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ void	error_exit(char *str, int errno_value)
 	exit(1);
 }
 
-void	pipe_and_fork(int *pipefd[2], t_command *command, int *pid)
+void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 {
-	if ((command->is_piped && pipe(*pipefd) < 0))
+	if ((command->is_piped && pipe(pipefd) < 0))
 		error_exit("pipe error", errno);
 	*pid = fork();
 	if (*pid == -1)
 		error_exit("fork error", errno);
-	dup_for_pipe(command, *pid, *pipefd);
+	dup_for_pipe(command, *pid, pipefd);
 	dup_for_redirections(command, *pid);
 	if (*pid != 0)
 		command->pid = *pid;
@@ -116,7 +116,7 @@ int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
 		add_command_to_args(command);
 		if (forking)
 		{
-			pipe_and_fork(&pipefd, command, &pid);
+			pipe_and_fork(pipefd, command, &pid);
 			if (pid == 0)
 			{
 				executing(command, vars, save_stdin);
