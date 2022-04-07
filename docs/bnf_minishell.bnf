@@ -36,12 +36,6 @@
 					  |		<pipeline>			'||'		<and_or>
 					  |		<pipeline>
 
-
-<and_or>			::=		<pipeline>			'&&'		<and_or>
-					  |		<pipeline>			'||'		<and_or>
-					  |		<pipeline>
-
-<and_or>			::=		<pipeline>			{ ('&&' | '||') <pipeline> }
 <command>			::=		<simple_command>
 					  |		'('		<and_or>	')'
 

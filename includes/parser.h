@@ -55,20 +55,9 @@ t_ast_tree_node	*parse(t_dlist **tkns);
 
 /* Prototype for each production rules : */
 
-t_ast_tree_node	*complete_cmd(t_parser *parser);
-
 t_ast_tree_node	*pipeline(t_parser *parser);
 t_ast_tree_node	*pipeline1(t_parser *parser);
 t_ast_tree_node	*pipeline2(t_parser *parser);
-
-t_ast_tree_node	*and_or(t_parser *parser);
-t_ast_tree_node	*and_or1(t_parser *parser);
-t_ast_tree_node	*and_or2(t_parser *parser);
-t_ast_tree_node	*and_or3(t_parser *parser);
-
-t_ast_tree_node	*cmd(t_parser *parser);
-t_ast_tree_node	*cmd1(t_parser *parser);
-t_ast_tree_node	*cmd2(t_parser *parser);
 
 t_ast_tree_node *simple_cmd(t_parser *parser);
 t_ast_tree_node *simple_cmd1(t_parser *parser);

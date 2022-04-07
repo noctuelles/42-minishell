@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/07 12:38:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/07 16:42:40 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 
 	parser.tkns = tkns;
 	parser.errcode = NO_ERR;
-	root = complete_cmd(&parser);
+	root = pipeline(&parser);
 	if (!root)
 	{
 		t_token *tkn = tkns->content;
