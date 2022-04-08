@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/07 14:01:50 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/08 17:00:14 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,8 @@ VOGSPHERE	=
 
 SRCS_EXTENSION	=	.c
 SRCS_PATH		=	./srcs
-MAIN			=	main.c
-SRCS			=	env.c \
+SRCS			=	main.c \
+					env.c \
 					ft_strtrunc.c \
 					var_expansion.c \
 					var_utils.c \
@@ -102,9 +102,7 @@ MLX_NAME			=	minilibx.a
 OBJS_PATH		=	./objs
 
 OBJS			=	$(addprefix $(OBJS_PATH)/, ${SRCS:$(SRCS_EXTENSION)=.o})
-OBJ_MAIN		=	$(addprefix $(OBJS_PATH)/, ${MAIN:$(SRCS_EXTENSION)=.o})
 OBJS_DEPEND		=	$(addprefix $(OBJS_PATH)/, ${SRCS:$(SRCS_EXTENSION)=.d})
-OBJ_MAIN_DEPEND	=	$(addprefix $(OBJS_PATH)/, ${MAIN:$(SRCS_EXTENSION)=.d})
 
 ################################################################################
 #								  Constants									   #
@@ -237,24 +235,16 @@ $(OBJS_PATH)/%.o:	$(SRCS_PATH)/%$(SRCS_EXTENSION)
 			@$(CC) $(CFLAGS) -MMD -MF $(@:.o=.d)  ${INCLUDE_FLAGS} -c $< -o $@
 			@$(call file_compiled)
 			@$(call draw_bar)
-$(OBJS_PATH)/%.o:	%$(SRCS_EXTENSION)
-			@mkdir -p $(dir $@)
-			@$(call draw_bar)
-			@echo "\r$(CYAN)Compiling $(BLUE)$@ ...$(NO_COLOR)                             "
-			@$(call draw_bar)
-			@$(CC) $(CFLAGS) -MMD -MF $(@:.o=.d)  ${INCLUDE_FLAGS} -c $< -o $@
-			@$(call file_compiled)
-			@$(call draw_bar)
 
 $(LIBFT_COMPLETE):
 		@make -C $(LIBFT_DIR) all
 		@echo "$(GREEN)Compiled libft !$(NO_COLOR)"
 			
 #Link
--include $(OBJS_DEPEND) $(OBJ_MAIN_DEPEND)
-$(NAME):	${OBJS} ${OBJ_MAIN} ${ALL_LIBS}
+-include $(OBJS_DEPEND)
+$(NAME):	${OBJS} ${ALL_LIBS}
 		@echo "$(ORANGE)Linking $(BLUE)$@ ...$(NO_COLOR)"
-		@$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(LFLAGS) -o $@ ${OBJS} ${OBJ_MAIN} ${ALL_LIBS}
+		@$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $(LFLAGS) -o $@ ${OBJS} ${ALL_LIBS}
 		@$(call clean)
 		@echo "$(GREEN)$@ created !$(NO_COLOR)"
 

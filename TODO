@@ -1,8 +1,8 @@
 # Pas fait
-	here_doc avant tout, meme erreurs syntax
 
 # A verifier
 
 # Les problemes
 	exit sans arg
 	echo coucou | ./minishell
+	unset PWD
