@@ -1,9 +1,8 @@
 # Pas fait
+	here_doc avant tout, meme erreurs syntax
 
 # A verifier
 
 # Les problemes
-	export. \ devant $
 	exit sans arg
-	exit min/max
-	echo coucou | ./minishell 
+	echo coucou | ./minishell

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 11:56:38 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/08 11:57:54 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	create_new_string(char *str, char *new_str, int size, int length)
 {
 	while (str[++size])
 	{
-		if (str[size] == '"' || str[size] == '\\')
+		if (str[size] == '"' || str[size] == '\\' || str[size] == '$')
 			new_str[length++] = '\\';
 		new_str[length++] = str[size];
 	}
@@ -35,7 +35,7 @@ void	print_string_escape_quote(char *str)
 	while (str[++size])
 	{
 		length++;
-		if (str[size] == '"' || str[size] == '\\')
+		if (str[size] == '"' || str[size] == '\\' || str[size] == '$')
 			length++;
 	}
 	new_str = malloc(sizeof(char) * (length + 1));
