@@ -1,3 +1,0 @@
-[submodule "srcs/gnl"]
-	path = srcs/gnl
-	url = git@github.com:noctuelles/42-gnl.git

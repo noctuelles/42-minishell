@@ -6,72 +6,47 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/22 15:46:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 11:10:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "minishell.h"
+#include "ft_dprintf.h"
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
 
-/* call_production() call a production rule, saving the index in the current
- * to be restore upon completion of the rule if restore is set to TRUE.  */
-
-t_ast_tree_node	*call_production(t_parser *parser,
-		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		size_t save)
-{
-	parser->lex_idx = save;
-	*root = fprod(parser);
-	return (*root);
-}
-
-t_ast_tree_node	*call_term(t_parser *parser,
-		t_ast_tree_node *(fterm)(t_parser *), t_ast_tree_node **root)
-{
-	*root = fterm(parser);
-	return (*root);
-}
-
-void	*quit_production(t_parser *parser, t_ast_tree_node *left,
-		t_ast_tree_node *right, t_parser_errcode errcode)
-{
-	if (left != NULL)
-		ast_tree_delete_node(left);
-	if (right != NULL)
-		ast_tree_delete_node(right);
-	if (parser->errcode != ERR_MALLOC)
-		parser->errcode = errcode;
-	return (NULL);
-}
-
-t_bool	match(t_parser *parser, t_token_type type, char **value)
-{
-	if (parser->lex_idx >= parser->lexer->idx)
-		return (FALSE);
-	if (parser->lexer->tkns[parser->lex_idx].type == type)
-	{
-		if (value != NULL)
-				*value = parser->lexer->tkns[parser->lex_idx].val;
-		parser->lex_idx += 1;
-		return (TRUE);
-	}
-	parser->lex_idx += 1;
-	return (FALSE);
-}
-
-#include <stdio.h>
-
-t_ast_tree_node	*parse(t_lexer *lexer)
+static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 {
 	t_parser		parser;
 	t_ast_tree_node	*root;
 
-	parser.lexer = lexer;
-	parser.lex_idx = 0;
+	parser.tkns = tkns;
 	parser.errcode = NO_ERR;
-	root = PIPELINE(&parser);
-	if (root == NULL)
-		printf("\x1b[1;31mSyntax error, near : %s\e[0m\n", parser.lexer->tkns[parser.lex_idx - 1].val);
-	/*else
-		puts("\x1b[1;32mParsing sucess!");*/
+	root = complete_cmd(&parser);
+	if (!root)
+	{
+		t_token *tkn = tkns->content;
+		if (parser.errcode == ERR_MALLOC)
+			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
+		else
+			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
+					get_parser_error(parser.errcode), tkn->val);
+	}
+	else
+	{
+		// Here we're doing variable expansion and removing all quote.
+	}
 	return (root);
+}
+
+t_ast_tree_node	*parse(t_dlist **tkns)
+{
+	t_ast_tree_node	*ast_root;
+
+	ast_root = parse_from_tkns(*tkns);
+	ft_dlstclear(tkns, free_token);
+	if (!ast_root)
+		return (NULL);
+	return (ast_root);
 }

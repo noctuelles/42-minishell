@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_post_process.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 12:46:48 by plouvel           #+#    #+#             */
-/*   Updated: 2022/02/28 17:39:59 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/11 11:05:58 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
  * Token that only contains a variable and this variable is incorrect are
  * assigned as a T_NULL token, and the token value is immediatly free . */
 
+/*
 void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer)
 {
 	size_t	i;
@@ -39,4 +40,5 @@ void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer)
 		}
 		i++;
 	}
-}
+}*/
+

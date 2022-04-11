@@ -36,6 +36,15 @@
 					  |		<pipeline>			'||'		<and_or>
 					  |		<pipeline>
 
+<<<<<<< HEAD
+=======
+
+<and_or>			::=		<pipeline>			'&&'		<and_or>
+					  |		<pipeline>			'||'		<and_or>
+					  |		<pipeline>
+
+<and_or>			::=		<pipeline>			{ ('&&' | '||') <pipeline> }
+>>>>>>> parsing
 <command>			::=		<simple_command>
 					  |		'('		<and_or>	')'
 

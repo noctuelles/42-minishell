@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/15 14:48:14 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 11:01:05 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ typedef enum	s_node_type
 	NODE_PIPE,
 	NODE_COMMAND_SUBSHELL,
 	NODE_COMMAND,
+
+	NODE_PRIORITY_AND,
+	NODE_PRIORITY_OR,
+	NODE_LOGICAL_AND,
+	NODE_LOGICAL_OR,
 	NODE_EMPTY_COMMAND,
 	NODE_IO_LIST,
-	NODE_COMMAND_IMMEDIATE,
-	NODE_COMMAND_PREFIX,
 	NODE_COMMAND_SUFFIX,
 	NODE_IO_REDIRECT_STDIN,
 	NODE_IO_REDIRECT_FILE,
 	NODE_IO_REDIRECT_FILE_APPEND,
 	NODE_IO_REDIRECT_HERE_DOC,
-	NODE_IO,
-	NODE_RD_OUT,
-	NODE_RD_IN,
-	NODE_RD_HERE
 }	t_node_type;
+
 typedef struct	s_ast_tree_node
 {
 	t_node_type				type;

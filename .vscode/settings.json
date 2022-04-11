@@ -15,6 +15,7 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"utility": "c",
-		"cerrno": "c"
+		"cerrno": "c",
+		"unistd.h": "c"
 	}
 }
