@@ -5,4 +5,4 @@
 # Les problemes
 	exit sans arg
 	echo coucou | ./minishell
-	unset PWD
+	mkdir test; cd test; rmdir ../test
