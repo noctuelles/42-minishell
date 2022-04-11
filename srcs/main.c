@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 11:24:20 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 11:37:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,14 +217,16 @@ int main(int argc, char **argv, char **envp)
 		
 		tkns = get_tokens(str, vars);
 		if (tkns)
-			root = parse(&tkns);
-
-		root = parse(&tkns);
-		if (root != NULL)
 		{
-			execute_pipeline(root, vars);
-			ast_tree_delete_node(root);
+			root = parse(&tkns);
+			if (root != NULL)
+			{
+				execute_pipeline(root, vars);
+				ast_tree_delete_node(root);
+			}
 		}
+		else
+			fprintf(stderr, "Les tokens ca marche pas\n");
 	}
 	return (0);
 }
