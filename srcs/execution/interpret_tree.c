@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:55:42 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:17:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,8 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, t_args **args)
 
 	command = calloc(sizeof(t_command), 1);
 	command->is_piped = piped;
-	command->name = node->value;
+	command->name = strdup(node->value);
+	command->original_name = NULL;
 	command->io_in_redirect = -1;
 	command->io_out_redirect = -1;
 	command->error = false;
@@ -195,7 +196,7 @@ void	set_args(t_command *command, t_args *args)
 	i = 0;
 	while (args)
 	{
-		command->args[i] = args->value;
+		command->args[i] = strdup(args->value);
 		elem = args;
 		args = args->next;
 		free(elem);

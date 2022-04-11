@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 11:32:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:52:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,8 @@ void	free_var(void *dlst_content)
 	t_var	*var;
 
 	var = (t_var *) dlst_content;
-	if (var->inherit == FALSE)
-	{
-		free(var->name);
-		free(var->value);
-	}
+	free(var->name);
+	free(var->value);
 	free(var);
 }
 

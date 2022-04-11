@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 14:15:20 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:11:23 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ void	treat_result(int pid, int wait_status, int *pipeline_result,
 
 void	free_cmd(t_command *cmd)
 {
+	int	i;
+	if(cmd->name != cmd->original_name)
+	{
+		free(cmd->name);
+		free(cmd->original_name);
+	}
+	else
+		free(cmd->name);
+	i = 0;
+	while(cmd->args[++i])
+		free(cmd->args[i]);
 	free(cmd->args);
 	free(cmd);
 }
@@ -72,7 +83,7 @@ int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 			*last_pid = first->pid;
 	}
 	*cmd = first->next;
-	free(first);
+	free_cmd(first);
 	return (count);
 }
 
@@ -133,9 +144,13 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	save_stdin = dup(0);
 	first = parse_commands(root, env);
 	if (g_sigint)
+	{
+		ast_tree_delete_node(root);
 		return (cancel_everything(save_stdin));
+	}
 	forking = !(first->next == NULL && is_builtin(first->name));
 	replace_by_path(first, env);
+	ast_tree_delete_node(root);
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
@@ -208,10 +223,15 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signals_as_prompt();
-		str = prompt_and_read(vars);
+		if(isatty(0) == 1)
+		{
+			str = prompt_and_read(vars);
+			add_history(str);
+		}
+		else
+			str = readline("");
 		if (str == NULL)
 			ft_exit(1, NULL, vars, 0);
-		add_history(str);
 		refill_env(&vars);
 		
 		tkns = get_tokens(str, vars);
@@ -221,7 +241,7 @@ int main(int argc, char **argv, char **envp)
 			if (root != NULL)
 			{
 				execute_pipeline(root, vars);
-				ast_tree_delete_node(root);
+				//ast_tree_delete_node(root);
 			}
 		}
 		else

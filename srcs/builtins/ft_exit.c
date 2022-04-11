@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/08 12:37:44 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:02:47 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	end_program(int save_stdin, t_dlist *env, int exit_code)
 void	init(long int *exit_code, int argc, int save_stdin, t_dlist *env)
 {
 	*exit_code = 0;
-	fprintf(stderr, "exit\n");
+	if(isatty(0) == 1)
+		fprintf(stderr, "exit\n");
 	if (argc == 1)
 		end_program(save_stdin, env, *exit_code);
 }
@@ -65,6 +66,7 @@ int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
 		{
 			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n",
 				argv[1]);
+			free_env(env);
 			exit(1);
 		}
 	}

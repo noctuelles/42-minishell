@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/03/24 15:06:31 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:47:53 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ t_command *parse_commands(t_ast_tree_node *root, t_dlist *vars);
 void replace_by_path(t_command *command, t_dlist *vars);
 int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin);
 int	is_builtin(char *str);
-int exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin);
+int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking);
 
 #endif

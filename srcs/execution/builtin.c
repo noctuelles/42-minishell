@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:00:14 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:04:57 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,16 @@ int	ft_pwd(int argc, char **argv, t_dlist *env);
 int	ft_unset(int argc, char **argv, t_dlist *env);
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
-int	exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin)
+void	free_cmd(t_command *cmd);
+
+int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking)
 {
 	int	count;
+	char	*str;
+	char	**argv;
 
+	str = command->name;
+	argv = command->args;
 	count = 0;
 	while (argv[count])
 		count++;
@@ -60,6 +66,10 @@ int	exec_builtin(char *str, char **argv, t_dlist *env, int save_stdin)
 	if (strcmp(str, "env") == 0)
 		return (ft_env(count, argv, env));
 	if (strcmp(str, "exit") == 0)
+	{
+		if(!forking)
+			free_cmd(command);
 		ft_exit(count, argv, env, save_stdin);
+	}
 	return ((0));
 }

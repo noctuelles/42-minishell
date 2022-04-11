@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 14:38:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:09:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void executing(t_command *command, t_dlist *vars, int save_stdin)
 		close_all_error(command, errno);
 	}
 	else
-		exit(exec_builtin(command->name, command->args,
-				vars, save_stdin));
+		exit(exec_builtin(command,
+				vars, save_stdin, 1));
 }
 
 int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
@@ -139,8 +139,7 @@ int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
 				return (4242);
 		}
 		else
-			return (exec_builtin(command->name, command->args,
-					vars, save_stdin));
+			return (exec_builtin(command, vars, save_stdin, 0));
 	}
 	else
 		return (127);

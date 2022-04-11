@@ -6,3 +6,4 @@
 	exit sans arg
 	echo coucou | ./minishell
 	mkdir test; cd test; rmdir ../test
+	cat <, eof
