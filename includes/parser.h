@@ -32,13 +32,19 @@ typedef enum e_parser_errcode
 	ERR_UNEXPECTED_IO_HEREDOC_TOKEN
 }	t_parser_errcode;
 
+typedef struct	s_parse_stack
+{
+	t_dlist	*top;
+	t_dlist	*cnt;
+}	t_parse_stack;
+
 typedef struct	s_parser
 {
 	t_dlist				*tkns;
 	t_token				*last_used_tkn;
 	t_parser_errcode	errcode;
-	t_dlist				*cmd_stack;
-	t_dlist				*op_stack;
+	t_parse_stack		*output_stack;
+	t_parse_stack		*op_stack;
 }	t_parser;
 
 /* parser_utils.c */
@@ -63,6 +69,7 @@ t_ast_tree_node	*pipeline1(t_parser *parser);
 t_ast_tree_node	*pipeline2(t_parser *parser);
 t_ast_tree_node	*pipeline3(t_parser *parser);
 t_ast_tree_node	*pipeline4(t_parser *parser);
+t_ast_tree_node	*pipeline5(t_parser *parser);
 
 t_ast_tree_node *simple_cmd(t_parser *parser);
 t_ast_tree_node *simple_cmd1(t_parser *parser);
@@ -86,5 +93,11 @@ t_ast_tree_node	*io_redirect1(t_parser *parser);
 t_ast_tree_node	*io_redirect2(t_parser *parser);
 t_ast_tree_node	*io_redirect3(t_parser *parser);
 t_ast_tree_node	*io_redirect4(t_parser *parser);
+
+/* stack.c */
+
+t_dlist			*push_stack(t_parse_stack *stack, void *content);
+void			pop_stack(t_parse_stack *stack, void (*del)(void *));
+t_token_type	*new_token_type(t_token_type type);
 
 #endif

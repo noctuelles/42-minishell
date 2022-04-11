@@ -9,40 +9,8 @@
 <pipeline>			::=		<simple_command>	'|'			<pipeline>
 					  |		<simple_command>	'&&'
 					  |		<simple_command>	'||'
+					  |		<simple_command>	')'
 					  |		<simple_command>	'rien'
-
-<simple_command>	::=		<io_list>			<word>		<cmd_suffix>
-					  |		<io_list>			<word>
-					  |		<io_list>
-					  |		<word>				<cmd_suffix>
-					  |		<word>
-
-<io_list>			::=		<io_redirect>		<io_list>
-					  |		<io_redirect>
-
-<cmd_suffix>		::=		<io_list>			<cmd_suffix>
-					  |		<io_list>
-					  |		<word>				<cmd_suffix>
-					  |		<word>
-
-<io_redirect>		::=		'<'					<word>
-					  |		'>'					<word>
-					  |		'>>'				<word>
-					  |		'<<'				<word>
-
-/* For recursive descent parser (minishell bonuses). */
-
-<complete_command>	::=		<and_or>			'ε'
-
-<and_or>			::=		<pipeline>			'&&'		<and_or>
-					  |		<pipeline>			'||'		<and_or>
-					  |		<pipeline>
-
-<command>			::=		<simple_command>
-					  |		'('		<and_or>	')'
-
-<pipeline>			::=		<command>			'|'			<pipeline>
-					  |		<command>
 
 <simple_command>	::=		<io_list>			<word>		<cmd_suffix>
 					  |		<io_list>			<word>

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 15:02:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/11 15:41:39 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ static int	finish_lexing(t_lexer *lexer, char *str)
 		if (!add_to_tkns(&lexer->tkns, lexer->prev, str - lexer->prev, T_WORD))
 			return (ERR_MEM);
 	}
-	if (lexer->prt_cnt != 0)
-		return (ERR_PRT);
+	//if (lexer->prt_cnt != 0)
+	//	return (ERR_PRT);
 	if (!add_to_tkns(&lexer->tkns, NULL, 0, T_NULL))
 		return (ERR_MEM);
 	return (ERR_NO);
