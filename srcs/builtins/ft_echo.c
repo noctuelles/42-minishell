@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:17:43 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 11:49:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 14:41:50 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	is_option_string(char *str)
 {
 	int	i;
 
+	if(strlen(str) < 2)
+		return (0);
 	if (str[0] != '-')
 		return (0);
 	i = 0;

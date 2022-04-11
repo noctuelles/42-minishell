@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 11:37:37 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 14:15:20 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ void	treat_result(int pid, int wait_status, int *pipeline_result,
 			}
 		}
 		else if (__WCOREDUMP(wait_status))
-			fprintf(stderr, "minishell: process %i terminated by a signal \
-				(%i)\n", pid, WTERMSIG(wait_status));
+			fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
 		if (last_pid != 0 && pid == last_pid)
 			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
