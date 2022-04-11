@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 17:20:03 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 18:15:12 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,7 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signals_as_prompt();
+		refill_env(&vars);
 		if(isatty(0) == 1)
 		{
 			str = prompt_and_read(vars);
@@ -233,7 +234,8 @@ int main(int argc, char **argv, char **envp)
 		if (str == NULL)
 			ft_exit(1, NULL, vars, 0);
 		refill_env(&vars);
-		
+		if(strcmp(str, "") == 0)
+			continue;
 		tkns = get_tokens(str, vars);
 		if (tkns)
 		{
