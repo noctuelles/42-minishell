@@ -91,6 +91,7 @@ t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 		return (NULL);
 	}
 	ft_dlstadd_back(tkns, elem);
+	tkn->lst_elem = elem;
 	return (tkn);
 }
 
