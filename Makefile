@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/08 17:00:14 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/11 11:31:23 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,11 +30,7 @@ VOGSPHERE	=
 SRCS_EXTENSION	=	.c
 SRCS_PATH		=	./srcs
 SRCS			=	main.c \
-					env.c \
 					ft_strtrunc.c \
-					var_expansion.c \
-					var_utils.c \
-					var.c \
 					signals.c \
 					$(addprefix builtins/, \
 						ft_cd.c \
@@ -44,28 +40,50 @@ SRCS			=	main.c \
 						ft_pwd.c \
 						ft_unset.c \
 						ft_exit.c) \
+					$(addprefix env/, \
+						env.c) \
 					$(addprefix execution/, \
 						builtin.c \
 						command_preparator.c \
 						executor.c \
 						interpret_tree.c) \
 					$(addprefix lexer/, \
-						lexer_memutils.c \
+						lexer_mem_utils.c \
 						lexer_post_process.c \
 						lexer_utils.c \
+						tokens.c \
 						lexer.c) \
 					$(addprefix parser/, \
 						ast.c \
 						parser.c \
+						parser_utils.c \
 						$(addprefix ast/, \
 							ast.c) \
 						$(addprefix grammar/, \
+							and_or.c \
 							cmd_suffix.c \
+							command.c \
+							complete_command.c \
 							io_list.c \
 							io_redirect.c \
 							pipeline.c \
-							simple_command.c) \
-						)
+							simple_command.c \
+							simple_command_appendix.c) \
+						) \
+					$(addprefix utils/, \
+						io_utils.c \
+						linked_list_utils.c) \
+					$(addprefix var/, \
+						var_expansion_post_utils.c \
+						var_expansion_utils.c \
+						var_expansion.c \
+						var_utils.c \
+						var.c \
+						var_expansion_post.c) \
+					$(addprefix wildcard/, \
+						wildcard_expansion_utils.c \
+						wildcard_expansion.c)
+					
 
 ################################################################################
 #								  Includes									   #

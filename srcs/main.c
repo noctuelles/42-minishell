@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 14:25:06 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/11 11:24:20 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,22 +194,13 @@ void refill_env(t_dlist **env)
 
 int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
-void	reset_lexer(t_lexer *lexer)
-{
-	lexer->errcode = 0;
-	lexer->idx = 0;
-	lexer->prev = 0;
-	lexer->prt_cnt = 0;
-	lexer->size = 0;
-	lexer->tkns = 0;
-}
 
 int main(int argc, char **argv, char **envp)
 {
 	t_dlist			*vars;
-	t_lexer			lexer;
 	t_ast_tree_node	*root;
 	char			*str;
+	t_dlist			*tkns;
 
 	(void)argc;
 	(void)argv;
@@ -217,19 +208,22 @@ int main(int argc, char **argv, char **envp)
 	vars = import_var(&vars, envp);
 	while (1)
 	{
-		reset_lexer(&lexer);
 		set_signals_as_prompt();
 		str = prompt_and_read(vars);
 		if (str == NULL)
 			ft_exit(1, NULL, vars, 0);
 		add_history(str);
-		fill_lexer_from_str(&lexer, str);
-		root = parse(&lexer);
 		refill_env(&vars);
+		
+		tkns = get_tokens(str, vars);
+		if (tkns)
+			root = parse(&tkns);
+
+		root = parse(&tkns);
 		if (root != NULL)
 		{
 			execute_pipeline(root, vars);
-			free_lexer(&lexer);
+			ast_tree_delete_node(root);
 		}
 	}
 	return (0);
