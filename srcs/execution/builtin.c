@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 17:04:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 13:55:45 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,34 +42,51 @@ int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
 
 void	free_cmd(t_command *cmd);
 
+void	free_all(t_command *cmd, t_dlist *env)
+{
+	t_command *tmp;
+
+	free_env(env);
+	while(cmd)
+	{
+		tmp = cmd->next;
+		free_cmd(cmd);
+		cmd = tmp;
+	}
+}
+
 int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking)
 {
 	int	count;
 	char	*str;
 	char	**argv;
+	int		res;
 
 	str = command->name;
 	argv = command->args;
 	count = 0;
+	res = 0;
 	while (argv[count])
 		count++;
 	if (strcmp(str, "echo") == 0)
-		return (ft_echo(count, argv, env));
+		res = ft_echo(count, argv, env);
 	if (strcmp(str, "cd") == 0)
-		return (ft_cd(count, argv, env));
+		res = ft_cd(count, argv, env);
 	if (strcmp(str, "pwd") == 0)
-		return (ft_pwd(count, argv, env));
+		res = ft_pwd(count, argv, env);
 	if (strcmp(str, "export") == 0)
-		return (ft_export(count, argv, env));
+		res = ft_export(count, argv, env);
 	if (strcmp(str, "unset") == 0)
-		return (ft_unset(count, argv, env));
+		res = ft_unset(count, argv, env);
 	if (strcmp(str, "env") == 0)
-		return (ft_env(count, argv, env));
+		res = ft_env(count, argv, env);
 	if (strcmp(str, "exit") == 0)
 	{
 		if(!forking)
 			free_cmd(command);
 		ft_exit(count, argv, env, save_stdin);
 	}
-	return ((0));
+	if(forking)
+		free_all(command, env);
+	return (res);
 }

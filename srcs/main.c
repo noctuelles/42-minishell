@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 18:15:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 14:02:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ void	free_cmd(t_command *cmd)
 	else
 		free(cmd->name);
 	i = 0;
-	while(cmd->args[++i])
-		free(cmd->args[i]);
+	if(cmd->args && cmd->args[0])
+	{
+		while(cmd->args[++i])
+			free(cmd->args[i]);
+	}
 	free(cmd->args);
 	free(cmd);
 }
@@ -97,11 +100,19 @@ int	end_pipeline(int save_stdin, int status)
 	return (status);
 }
 
-int	cancel_everything(int save_stdin)
+int	cancel_everything(int save_stdin, t_command *cmd)
 {
+	t_command *tmp;
+
 	g_sigint = 0;
 	dup2(save_stdin, 0);
 	close(save_stdin);
+	while(cmd)
+	{
+		tmp = cmd->next;
+		free_cmd(cmd);
+		cmd = tmp;
+	}
 	return (130);
 }
 
@@ -146,7 +157,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	if (g_sigint)
 	{
 		ast_tree_delete_node(root);
-		return (cancel_everything(save_stdin));
+		return (cancel_everything(save_stdin, first));
 	}
 	forking = !(first->next == NULL && is_builtin(first->name));
 	replace_by_path(first, env);

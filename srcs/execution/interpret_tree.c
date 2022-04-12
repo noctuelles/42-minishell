@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 17:17:48 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 13:48:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,7 @@ void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 				printf("\n");
 				break ;
 			}
-			printf("Minishell: warning: here-document delimited by end-of-file \
-				(wanted `%s')\n", node->value);
+			printf("Minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", node->value);
 			break ;
 		}
 	}
