@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/12 16:08:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 17:30:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,34 @@ static	t_ast_tree_node *create_node(t_parse_stack *out_stack, t_token_type type)
 	return (result);
 }
 
+void	consume_token(t_parser *parser)
+{
+	parser->tkns = parser->tkns->next;
+	parser->curr_tkn = (t_token *) parser->tkns->content;
+}
+
+static inline t_token_type	curr_type(t_parser parser)
+{
+	return (parser.curr_tkn->type);
+}
+
+static inline bool	is_top_an_operator(t_parser parser)
+{
+	t_token	*top_tkn;
+
+	top_tkn = parser.op_stack.top->content;
+	if (top_tkn->type == T_LOG_AND || top_tkn->type == T_LOG_OR)
+		return (true);
+	else
+		return (false);
+}
+
+static void	update_tkns(t_parser *parser)
+{
+	parser->tkns = parser->last_used_tkn->lst_elem;
+	parser->curr_tkn = (t_token *) parser->tkns->content;
+}
+
 static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 {
 	t_parser		parser;
@@ -68,24 +96,23 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 
 	ft_memset(&parser, 0 ,sizeof(t_parser));
 	parser.tkns = tkns;
+	parser.curr_tkn = (t_token *) parser.tkns->content;
 	parser.errcode = NO_ERR;
 	node_pipeline = NULL;
-	while (cast_tkn(parser.tkns)->type != T_NULL)
+	while (curr_type(parser) != T_NULL)
 	{
-		if (cast_tkn(parser.tkns)->type != T_OP_PRT
-				&& cast_tkn(parser.tkns)->type != T_WORD)
+		if (curr_type(parser) != T_OP_PRT && curr_type(parser) != T_WORD)
 		{
 			ft_dprintf(0, "{1;33}An error occured while parsing, invalid start token : %s{0}\n",
 					get_type(cast_tkn(parser.tkns)->type));
 			return (NULL);
 		}
-		while (cast_tkn(parser.tkns)->type == T_OP_PRT)
+		while (curr_type(parser) == T_OP_PRT)
 		{
 			push_stack(&parser.op_stack, cast_tkn(parser.tkns));
-			parser.tkns = parser.tkns->next;
+			consume_token(&parser);
 		}
-		if (cast_tkn(parser.tkns)->type != T_CL_PRT
-				&& cast_tkn(parser.tkns)->type != T_NULL)
+		if (curr_type(parser) != T_CL_PRT && curr_type(parser)!= T_NULL)
 		{
 			node_pipeline = retrieve_pipeline(&parser);
 			if (!node_pipeline)
@@ -96,45 +123,35 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 			else
 			{
 				push_stack(&parser.output_stack, node_pipeline);
-				parser.tkns = parser.last_used_tkn->lst_elem;
+				update_tkns(&parser);
 			}
 		}
-		while (cast_tkn(parser.tkns)->type == T_CL_PRT)
+		while (curr_type(parser) == T_CL_PRT)
 		{
-			if (cast_tkn(parser.op_stack.top)->type == T_LOG_AND ||
-				cast_tkn(parser.op_stack.top)->type == T_LOG_OR)
+			if (is_top_an_operator(parser))
 			{
 				create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
 				pop_stack(&parser.op_stack, NULL, 2);
 			}
-			else if (cast_tkn(parser.op_stack.top)->type == T_OP_PRT)
+			else
 				pop_stack(&parser.op_stack, NULL, 1);
-			parser.tkns = parser.tkns->next;
+			consume_token(&parser);
 		}
-		if (cast_tkn(parser.tkns)->type == T_LOG_AND
-			|| cast_tkn(parser.tkns)->type == T_LOG_OR)
+		if (curr_type(parser) == T_LOG_AND || curr_type(parser) == T_LOG_OR)
 		{
-			if (parser.op_stack.top)
-			{
-				if (cast_tkn(parser.op_stack.top)->type == T_LOG_AND ||
-					cast_tkn(parser.op_stack.top)->type == T_LOG_OR)
-				{
-					create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
-					pop_stack(&parser.op_stack, NULL, 1);
-				}
-			}
-			push_stack(&parser.op_stack, cast_tkn(parser.tkns));
-			parser.tkns = parser.tkns->next;
-		}
-		if (cast_tkn(parser.tkns)->type == T_NULL)
-		{
-			if (cast_tkn(parser.op_stack.top)->type == T_LOG_AND ||
-				cast_tkn(parser.op_stack.top)->type == T_LOG_OR)
+			if (parser.op_stack.top && is_top_an_operator(parser))
 			{
 				create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
 				pop_stack(&parser.op_stack, NULL, 1);
 			}
+			push_stack(&parser.op_stack, parser.curr_tkn);
+			consume_token(&parser);
 		}
+	}
+	if (parser.op_stack.top && is_top_an_operator(parser))
+	{
+		create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
+		pop_stack(&parser.op_stack, NULL, 1);
 	}
 	//ft_printf("Last token used :\n\t< {32}%s{0} > {1}Type{0} <{1;36}%s{0}>",
 	//		parser.last_used_tkn->val, get_type(parser.last_used_tkn->type));

@@ -42,6 +42,7 @@ typedef struct	s_parser
 {
 	t_dlist				*tkns;
 	t_token				*last_used_tkn;
+	t_token				*curr_tkn;
 	t_parser_errcode	errcode;
 	t_parse_stack		output_stack;
 	t_parse_stack		op_stack;
