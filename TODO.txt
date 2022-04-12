@@ -5,5 +5,5 @@ expansion here_doc		                     -> appeler la fonction d expansion si d
 expansion $?                                 -> passer $? a la fonction d expansion ?
 cat << eof								     -> leak du coté lecture du pipe
 
-
+Refaire .h
 PROTECTION APPEL SYSTEME !!!!
