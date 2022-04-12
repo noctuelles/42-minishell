@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/12 19:30:15 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 20:04:41 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,12 @@ static void	update_tkns(t_parser *parser)
 
 void	*quit_parsing(t_parser *parser)
 {
-	ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
-		get_parser_error(parser->errcode), parser->last_used_tkn->val);
+	if (parser->last_used_tkn)
+		ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
+			get_parser_error(parser->errcode), parser->last_used_tkn->val);
+	else
+		ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
+					get_parser_error(parser->errcode), parser->curr_tkn->val);
 	ft_dlstclear(&parser->op_stack.cnt, NULL);
 	ft_dlstclear(&parser->output_stack.cnt, ast_tree_delete_node);
 	return (NULL);
@@ -93,14 +97,10 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 	ft_memset(&parser, 0 ,sizeof(t_parser));
 	parser.tkns = tkns;
 	parser.curr_tkn = (t_token *) parser.tkns->content;
-	parser.errcode = NO_ERR;
-	node_pipeline = NULL;
 	while (curr_type(parser) != T_NULL)
 	{
 		if (curr_type(parser) != T_OP_PRT && curr_type(parser) != T_WORD)
-		{
 			return (quit_parsing(&parser));
-		}
 		while (curr_type(parser) == T_OP_PRT)
 		{
 			push_stack(&parser.op_stack, cast_tkn(parser.tkns));
@@ -159,10 +159,6 @@ t_ast_tree_node	*parse(t_dlist **tkns)
 	if (!ast_root)
 	{
 		return (NULL);
-	}
-	else
-	{
-		ast_print_tree("", ast_root, false);
 	}
 	return (ast_root);
 }
