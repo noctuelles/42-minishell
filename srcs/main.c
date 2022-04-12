@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 18:24:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 19:01:52 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,10 @@ void	free_cmd(t_command *cmd)
 			free(cmd->args[i]);
 	}
 	free(cmd->args);
+	if(cmd->io_in_redirect > 0)
+		close(cmd->io_in_redirect);
+	if(cmd->io_out_redirect > 0)
+		close(cmd->io_out_redirect);
 	free(cmd);
 }
 
