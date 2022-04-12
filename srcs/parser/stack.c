@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:12:13 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 17:27:11 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 12:26:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,19 @@ t_dlist	*push_stack(t_parse_stack *stack, void *content)
 	return (elem);
 }
 
-void	pop_stack(t_parse_stack *stack, void (*del)(void *))
+void	pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times)
 {
 	t_dlist	*top_prev;
+	size_t	i;
 
-	top_prev = stack->cnt->prev;
-	ft_dlstdelone(&stack->cnt, stack->top, del);
-	stack->top = top_prev;
+	i = 0;
+	while (i < times)
+	{
+		top_prev = stack->top->prev;
+		ft_dlstdelone(&stack->cnt, stack->top, del);
+		stack->top = top_prev;
+		i++;
+	}
 }
 
 t_token_type	*new_token_type(t_token_type type)

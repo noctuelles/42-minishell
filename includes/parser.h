@@ -43,10 +43,11 @@ typedef struct	s_parser
 	t_dlist				*tkns;
 	t_token				*last_used_tkn;
 	t_parser_errcode	errcode;
-	t_parse_stack		*output_stack;
-	t_parse_stack		*op_stack;
+	t_parse_stack		output_stack;
+	t_parse_stack		op_stack;
 }	t_parser;
 
+char *get_type(t_token_type type);
 /* parser_utils.c */
 
 t_bool	match(t_parser *parser, t_token_type type, char **value);
@@ -97,7 +98,7 @@ t_ast_tree_node	*io_redirect4(t_parser *parser);
 /* stack.c */
 
 t_dlist			*push_stack(t_parse_stack *stack, void *content);
-void			pop_stack(t_parse_stack *stack, void (*del)(void *));
+void			pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times);
 t_token_type	*new_token_type(t_token_type type);
 
 #endif
