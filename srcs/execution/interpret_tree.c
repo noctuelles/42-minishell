@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 13:48:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 16:56:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,9 @@ int	treat_line(char *line, t_ast_tree_node *node, int pipefd[2])
 void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 {
 	char	*line;
+	int		count;
 
+	count = 1;
 	while (1)
 	{
 		line = readline("> ");
@@ -121,6 +123,7 @@ void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 		{
 			if (treat_line(line, node, pipefd))
 				break ;
+			count++;
 		}
 		else
 		{
@@ -130,7 +133,7 @@ void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 				printf("\n");
 				break ;
 			}
-			printf("Minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", node->value);
+			printf("Minishell: warning: here-document at line %i delimited by end-of-file (wanted `%s')\n", count, node->value);
 			break ;
 		}
 	}
