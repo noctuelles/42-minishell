@@ -1,9 +1,0 @@
-# Pas fait
-
-# A verifier
-
-# Les problemes
-	exit sans arg
-	echo coucou | ./minishell
-	mkdir test; cd test; rmdir ../test
-	cat <, eof
