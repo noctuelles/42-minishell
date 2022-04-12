@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 18:18:43 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:24:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,7 @@ int main(int argc, char **argv, char **envp)
 		if(strcmp(str, "") == 0)
 			continue;
 		tkns = get_tokens(str, vars);
+		free(str);
 		if (tkns)
 		{
 			root = parse(&tkns);
