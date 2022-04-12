@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 16:56:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:40:44 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,8 @@ void	here_doc_logic(t_ast_tree_node *node, t_command *command)
 {
 	int		pipefd[2];
 
+	if (command->io_in_redirect > 0)
+			close(command->io_in_redirect);
 	if (pipe(pipefd) < 0)
 	{
 		printf("Pipe error\n");
