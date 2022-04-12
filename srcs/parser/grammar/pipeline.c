@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 15:42:13 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 18:49:13 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_ast_tree_node	*pipeline2(t_parser *parser)
 
 	cmd_node = simple_cmd(parser);
 	if (match(parser, T_LOG_AND, NULL) == false)
-		return (quit_production(parser, NULL, cmd_node, 0));
+		return (quit_production(parser, NULL, cmd_node, ERR_UNEXPECTED_TOKEN));
 	return (cmd_node);
 }
 
@@ -69,7 +69,7 @@ t_ast_tree_node	*pipeline3(t_parser *parser)
 
 	cmd_node = simple_cmd(parser);
 	if (match(parser, T_LOG_OR, NULL) == false)
-		return (quit_production(parser, NULL, cmd_node, 0));
+		return (quit_production(parser, NULL, cmd_node, ERR_UNEXPECTED_TOKEN));
 	return (cmd_node);
 }
 
@@ -79,16 +79,6 @@ t_ast_tree_node	*pipeline4(t_parser *parser)
 
 	cmd_node = simple_cmd(parser);
 	if (match(parser, T_CL_PRT, NULL) == false)
-		return (quit_production(parser, NULL, cmd_node, 0));
-	return (cmd_node);
-}
-
-t_ast_tree_node	*pipeline5(t_parser *parser)
-{
-	t_ast_tree_node	*cmd_node;
-
-	cmd_node = simple_cmd(parser);
-	if (match(parser, T_NULL, NULL) == false)
-		return (quit_production(parser, NULL, cmd_node, 0));
+		return (quit_production(parser, NULL, cmd_node, ERR_UNEXPECTED_TOKEN));
 	return (cmd_node);
 }

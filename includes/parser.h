@@ -15,7 +15,7 @@
 # include "lexer.h"
 # include "ast.h"
 
-# define STR_ERR_UNEXPECTED_EOF              "unexpected end-of-file or token"
+# define STR_ERR_UNEXPECTED_TOKEN            "unexpected token"
 # define STR_ERR_EXPECTED_COMMAND            "expected command"
 # define STR_ERR_UNEXPECTED_IO_TOKEN         "expected filename for redirection"
 # define STR_ERR_UNEXPECTED_IO_HEREDOC_TOKEN "expected here-doc delimiter"
@@ -26,8 +26,8 @@ typedef enum e_parser_errcode
 	NO_ERR,
 	ERR_MALLOC,
 	ERR_SYNTAX,
-	ERR_UNEXPECTED_EOF,
 	ERR_EXPECTED_COMMAND,
+	ERR_UNEXPECTED_TOKEN,
 	ERR_UNEXPECTED_IO_TOKEN,
 	ERR_UNEXPECTED_IO_HEREDOC_TOKEN
 }	t_parser_errcode;

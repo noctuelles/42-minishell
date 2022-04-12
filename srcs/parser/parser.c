@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/12 17:30:52 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 19:30:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,25 @@
 #include <string.h>
 #include <errno.h>
 
-static t_ast_tree_node	*retrieve_pipeline(t_parser *parser)
-{
-	t_ast_tree_node	*node_pipeline;
-
-	node_pipeline = pipeline(parser);
-	if (!node_pipeline)
-	{
-		if (parser->errcode == ERR_MALLOC)
-			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
-		else
-			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
-					get_parser_error(parser->errcode), parser->last_used_tkn->val);
-		return (NULL);
-	}
-	else
-		return (node_pipeline);
-}
-
 static inline t_token	*cast_tkn(t_dlist *elem)
 {
 	return ((t_token *) elem->content);
 }
 
-static	t_ast_tree_node *create_node(t_parse_stack *out_stack, t_token_type type)
+static	t_ast_tree_node *create_node(t_parser *parser, t_token_type type)
 {
 	t_ast_tree_node	*left;
 	t_ast_tree_node	*right;
 	t_ast_tree_node	*result;
 	t_node_type		node_type;
 
-	left = (t_ast_tree_node *) out_stack->top->prev->content;
-	right = (t_ast_tree_node *) out_stack->top->content;
+	if (parser->output_stack.top->prev == NULL)
+	{
+		parser->errcode = ERR_EXPECTED_COMMAND;
+		return (NULL);
+	}
+	left = (t_ast_tree_node *) parser->output_stack.top->prev->content;
+	right = (t_ast_tree_node *) parser->output_stack.top->content;
 	if (type == T_LOG_AND)
 		node_type = NODE_LOGICAL_AND;
 	if (type == T_LOG_OR)
@@ -56,8 +43,8 @@ static	t_ast_tree_node *create_node(t_parse_stack *out_stack, t_token_type type)
 	if (!result)
 		return (NULL);
 	ast_tree_attach(result, left, right);
-	pop_stack(out_stack, NULL, 2);
-	push_stack(out_stack, result);
+	pop_stack(&parser->output_stack, NULL, 2);
+	push_stack(&parser->output_stack, result);
 	return (result);
 }
 
@@ -89,6 +76,15 @@ static void	update_tkns(t_parser *parser)
 	parser->curr_tkn = (t_token *) parser->tkns->content;
 }
 
+void	*quit_parsing(t_parser *parser)
+{
+	ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR,
+		get_parser_error(parser->errcode), parser->last_used_tkn->val);
+	ft_dlstclear(&parser->op_stack.cnt, NULL);
+	ft_dlstclear(&parser->output_stack.cnt, ast_tree_delete_node);
+	return (NULL);
+}
+
 static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 {
 	t_parser		parser;
@@ -103,9 +99,7 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 	{
 		if (curr_type(parser) != T_OP_PRT && curr_type(parser) != T_WORD)
 		{
-			ft_dprintf(0, "{1;33}An error occured while parsing, invalid start token : %s{0}\n",
-					get_type(cast_tkn(parser.tkns)->type));
-			return (NULL);
+			return (quit_parsing(&parser));
 		}
 		while (curr_type(parser) == T_OP_PRT)
 		{
@@ -114,12 +108,9 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 		}
 		if (curr_type(parser) != T_CL_PRT && curr_type(parser)!= T_NULL)
 		{
-			node_pipeline = retrieve_pipeline(&parser);
+			node_pipeline = pipeline(&parser);
 			if (!node_pipeline)
-			{
-				ft_dprintf(0, "{1;33}An error occured while parsing : bad pipeline.{0}\n");
-				return (NULL);
-			}
+				return (quit_parsing(&parser));
 			else
 			{
 				push_stack(&parser.output_stack, node_pipeline);
@@ -130,7 +121,8 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 		{
 			if (is_top_an_operator(parser))
 			{
-				create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
+				if (!create_node(&parser, cast_tkn(parser.op_stack.top)->type))
+					return (quit_parsing(&parser));
 				pop_stack(&parser.op_stack, NULL, 2);
 			}
 			else
@@ -141,7 +133,8 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 		{
 			if (parser.op_stack.top && is_top_an_operator(parser))
 			{
-				create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
+				if (!create_node(&parser, cast_tkn(parser.op_stack.top)->type))
+					return (quit_parsing(&parser));
 				pop_stack(&parser.op_stack, NULL, 1);
 			}
 			push_stack(&parser.op_stack, parser.curr_tkn);
@@ -150,11 +143,10 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist *tkns)
 	}
 	if (parser.op_stack.top && is_top_an_operator(parser))
 	{
-		create_node(&parser.output_stack, cast_tkn(parser.op_stack.top)->type); 
+		if (!create_node(&parser, cast_tkn(parser.op_stack.top)->type))
+			return (quit_parsing(&parser));
 		pop_stack(&parser.op_stack, NULL, 1);
 	}
-	//ft_printf("Last token used :\n\t< {32}%s{0} > {1}Type{0} <{1;36}%s{0}>",
-	//		parser.last_used_tkn->val, get_type(parser.last_used_tkn->type));
 	return ((t_ast_tree_node *) parser.output_stack.top->content);
 }
 
@@ -167,6 +159,10 @@ t_ast_tree_node	*parse(t_dlist **tkns)
 	if (!ast_root)
 	{
 		return (NULL);
+	}
+	else
+	{
+		ast_print_tree("", ast_root, false);
 	}
 	return (ast_root);
 }
