@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 17:23:32 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:42:06 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <signal.h>
 #include "execution.h"
 #include "minishell.h"
+#include "get_next_line.h"
 
 extern int	g_sigint;
 
@@ -245,7 +246,11 @@ int main(int argc, char **argv, char **envp)
 			add_history(str);
 		}
 		else
-			str = readline("");
+		{
+			str = get_next_line(0);
+			if(str && strchr(str, '\n') != NULL)
+				*strchr(str, '\n') = 0;
+		}
 		if (str == NULL)
 			ft_exit(1, NULL, minishell, 0);
 		refill_env(&vars);
