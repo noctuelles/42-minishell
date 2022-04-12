@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 11:48:36 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 19:27:16 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 
 	if (argc != 2)
 	{
-		printf("Minishell: %s: use with format: \
-			cd <relative or absolute path>\n",argv[0]);
+		printf("Minishell: %s: use with format: cd <relative or absolute path>\n",argv[0]);
 		return (1);
 	}
 	if (chdir(argv[1]) == 0)
