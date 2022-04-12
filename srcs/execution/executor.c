@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 17:09:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:15:41 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,24 +106,26 @@ void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 		command->pid = *pid;
 }
 
-void executing(t_command *command, t_dlist *vars, int save_stdin)
+void executing(t_command *command, t_minishell minishell, int save_stdin)
 {
 	if (!is_builtin(command->original_name))
 	{
-		execve(command->name, command->args, export_env(vars));
+		execve(command->name, command->args, export_env(minishell.vars));
 		perror("Execution error");
 		close_all_error(command, errno);
 	}
 	else
 		exit(exec_builtin(command,
-				vars, save_stdin, 1));
+				minishell, save_stdin, 1));
 }
 
-int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
+int	execute_file(t_command *command, t_minishell minishell, int forking, int save_stdin)
 {
 	pid_t	pid;
 	int		pipefd[2];
+	t_dlist	*vars;
 
+	vars = minishell.vars;
 	if (command->name != NULL)
 	{
 		add_command_to_args(command);
@@ -132,14 +134,14 @@ int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin)
 			pipe_and_fork(pipefd, command, &pid);
 			if (pid == 0)
 			{
-				executing(command, vars, save_stdin);
+				executing(command, minishell, save_stdin);
 				return (1);
 			}
 			else
 				return (4242);
 		}
 		else
-			return (exec_builtin(command, vars, save_stdin, 0));
+			return (exec_builtin(command, minishell, save_stdin, 0));
 	}
 	else
 		return (127);

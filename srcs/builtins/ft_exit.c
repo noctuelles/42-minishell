@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 17:02:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:24:45 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@ int	end_program(int save_stdin, t_dlist *env, int exit_code)
 	return (1);
 }
 
-void	init(long int *exit_code, int argc, int save_stdin, t_dlist *env)
+void	init(long int *exit_code, int argc, int save_stdin, t_minishell minishell)
 {
-	*exit_code = 0;
+	t_dlist *env;
+	
+	env = minishell.vars;
+	*exit_code = minishell.last_ret;
 	if(isatty(0) == 1)
 		fprintf(stderr, "exit\n");
 	if (argc == 1)
@@ -49,12 +52,14 @@ void	check_long(char **argv, int save_stdin, t_dlist *env)
 	}
 }
 
-int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin)
+int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin)
 {
 	long int	exit_code;
 	int			i;
+	t_dlist		*env;
 
-	init(&exit_code, argc, save_stdin, env);
+	env = minishell.vars;
+	init(&exit_code, argc, save_stdin, minishell);
 	i = -1;
 	if (argv[1][i + 1] == '-')
 		i++;

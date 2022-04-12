@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 14:02:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:23:32 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	init_variable(int *forking, int *count, int *status, int *last_pid)
 	*last_pid = 0;
 }
 
-int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
+int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 {
 	int			save_stdin;
 	int			forking;
@@ -150,7 +150,9 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	int			status;
 	int			last_pid;
 	t_command	*first;
+	t_dlist		*env;
 
+	env = minishell.vars;
 	init_variable(&forking, &count, &status, &last_pid);
 	save_stdin = dup(0);
 	first = parse_commands(root, env);
@@ -165,7 +167,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_dlist *env)
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
-		count += treat_return_code(&first, execute_file(first, env, forking,
+		count += treat_return_code(&first, execute_file(first, minishell, forking,
 					save_stdin), &status, &last_pid);
 	status = wait_for_result(count, last_pid);
 	return (end_pipeline(save_stdin, status));
@@ -217,8 +219,7 @@ void refill_env(t_dlist **env)
 	}
 }
 
-int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
-
+int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
 
 int main(int argc, char **argv, char **envp)
 {
@@ -226,11 +227,14 @@ int main(int argc, char **argv, char **envp)
 	t_ast_tree_node	*root;
 	char			*str;
 	t_dlist			*tkns;
+	t_minishell		minishell;
 
 	(void)argc;
 	(void)argv;
 	vars = NULL;
 	vars = import_var(&vars, envp);
+	minishell.last_ret = 0;
+	minishell.vars = vars;
 	while (1)
 	{
 		set_signals_as_prompt();
@@ -243,7 +247,7 @@ int main(int argc, char **argv, char **envp)
 		else
 			str = readline("");
 		if (str == NULL)
-			ft_exit(1, NULL, vars, 0);
+			ft_exit(1, NULL, minishell, 0);
 		refill_env(&vars);
 		if(strcmp(str, "") == 0)
 			continue;
@@ -252,7 +256,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			root = parse(&tkns);
 			if (root != NULL)
-				execute_pipeline(root, vars);
+				minishell.last_ret = execute_pipeline(root, minishell);
 		}
 		else
 			fprintf(stderr, "Les tokens ca marche pas\n");

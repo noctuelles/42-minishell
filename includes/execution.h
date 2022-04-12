@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 16:47:53 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:14:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <string.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include "minishell.h"
 
 typedef struct s_command
 {
@@ -51,8 +52,8 @@ void	add_command_to_args(t_command *command);
 char    *ft_strtrunc(char **str, const char delim);
 t_command *parse_commands(t_ast_tree_node *root, t_dlist *vars);
 void replace_by_path(t_command *command, t_dlist *vars);
-int	execute_file(t_command *command, t_dlist *vars, int forking, int save_stdin);
+int	execute_file(t_command *command, t_minishell minishell, int forking, int save_stdin);
 int	is_builtin(char *str);
-int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking);
+int	exec_builtin(t_command *command, t_minishell minishell, int save_stdin, int forking);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 11:04:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:07:38 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_minishell
 	t_dlist	*vars;
 	char	**envp;
 	t_bool	update_envp;
+	int		last_ret;
 }	t_minishell;
 
 /* var.c */

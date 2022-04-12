@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 13:55:45 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:19:59 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_env(int argc, char **argv, t_dlist *env);
 int	ft_export(int argc, char **argv, t_dlist *env);
 int	ft_pwd(int argc, char **argv, t_dlist *env);
 int	ft_unset(int argc, char **argv, t_dlist *env);
-int	ft_exit(int argc, char **argv, t_dlist *env, int save_stdin);
+int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
 
 void	free_cmd(t_command *cmd);
 
@@ -55,13 +55,15 @@ void	free_all(t_command *cmd, t_dlist *env)
 	}
 }
 
-int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking)
+int	exec_builtin(t_command *command, t_minishell minishell, int save_stdin, int forking)
 {
 	int	count;
 	char	*str;
 	char	**argv;
 	int		res;
+	t_dlist	*env;
 
+	env = minishell.vars;
 	str = command->name;
 	argv = command->args;
 	count = 0;
@@ -84,7 +86,7 @@ int	exec_builtin(t_command *command, t_dlist *env, int save_stdin, int forking)
 	{
 		if(!forking)
 			free_cmd(command);
-		ft_exit(count, argv, env, save_stdin);
+		ft_exit(count, argv, minishell, save_stdin);
 	}
 	if(forking)
 		free_all(command, env);
