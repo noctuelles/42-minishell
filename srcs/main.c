@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 19:01:52 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 11:39:00 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,32 @@ void refill_env(t_dlist **env)
 	}
 }
 
+void	parse_node(t_ast_tree_node *node, t_minishell *minishell)
+{
+	// Parsing error
+	if(node->left == NULL || node->right == NULL)
+		return ;
+	// OR or AND at left --> recursive
+	if (node->left->type == NODE_LOGICAL_AND || node->left->type == NODE_LOGICAL_OR)
+		parse_node(node->left, minishell);
+	// COMMAND at left --> execute
+	else if(node->left->type == NODE_COMMAND || node->left->type == NODE_PIPE)
+		minishell->last_ret = execute_pipeline(node->left, *minishell);
+	node->left = NULL;
+	// Check result to do or not the right branch
+	if((minishell->last_ret == 0 && node->type == NODE_LOGICAL_AND) || (minishell->last_ret != 0 && node->type == NODE_LOGICAL_OR))
+	{
+		// OR or AND at right --> recursive
+		if (node->right->type == NODE_LOGICAL_AND || node->right->type == NODE_LOGICAL_OR)
+			parse_node(node->right, minishell);
+		// COMMAND at right --> execute
+		else if(node->right->type == NODE_COMMAND || node->right->type == NODE_PIPE)
+			minishell->last_ret = execute_pipeline(node->right, *minishell);
+		node->right = NULL;
+	}
+	ast_tree_delete_node(node);
+}
+
 int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
 
 int main(int argc, char **argv, char **envp)
@@ -266,10 +292,13 @@ int main(int argc, char **argv, char **envp)
 		{
 			root = parse(&tkns);
 			if (root != NULL)
-				minishell.last_ret = execute_pipeline(root, minishell);
+			{
+				if(root->type == NODE_COMMAND || root->type == NODE_PIPE)
+					minishell.last_ret = execute_pipeline(root, minishell);
+				else
+					parse_node(root, &minishell);
+			}
 		}
-		else
-			fprintf(stderr, "Les tokens ca marche pas\n");
 	}
 	return (0);
 }
