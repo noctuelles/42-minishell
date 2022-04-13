@@ -6,11 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 13:59:34 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 11:50:37 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:21:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "builtins.h"
 
 int	ft_env(int argc, char **argv, t_dlist *env)
 {

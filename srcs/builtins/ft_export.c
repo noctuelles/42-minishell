@@ -6,12 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/08 11:57:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:26:56 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <stdio.h>
+#include "builtins.h"
 
 void	create_new_string(char *str, char *new_str, int size, int length)
 {
@@ -56,7 +55,7 @@ int	ft_export(int argc, char **argv, t_dlist *env)
 	{
 		while (env != NULL)
 		{
-			printf("declare -x %s=\"", ((t_var *)env->content)->name);
+			printf(EXPORT_LIST, ((t_var *)env->content)->name);
 			print_string_escape_quote(((t_var *)env->content)->value);
 			printf("\"\n");
 			env = env->next;

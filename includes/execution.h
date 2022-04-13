@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 17:14:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:17:58 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include "minishell.h"
+#include "env.h"
 
 typedef struct s_command
 {

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 18:17:02 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 11:57:38 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 void	file_error(t_command *command, int *error, int type)
 {
 	int	err;
-	*error = 1;
+
+	if(error != NULL)
+		*error = 1;
 
 	err = 0;
 	if(type == 1)
@@ -141,7 +143,24 @@ int	execute_file(t_command *command, t_minishell minishell, int forking, int sav
 				return (4242);
 		}
 		else
-			return (exec_builtin(command, minishell, save_stdin, 0));
+		{
+			int save_stdout = -1;
+			if (command->io_out_redirect != -1)
+			{
+				if (command->io_out_redirect == -2)
+					file_error(command, NULL, 2);
+				else
+				{
+					save_stdout = dup(1);
+					dup2(command->io_out_redirect, 1);
+					close(command->io_out_redirect);
+				}
+			}
+			int ret = exec_builtin(command, minishell, save_stdin, 0);
+			dup2(save_stdout, 1);
+			close(save_stdout);
+			return (ret);
+		}
 	}
 	else
 		return (127);

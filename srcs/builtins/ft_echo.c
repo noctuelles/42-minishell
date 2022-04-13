@@ -6,18 +6,17 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:17:43 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 14:41:50 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:21:10 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <stdio.h>
+#include "builtins.h"
 
 int	is_option_string(char *str)
 {
 	int	i;
 
-	if(strlen(str) < 2)
+	if (strlen(str) < 2)
 		return (0);
 	if (str[0] != '-')
 		return (0);

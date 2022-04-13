@@ -3,7 +3,5 @@ cat <, eof (et autre erreurs)                -> leaks en cas d erreur de parsing
 expansion here_doc		                     -> appeler la fonction d expansion si delimiter n est pas entre "" ou ''. Pas d expansion des wildcard
 expansion $?                                 -> passer $? a la fonction d expansion ?
 return code bultins
-echo a > file1
-
 Refaire .h
 PROTECTION APPEL SYSTEME !!!!

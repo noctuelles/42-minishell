@@ -6,12 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 17:30:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:24:42 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <stdio.h>
+#include "builtins.h"
 
 int	end_program(int save_stdin, t_dlist *env, int exit_code)
 {
@@ -22,13 +21,14 @@ int	end_program(int save_stdin, t_dlist *env, int exit_code)
 	return (1);
 }
 
-void	init(long int *exit_code, int argc, int save_stdin, t_minishell minishell)
+void	init(long int *exit_code, int argc, int save_stdin,
+	t_minishell minishell)
 {
-	t_dlist *env;
-	
+	t_dlist	*env;
+
 	env = minishell.vars;
 	*exit_code = minishell.last_ret;
-	if(isatty(0) == 1)
+	if (isatty(0) == 1)
 		fprintf(stderr, "exit\n");
 	if (argc == 1)
 		end_program(save_stdin, env, *exit_code);
@@ -39,17 +39,22 @@ void	check_long(char **argv, int save_stdin, t_dlist *env)
 	if (argv[1][0] == '-' && (strcmp(argv[1], "-9223372036854775808") > 0
 		|| strlen(argv[1]) > 20))
 	{
-		fprintf(stderr, "Minishell: exit: %s: numeric argument required\n",
-			argv[1]);
+		fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		end_program(save_stdin, env, 2);
 	}
 	if (argv[1][0] != '-' && (strcmp(argv[1], "9223372036854775807") > 0
 		|| strlen(argv[1]) > 19))
 	{
-		fprintf(stderr, "Minishell: exit: %s: numeric argument required\n",
-			argv[1]);
+		fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		end_program(save_stdin, env, 2);
 	}
+}
+
+void	exit_error(char **argv, t_dlist *env)
+{
+	fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
+	free_env(env);
+	exit(1);
 }
 
 int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin)
@@ -68,16 +73,11 @@ int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin)
 		if (argv[1][i] >= '0' && argv[1][i] <= '9')
 			exit_code = (exit_code * 10) + (argv[1][i] - '0');
 		else
-		{
-			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n",
-				argv[1]);
-			free_env(env);
-			exit(1);
-		}
+			exit_error(argv, env);
 	}
 	if (argc > 2)
 	{
-		fprintf(stderr, "Minishell: exit: too many arguments\n");
+		fprintf(stderr, EXIT_TO_MANY, argv[0]);
 		return (1);
 	}
 	check_long(argv, save_stdin, env);
