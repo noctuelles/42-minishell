@@ -6,12 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 17:19:59 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:41:35 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include "minishell.h"
 
 int	is_builtin(char *str)
 {
@@ -32,22 +31,12 @@ int	is_builtin(char *str)
 	return (0);
 }
 
-int	ft_cd(int argc, char **argv, t_dlist *env);
-int	ft_echo(int argc, char **argv, t_dlist *env);
-int	ft_env(int argc, char **argv, t_dlist *env);
-int	ft_export(int argc, char **argv, t_dlist *env);
-int	ft_pwd(int argc, char **argv, t_dlist *env);
-int	ft_unset(int argc, char **argv, t_dlist *env);
-int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
-
-void	free_cmd(t_command *cmd);
-
 void	free_all(t_command *cmd, t_dlist *env)
 {
-	t_command *tmp;
+	t_command	*tmp;
 
 	free_env(env);
-	while(cmd)
+	while (cmd)
 	{
 		tmp = cmd->next;
 		free_cmd(cmd);
@@ -55,21 +44,10 @@ void	free_all(t_command *cmd, t_dlist *env)
 	}
 }
 
-int	exec_builtin(t_command *command, t_minishell minishell, int save_stdin, int forking)
+int	execute_basic(char *str, int count, char **argv, t_dlist *env)
 {
-	int	count;
-	char	*str;
-	char	**argv;
-	int		res;
-	t_dlist	*env;
+	int	res;
 
-	env = minishell.vars;
-	str = command->name;
-	argv = command->args;
-	count = 0;
-	res = 0;
-	while (argv[count])
-		count++;
 	if (strcmp(str, "echo") == 0)
 		res = ft_echo(count, argv, env);
 	if (strcmp(str, "cd") == 0)
@@ -82,13 +60,33 @@ int	exec_builtin(t_command *command, t_minishell minishell, int save_stdin, int 
 		res = ft_unset(count, argv, env);
 	if (strcmp(str, "env") == 0)
 		res = ft_env(count, argv, env);
+	return (res);
+}
+
+int	exec_builtin(t_command *command, t_minishell minishell,
+	int save_stdin, int forking)
+{
+	int		count;
+	char	*str;
+	char	**argv;
+	int		res;
+	t_dlist	*env;
+
+	env = minishell.vars;
+	str = command->name;
+	argv = command->args;
+	count = 0;
+	res = 0;
+	while (argv[count])
+		count++;
+	res = execute_basic(str, count, argv, env);
 	if (strcmp(str, "exit") == 0)
 	{
-		if(!forking)
+		if (!forking)
 			free_cmd(command);
 		ft_exit(count, argv, minishell, save_stdin);
 	}
-	if(forking)
+	if (forking)
 		free_all(command, env);
 	return (res);
 }

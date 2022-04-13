@@ -6,12 +6,16 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:17:30 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:28:29 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENV_H
 # define ENV_H
+
+# include "libft.h"
+# include <stdbool.h>
+# include <stdlib.h> 
 
 typedef struct s_var
 {

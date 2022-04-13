@@ -6,12 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 18:18:39 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:42:50 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-#include "minishell.h"
 
 char	*create_path(char *path, char *command_name)
 {
@@ -74,16 +73,14 @@ void	replace_by_path(t_command *command, t_dlist *vars)
 			{
 				path = get_path_from_env(command->name, vars);
 				if (path == NULL)
-					fprintf(stderr, "Minishell: %s: command not found\n",
-						command->name);
+					fprintf(stderr, COMMAND_NOT_FOUND, command->name);
 				command->name = path;
 			}
 		}
 		else
 		{
 			if (access(command->name, F_OK) != 0)
-				fprintf(stderr, "Minishell: %s: %s\n", command->name,
-					strerror(errno));
+				fprintf(stderr, ERROR_ERRNO, command->name, strerror(errno));
 		}
 		command = command->next;
 	}

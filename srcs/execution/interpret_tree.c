@@ -6,13 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/12 18:40:44 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:47:47 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include <readline/readline.h>
-#include "minishell.h"
 
 extern int	g_sigint;
 
@@ -133,7 +132,7 @@ void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 				printf("\n");
 				break ;
 			}
-			printf("Minishell: warning: here-document at line %i delimited by end-of-file (wanted `%s')\n", count, node->value);
+			printf(HERE_DOC_EOF, count, node->value);
 			break ;
 		}
 	}
@@ -144,10 +143,10 @@ void	here_doc_logic(t_ast_tree_node *node, t_command *command)
 	int		pipefd[2];
 
 	if (command->io_in_redirect > 0)
-			close(command->io_in_redirect);
+		close(command->io_in_redirect);
 	if (pipe(pipefd) < 0)
 	{
-		printf("Pipe error\n");
+		printf(PIPE_ERROR);
 		exit(1);
 	}
 	set_signals_as_here_doc();

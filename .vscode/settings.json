@@ -17,6 +17,8 @@
 		"utility": "c",
 		"cerrno": "c",
 		"unistd.h": "c",
-		"builtins.h": "c"
+		"builtins.h": "c",
+		"typeinfo": "cpp",
+		"algorithm": "c"
 	}
 }
