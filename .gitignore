@@ -1,6 +1,5 @@
 *.o
 *.out
-libft
 .vscode
 bug.save
 minishell
