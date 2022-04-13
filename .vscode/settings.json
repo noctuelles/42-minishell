@@ -19,6 +19,7 @@
 		"unistd.h": "c",
 		"builtins.h": "c",
 		"typeinfo": "cpp",
-		"algorithm": "c"
+		"algorithm": "c",
+		"stddef.h": "c"
 	}
 }
