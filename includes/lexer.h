@@ -6,15 +6,18 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 10:03:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:51:42 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "libft.h"
 # include <stdbool.h>
+# include <stdlib.h>
+# include <unistd.h>
+
+# include "libft.h"
 
 # define STR_PIPE             "|"
 # define STR_LOG_OR           "||"
@@ -93,7 +96,7 @@ void	free_lexer(t_lexer *lexer);
 /* lexer_utils.c */
 
 t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
-															t_token_type type);
+			t_token_type type);
 t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
 t_token	search_existing_token(const char *str);

@@ -6,19 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:47:19 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:49:31 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-# include "libft.h"
-
-# include "ast.h"
-# include "env.h"
-# include "signals.h"
-# include "builtins.h"
 # include <stdbool.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -27,6 +21,13 @@
 # include <string.h>
 # include <stdio.h>
 # include <sys/wait.h>
+
+# include "libft.h"
+
+# include "ast.h"
+# include "env.h"
+# include "signals.h"
+# include "builtins.h"
 
 # define COMMAND_NOT_FOUND "Minishell: %s: command not found\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"

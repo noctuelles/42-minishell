@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 11:06:05 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/11 11:06:32 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:52:13 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*ft_strndup_wld(t_list *wldc_lst, const char *s, size_t n)
 }
 
 t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
-															t_token_type type)
+			t_token_type type)
 {
 	char	*str;
 	t_dlist	*elem;

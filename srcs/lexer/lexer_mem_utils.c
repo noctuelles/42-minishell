@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mem_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 15:44:12 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 13:50:44 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-#include <stdlib.h>
 
 t_token	*new_token(char *val, size_t len, t_token_type type)
 {
@@ -25,7 +24,7 @@ t_token	*new_token(char *val, size_t len, t_token_type type)
 	tkn->type = type;
 	tkn->wldc_lst = NULL;
 	tkn->quote_lst = NULL;
-	tkn->rem_quote_lst  = NULL;
+	tkn->rem_quote_lst = NULL;
 	tkn->quote = '\0';
 	return (tkn);
 }
@@ -33,7 +32,7 @@ t_token	*new_token(char *val, size_t len, t_token_type type)
 void	free_token(void *tkn)
 {
 	t_token	*ptkn;
-	
+
 	ptkn = (t_token *) tkn;
 	if (ptkn->type == T_WORD)
 	{
