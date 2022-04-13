@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:21:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:49:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 	while (first != NULL)
 		count += treat_return_code(&first, execute_file(first, minishell,
 					forking, minishell.save_stdin), &status, &last_pid);
-	status = wait_for_result(count, last_pid);
+	status = wait_for_result(count, last_pid, status);
 	return (end_pipeline(minishell.save_stdin, status));
 }
 

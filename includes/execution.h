@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:02:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:50:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void		free_cmd(t_command *cmd);
 int			cancel_everything(int save_stdin, t_command *cmd);
 int			treat_return_code(t_command **cmd, int ret, int *status,
 				int *last_pid);
-int			wait_for_result(int count, int last_pid);
+int			wait_for_result(int count, int last_pid, int status);
 int			end_pipeline(int save_stdin, int status);
 void		parse_and_or(t_ast_tree_node *node, t_minishell *minishell);
 int			execute_pipeline(t_ast_tree_node *root, t_minishell minishell);

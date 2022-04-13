@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:59:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:51:10 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 	if (first->next == NULL)
 	{
 		if (ret != 4242)
+		{
 			*status = ret;
+		}
 		else
 			*last_pid = first->pid;
 	}
@@ -84,15 +86,13 @@ int	cancel_everything(int save_stdin, t_command *cmd)
 	return (130);
 }
 
-int	wait_for_result(int count, int last_pid)
+int	wait_for_result(int count, int last_pid, int status)
 {
 	int	i;
 	int	pid;
 	int	wait_status;
-	int	status;
 
 	i = -1;
-	status = 0;
 	while (++i < count)
 	{
 		pid = waitpid(-1, &wait_status, 0);
