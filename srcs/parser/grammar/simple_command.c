@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/07 12:27:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 17:52:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,59 @@ t_ast_tree_node	*simple_cmd4(t_parser *parser)
 		return (quit_production(parser, node_cmd_suffix, NULL, ERR_MALLOC));
 	ast_tree_attach(rslt, NULL, node_cmd_suffix);
 	return (rslt);
+}
+
+t_arg	*new_arg(char *value, t_token_type token_type)
+{
+	t_arg		*arg;
+	char		*arg_value;
+	t_arg_type	arg_type;
+
+	if (token_type == T_GRT)
+		arg_type = ARG_REDIRECT_FILE;
+	else if (token_type == T_LESS)
+		arg_type = ARG_REDIRECT_STDIN;
+	else if (token_type == T_DGRT)
+		arg_type = ARG_REDIRECT_FILE_APPEND;
+	else if (token_type == T_DLESS)
+		arg_type = ARG_REDIRECT_HERE_DOC;
+	else
+		arg_type = ARG_WORD;
+	arg = (t_arg *) malloc(sizeof(t_arg));
+	if (!arg)
+		return (NULL);
+	arg_value = ft_strdup(value);
+	if (!arg_value)
+	{
+		free(arg);
+		return (NULL);
+	}
+	arg->type = arg_type;
+	arg->value = arg_value;
+	return (arg);
+}
+
+t_ast_tree_node *simple_command(t_parser *parser)
+{
+	while (true)
+	{
+		if (is_a_redirection(*parser))
+		{
+			parser->tkns = parser->tkns->next;
+			if (cast_tkn(parser->tkns)->type == T_WORD)
+			{
+
+			}
+			else
+			{
+				// ca va pas il y a une erreur
+			}
+		}
+		if (cast_tkn(parser->tkns)->type == T_WORD)
+		{
+
+		}
+		else
+			break ;
+	}
 }

@@ -26,6 +26,8 @@
 					  |		<word>				<cmd_suffix>
 					  |		<word>
 
+/* This production rule is returning an arg type (no recursion !) */
+
 <io_redirect>		::=		'<'					<word>
 					  |		'>'					<word>
 					  |		'>>'				<word>

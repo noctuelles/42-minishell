@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:48:42 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 17:47:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,26 @@ typedef enum	s_node_type
 	NODE_IO_REDIRECT_HERE_DOC,
 }	t_node_type;
 
+typedef enum	e_arg_type
+{
+	ARG_WORD,
+	ARG_REDIRECT_STDIN,
+	ARG_REDIRECT_FILE,
+	ARG_REDIRECT_FILE_APPEND,
+	ARG_REDIRECT_HERE_DOC
+}	t_arg_type;
+
+typedef struct	s_arg
+{
+	char		*value;
+	t_arg_type	type;
+}	t_arg;
+
 typedef struct	s_ast_tree_node
 {
 	t_node_type				type;
 	char					*value;
+	t_dlist					*args;
 	struct s_ast_tree_node	*left;
 	struct s_ast_tree_node	*right;
 }	t_ast_tree_node;
