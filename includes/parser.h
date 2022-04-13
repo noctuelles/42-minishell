@@ -16,7 +16,7 @@
 # include "lexer.h"
 # include "ast.h"
 
-# define STR_ERR_UNEXPECTED_EOF              "unexpected end-of-file or token"
+# define STR_ERR_UNEXPECTED_TOKEN            "unexpected token"
 # define STR_ERR_EXPECTED_COMMAND            "expected command"
 # define STR_ERR_UNEXPECTED_IO_TOKEN         "expected filename for redirection"
 # define STR_ERR_UNEXPECTED_IO_HEREDOC_TOKEN "expected here-doc delimiter"
@@ -27,18 +27,29 @@ typedef enum e_parser_errcode
 	NO_ERR,
 	ERR_MALLOC,
 	ERR_SYNTAX,
-	ERR_UNEXPECTED_EOF,
 	ERR_EXPECTED_COMMAND,
+	ERR_UNEXPECTED_TOKEN,
 	ERR_UNEXPECTED_IO_TOKEN,
 	ERR_UNEXPECTED_IO_HEREDOC_TOKEN
 }	t_parser_errcode;
 
+typedef struct	s_parse_stack
+{
+	t_dlist	*top;
+	t_dlist	*cnt;
+}	t_parse_stack;
+
 typedef struct	s_parser
 {
 	t_dlist				*tkns;
+	t_token				*last_used_tkn;
+	t_token				*curr_tkn;
 	t_parser_errcode	errcode;
+	t_parse_stack		output_stack;
+	t_parse_stack		op_stack;
 }	t_parser;
 
+char *get_type(t_token_type type);
 /* parser_utils.c */
 
 t_bool	match(t_parser *parser, t_token_type type, char **value);
@@ -56,20 +67,12 @@ t_ast_tree_node	*parse(t_dlist **tkns);
 
 /* Prototype for each production rules : */
 
-t_ast_tree_node	*complete_cmd(t_parser *parser);
-
 t_ast_tree_node	*pipeline(t_parser *parser);
 t_ast_tree_node	*pipeline1(t_parser *parser);
 t_ast_tree_node	*pipeline2(t_parser *parser);
-
-t_ast_tree_node	*and_or(t_parser *parser);
-t_ast_tree_node	*and_or1(t_parser *parser);
-t_ast_tree_node	*and_or2(t_parser *parser);
-t_ast_tree_node	*and_or3(t_parser *parser);
-
-t_ast_tree_node	*cmd(t_parser *parser);
-t_ast_tree_node	*cmd1(t_parser *parser);
-t_ast_tree_node	*cmd2(t_parser *parser);
+t_ast_tree_node	*pipeline3(t_parser *parser);
+t_ast_tree_node	*pipeline4(t_parser *parser);
+t_ast_tree_node	*pipeline5(t_parser *parser);
 
 t_ast_tree_node *simple_cmd(t_parser *parser);
 t_ast_tree_node *simple_cmd1(t_parser *parser);
@@ -93,5 +96,11 @@ t_ast_tree_node	*io_redirect1(t_parser *parser);
 t_ast_tree_node	*io_redirect2(t_parser *parser);
 t_ast_tree_node	*io_redirect3(t_parser *parser);
 t_ast_tree_node	*io_redirect4(t_parser *parser);
+
+/* stack.c */
+
+t_dlist			*push_stack(t_parse_stack *stack, void *content);
+void			pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times);
+t_token_type	*new_token_type(t_token_type type);
 
 #endif

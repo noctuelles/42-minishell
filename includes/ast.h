@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 11:01:05 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 10:02:54 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct	s_ast_tree_node
 t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type);
 void	ast_tree_apply_preorder(t_ast_tree_node *root);
 void	ast_tree_print_graph(t_ast_tree_node *root);
-void			ast_tree_delete_node(t_ast_tree_node *node);
+void			ast_tree_delete_node(void *node);
 t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 		t_ast_tree_node *right);
 

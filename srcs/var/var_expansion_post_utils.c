@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 23:45:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/11 18:35:33 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_token	*add_to_tkns_cpy(t_lexer *lex, t_token *old_tkn)
 		return (NULL);
 	}
 	ft_dlstadd_back(&lex->tkns, elem);
+	tkn->lst_elem = elem;
 	return (tkn);
 }
 

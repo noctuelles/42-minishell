@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:19:21 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/18 19:34:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/12 18:46:04 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	*get_parser_error(t_parser_errcode errcode)
 		return (STR_ERR_UNEXPECTED_IO_TOKEN);
 	else if (errcode == ERR_UNEXPECTED_IO_HEREDOC_TOKEN)
 		return (STR_ERR_UNEXPECTED_IO_HEREDOC_TOKEN);
-	else if (errcode == ERR_UNEXPECTED_EOF)
-		return (STR_ERR_UNEXPECTED_EOF);
+	else if (errcode == ERR_UNEXPECTED_TOKEN)
+		return (STR_ERR_UNEXPECTED_TOKEN);
 	else if (errcode == ERR_EXPECTED_COMMAND)
 		return (STR_ERR_EXPECTED_COMMAND);
 	else

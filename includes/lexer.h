@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 11:02:38 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 10:03:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_token
 	t_list			*rem_quote_lst;
 	t_list			*wldc_lst;
 	t_token_type	type;
+	t_dlist			*lst_elem;
 	char			quote;
 }				t_token;
 
