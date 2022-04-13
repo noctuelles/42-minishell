@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 17:06:58 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 17:59:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,7 @@ char	*before_read(t_dlist **vars, t_minishell minishell)
 	set_signals_as_prompt();
 	refill_env(vars);
 	if (isatty(0) == 1)
-	{
 		str = prompt_and_read(*vars);
-		add_history(str);
-	}
 	else
 	{
 		str = get_next_line(0);
@@ -165,6 +162,7 @@ int	main(int argc, char **argv, char **envp)
 		str = before_read(&vars, minishell);
 		if (strcmp(str, "") == 0)
 			continue ;
+		add_history(str);
 		tkns = get_tokens(str, vars);
 		free(str);
 		if (tkns)
