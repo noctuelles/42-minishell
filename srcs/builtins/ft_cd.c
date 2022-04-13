@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:20:05 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:53:38 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ int	ft_cd(int argc, char **argv, t_dlist *env)
 		pwd = getcwd(pwd, 1000);
 		if (!pwd)
 		{
-			printf("Minishell: %s: %s\n", argv[0], strerror(errno));
+			printf(ERROR_ERRNO, argv[0], strerror(errno));
 			return (1);
 		}
 		update_env(pwd, old_pwd, env);
 		return (0);
 	}
-	printf("Minishell: %s: %s\n", argv[0], strerror(errno));
+	printf(ERROR_ERRNO, argv[0], strerror(errno));
 	return (1);
 }

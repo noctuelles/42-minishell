@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:14:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:33:25 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:53:09 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ absolute path>\n"
 # define EXIT_TO_MANY "Minishell: %s: too many arguments\n"
 # define EXPORT_LIST "declare -x %s=\""
 # define UNSET_NOT_ENOUGH "Minishell: %s: not enough arguments\n"
+# define ERROR_ERRNO "Minishell: %s: %s\n"
 
 int		ft_cd(int argc, char **argv, t_dlist *env);
 int		ft_echo(int argc, char **argv, t_dlist *env);
