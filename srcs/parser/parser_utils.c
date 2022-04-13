@@ -6,12 +6,18 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/07 18:19:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 14:55:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "ast.h"
+
+void	*set_parser_errcode(t_parser *parser, t_parser_errcode errcode)
+{
+	parser->errcode = errcode;
+	return (NULL);
+}
 
 t_bool	match(t_parser *parser, t_token_type type, char **value)
 {
@@ -25,12 +31,12 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 	{
 		if (value != NULL)
 		{
-				*value = ft_strdup(tkn->val);
-				if (!(*value))
-				{
-					parser->errcode = ERR_MALLOC;
-					return (FALSE);
-				}
+			*value = ft_strdup(tkn->val);
+			if (!(*value))
+			{
+				parser->errcode = ERR_MALLOC;
+				return (FALSE);
+			}
 		}
 		parser->tkns = parser->tkns->next;
 		return (TRUE);

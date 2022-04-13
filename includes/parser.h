@@ -48,7 +48,6 @@ typedef struct	s_parser
 	t_parse_stack		op_stack;
 }	t_parser;
 
-char *get_type(t_token_type type);
 /* parser_utils.c */
 
 t_bool	match(t_parser *parser, t_token_type type, char **value);
@@ -59,6 +58,7 @@ t_ast_tree_node	*call_term(t_parser *parser,
 		t_ast_tree_node *(*fterm)(t_parser *), t_ast_tree_node **root);
 void	*quit_production(t_parser *parser, t_ast_tree_node *left,
 		t_ast_tree_node *right, t_parser_errcode errcode);
+void	*set_parser_errcode(t_parser *parser, t_parser_errcode errcode);
 
 /* parser.c */
 
@@ -98,8 +98,25 @@ t_ast_tree_node	*io_redirect4(t_parser *parser);
 
 /* stack.c */
 
-t_dlist			*push_stack(t_parse_stack *stack, void *content);
-void			pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times);
+t_dlist			*push_stack(t_parser *parser, t_parse_stack *stack,
+		void *content);
+void			pop_stack(t_parse_stack *stack, void (*del)(void *),
+		size_t times);
 t_token_type	*new_token_type(t_token_type type);
+
+/* pushnstack.c */
+
+int	assemble_out_stack_top(t_parser *parser, size_t npop_op, bool force_pop);
+int	handle_cmd_start(t_parser *parser);
+int	handle_cmd_end(t_parser *parser);
+
+/* pushnstack_utils.c */
+
+t_token_type	curr_type(t_parser parser);
+bool			is_top_an_operator(t_parser parser);
+t_token			*cast_tkn(t_dlist *elem);
+void			consume_token(t_parser *parser);
+
+void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left);
 
 #endif
