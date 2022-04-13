@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 13:28:42 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 13:59:45 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,25 @@ char	**export_env(t_dlist *lst)
 	}
 	envp[i] = NULL;
 	return (envp);
+}
+
+void	refill_env(t_dlist **env)
+{
+	char	*pwd;
+	t_var	var;
+
+	if (get_var(*env, "PWD") == NULL)
+	{
+		pwd = calloc(sizeof(char), 1000);
+		pwd = getcwd(pwd, 1000);
+		if (!pwd)
+		{
+			perror("get working directory error");
+			return ;
+		}
+		var.name = "PWD";
+		var.value = pwd;
+		var.inherit = FALSE;
+		add_var(env, var);
+	}
 }

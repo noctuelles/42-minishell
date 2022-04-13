@@ -6,16 +6,19 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:28:29 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:13:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENV_H
 # define ENV_H
 
-# include "libft.h"
 # include <stdbool.h>
 # include <stdlib.h> 
+# include <unistd.h>
+# include <stdio.h>
+
+# include "libft.h"
 
 typedef struct s_var
 {
@@ -30,6 +33,7 @@ typedef struct s_minishell
 {
 	t_dlist	*vars;
 	int		last_ret;
+	int		save_stdin;
 }	t_minishell;
 
 t_var	*get_var(t_dlist *lst_var, char *name);
@@ -42,5 +46,6 @@ char	**export_env(t_dlist *lst);
 t_dlist	*import_one_var(t_dlist **lst_var, char *value);
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name);
 void	free_env(t_dlist *env);
+void	refill_env(t_dlist **env);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 11:39:00 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:14:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,11 @@
 #include "minishell.h"
 #include "get_next_line.h"
 
-extern int	g_sigint;
-
-void	treat_result(int pid, int wait_status, int *pipeline_result,
-	int last_pid)
-{
-	if (WIFEXITED(wait_status))
-	{
-		if (last_pid != 0 && pid == last_pid)
-			*pipeline_result = WEXITSTATUS(wait_status);
-	}
-	else if (WIFSIGNALED(wait_status))
-	{
-		if (WTERMSIG(wait_status) == 3)
-		{
-			if (!g_sigint)
-			{
-				fprintf(stderr, "Quit (core dumped)\n");
-				g_sigint = 1;
-			}
-		}
-		else if (__WCOREDUMP(wait_status))
-			fprintf(stderr, "minishell: process %i terminated by a signal (%i)\n", pid, WTERMSIG(wait_status));
-		if (last_pid != 0 && pid == last_pid)
-			*pipeline_result = 128 + WTERMSIG(wait_status);
-	}
-}
-
 void	free_cmd(t_command *cmd)
 {
 	int	i;
-	if(cmd->name != cmd->original_name)
+
+	if (cmd->name != cmd->original_name)
 	{
 		free(cmd->name);
 		free(cmd->original_name);
@@ -61,82 +35,17 @@ void	free_cmd(t_command *cmd)
 	else
 		free(cmd->name);
 	i = 0;
-	if(cmd->args && cmd->args[0])
+	if (cmd->args && cmd->args[0])
 	{
-		while(cmd->args[++i])
+		while (cmd->args[++i])
 			free(cmd->args[i]);
 	}
 	free(cmd->args);
-	if(cmd->io_in_redirect > 0)
+	if (cmd->io_in_redirect > 0)
 		close(cmd->io_in_redirect);
-	if(cmd->io_out_redirect > 0)
+	if (cmd->io_out_redirect > 0)
 		close(cmd->io_out_redirect);
 	free(cmd);
-}
-
-int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
-{
-	int			count;
-	t_command	*first;
-
-	first = *cmd;
-	count = 0;
-	if (ret == 4242)
-		count = 1;
-	if (first->next == NULL)
-	{
-		if (ret != 4242)
-			*status = ret;
-		else
-			*last_pid = first->pid;
-	}
-	*cmd = first->next;
-	free_cmd(first);
-	return (count);
-}
-
-int	end_pipeline(int save_stdin, int status)
-{
-	set_signals_as_prompt();
-	g_sigint = 0;
-	close(0);
-	dup2(save_stdin, 0);
-	close(save_stdin);
-	return (status);
-}
-
-int	cancel_everything(int save_stdin, t_command *cmd)
-{
-	t_command *tmp;
-
-	g_sigint = 0;
-	dup2(save_stdin, 0);
-	close(save_stdin);
-	while(cmd)
-	{
-		tmp = cmd->next;
-		free_cmd(cmd);
-		cmd = tmp;
-	}
-	return (130);
-}
-
-int wait_for_result(int count, int last_pid)
-{
-	int	i;
-	int	pid;
-	int	wait_status;
-	int	status;
-
-	i = -1;
-	status = 0;
-	while (++i < count)
-	{
-		pid = waitpid(-1, &wait_status, 0);
-		close(0);
-		treat_result(pid, wait_status, &status, last_pid);
-	}
-	return (status);
 }
 
 void	init_variable(int *forking, int *count, int *status, int *last_pid)
@@ -149,33 +58,30 @@ void	init_variable(int *forking, int *count, int *status, int *last_pid)
 
 int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 {
-	int			save_stdin;
 	int			forking;
 	int			count;
 	int			status;
 	int			last_pid;
 	t_command	*first;
-	t_dlist		*env;
 
-	env = minishell.vars;
 	init_variable(&forking, &count, &status, &last_pid);
-	save_stdin = dup(0);
-	first = parse_commands(root, env);
+	minishell.save_stdin = dup(0);
+	first = parse_commands(root, minishell.vars);
 	if (g_sigint)
 	{
 		ast_tree_delete_node(root);
-		return (cancel_everything(save_stdin, first));
+		return (cancel_everything(minishell.save_stdin, first));
 	}
 	forking = !(first->next == NULL && is_builtin(first->name));
-	replace_by_path(first, env);
+	replace_by_path(first, minishell.vars);
 	ast_tree_delete_node(root);
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
-		count += treat_return_code(&first, execute_file(first, minishell, forking,
-					save_stdin), &status, &last_pid);
+		count += treat_return_code(&first, execute_file(first, minishell,
+					forking, minishell.save_stdin), &status, &last_pid);
 	status = wait_for_result(count, last_pid);
-	return (end_pipeline(save_stdin, status));
+	return (end_pipeline(minishell.save_stdin, status));
 }
 
 char	*prompt_and_read(t_dlist *vars)
@@ -203,59 +109,46 @@ char	*prompt_and_read(t_dlist *vars)
 	return (str);
 }
 
-void refill_env(t_dlist **env)
+char	*before_read(t_dlist **vars, t_minishell minishell)
 {
-	char	*pwd;
-	t_var	var;
+	char	*str;
 
-	if (get_var(*env, "PWD") == NULL)
+	set_signals_as_prompt();
+	refill_env(vars);
+	if (isatty(0) == 1)
 	{
-		pwd = calloc(sizeof(char), 1000);
-		pwd = getcwd(pwd, 1000);
-		if (!pwd)
-		{
-			perror("get working directory error");
-			return ;
-		}
-		var.name = "PWD";
-		var.value = pwd;
-		var.inherit = FALSE;
-		add_var(env, var);
+		str = prompt_and_read(*vars);
+		add_history(str);
 	}
+	else
+	{
+		str = get_next_line(0);
+		if (str && strchr(str, '\n') != NULL)
+			*strchr(str, '\n') = 0;
+	}
+	if (str == NULL)
+		ft_exit(1, NULL, minishell, 0);
+	refill_env(vars);
+	return (str);
 }
 
-void	parse_node(t_ast_tree_node *node, t_minishell *minishell)
+void	start_exec(t_minishell *minishell, t_dlist *tkns)
 {
-	// Parsing error
-	if(node->left == NULL || node->right == NULL)
-		return ;
-	// OR or AND at left --> recursive
-	if (node->left->type == NODE_LOGICAL_AND || node->left->type == NODE_LOGICAL_OR)
-		parse_node(node->left, minishell);
-	// COMMAND at left --> execute
-	else if(node->left->type == NODE_COMMAND || node->left->type == NODE_PIPE)
-		minishell->last_ret = execute_pipeline(node->left, *minishell);
-	node->left = NULL;
-	// Check result to do or not the right branch
-	if((minishell->last_ret == 0 && node->type == NODE_LOGICAL_AND) || (minishell->last_ret != 0 && node->type == NODE_LOGICAL_OR))
-	{
-		// OR or AND at right --> recursive
-		if (node->right->type == NODE_LOGICAL_AND || node->right->type == NODE_LOGICAL_OR)
-			parse_node(node->right, minishell);
-		// COMMAND at right --> execute
-		else if(node->right->type == NODE_COMMAND || node->right->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(node->right, *minishell);
-		node->right = NULL;
-	}
-	ast_tree_delete_node(node);
-}
+	t_ast_tree_node	*root;
 
-int	ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
+	root = parse(&tkns);
+	if (root != NULL)
+	{
+		if (root->type == NODE_COMMAND || root->type == NODE_PIPE)
+			minishell->last_ret = execute_pipeline(root, *minishell);
+		else
+			parse_and_or(root, minishell);
+	}
+}
 
 int main(int argc, char **argv, char **envp)
 {
 	t_dlist			*vars;
-	t_ast_tree_node	*root;
 	char			*str;
 	t_dlist			*tkns;
 	t_minishell		minishell;
@@ -268,37 +161,13 @@ int main(int argc, char **argv, char **envp)
 	minishell.vars = vars;
 	while (1)
 	{
-		set_signals_as_prompt();
-		refill_env(&vars);
-		if(isatty(0) == 1)
-		{
-			str = prompt_and_read(vars);
-			add_history(str);
-		}
-		else
-		{
-			str = get_next_line(0);
-			if(str && strchr(str, '\n') != NULL)
-				*strchr(str, '\n') = 0;
-		}
-		if (str == NULL)
-			ft_exit(1, NULL, minishell, 0);
-		refill_env(&vars);
-		if(strcmp(str, "") == 0)
-			continue;
+		str = before_read(&vars, minishell);
+		if (strcmp(str, "") == 0)
+			continue ;
 		tkns = get_tokens(str, vars);
 		free(str);
 		if (tkns)
-		{
-			root = parse(&tkns);
-			if (root != NULL)
-			{
-				if(root->type == NODE_COMMAND || root->type == NODE_PIPE)
-					minishell.last_ret = execute_pipeline(root, minishell);
-				else
-					parse_node(root, &minishell);
-			}
-		}
+			start_exec(&minishell, tkns);
 	}
 	return (0);
 }

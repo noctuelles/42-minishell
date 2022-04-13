@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:49:31 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:02:21 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@
 # define EXECUTION_ERROR "Minishell: Error occured during execution\n"
 # define HERE_DOC_EOF "Minishell: warning: here-document at line %i \
 delimited by end-of-file (wanted `%s')\n"
+# define END_BY_SIGNAL "Minishell: process %i terminated by a signal (%i)\n"
+# define QUIT "Quit (core dumped)\n"
+
+extern int	g_sigint;
 
 typedef struct s_command
 {
@@ -70,5 +74,14 @@ int			is_builtin(char *str);
 int			exec_builtin(t_command *command, t_minishell minishell,
 				int save_stdin, int forking);
 void		free_cmd(t_command *cmd);
+int			cancel_everything(int save_stdin, t_command *cmd);
+int			treat_return_code(t_command **cmd, int ret, int *status,
+				int *last_pid);
+int			wait_for_result(int count, int last_pid);
+int			end_pipeline(int save_stdin, int status);
+void		parse_and_or(t_ast_tree_node *node, t_minishell *minishell);
+int			execute_pipeline(t_ast_tree_node *root, t_minishell minishell);
+int			execute_file(t_command *command, t_minishell minishell,
+				int forking, int save_stdin);
 
 #endif
