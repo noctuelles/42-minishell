@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:14:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:21:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "execution.h"
 #include "minishell.h"
 #include "get_next_line.h"
+#include "signals.h"
 
 void	free_cmd(t_command *cmd)
 {
@@ -146,7 +147,7 @@ void	start_exec(t_minishell *minishell, t_dlist *tkns)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_dlist			*vars;
 	char			*str;

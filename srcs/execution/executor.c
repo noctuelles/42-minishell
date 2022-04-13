@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:46:48 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/13 14:20:47 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	file_error(t_command *command, int *error, int type)
 
 	if (error != NULL)
 		*error = 1;
-
 	err = 0;
 	if (type == 1)
 		err = command->in_errno;
@@ -106,7 +105,7 @@ void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 		command->pid = *pid;
 }
 
-void executing(t_command *command, t_minishell minishell, int save_stdin)
+void	executing(t_command *command, t_minishell minishell, int save_stdin)
 {
 	if (!is_builtin(command->original_name))
 	{
