@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/12 20:00:15 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 18:21:02 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type)
+t_ast_tree_node	*ast_tree_create_node(t_dlist *args, t_node_type type)
 {
 	t_ast_tree_node	*node;
 
@@ -24,8 +24,8 @@ t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type)
 		return (NULL);
 	node->left = NULL;
 	node->right = NULL;
+	node->args = args;
 	node->type = type;
-	node->value = value;
 	return (node);
 }
 

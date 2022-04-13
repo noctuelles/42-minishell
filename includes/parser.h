@@ -116,6 +116,7 @@ t_token_type	curr_type(t_parser parser);
 bool			is_top_an_operator(t_parser parser);
 t_token			*cast_tkn(t_dlist *elem);
 void			consume_token(t_parser *parser);
+bool	is_a_redirection(t_token_type type);
 
 void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left);
 

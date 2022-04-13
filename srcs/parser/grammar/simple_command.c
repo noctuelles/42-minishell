@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 17:52:37 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 18:22:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,72 +31,6 @@ t_ast_tree_node	*simple_cmd(t_parser *parser)
 	if (call_production(parser, &simple_cmd5, &node, save) != NULL)
 		return (node);
 	return (NULL);
-}
-
-t_ast_tree_node	*simple_cmd1(t_parser *parser)
-{
-	char			*cmd_name;
-	t_ast_tree_node	*node_cmd_suffix;
-	t_ast_tree_node	*node_io_list;
-	t_ast_tree_node	*rslt;
-
-	if (call_term(parser, io_list, &node_io_list) == NULL)
-		return (NULL);
-	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, node_io_list, NULL, NO_ERR));
-	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
-	{
-		free(cmd_name);
-		return (quit_production(parser, node_io_list, NULL, NO_ERR));
-	}
-	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
-	if (!rslt)
-		return (quit_production(parser, node_io_list, node_cmd_suffix,
-				ERR_MALLOC));
-	ast_tree_attach(rslt, node_io_list, node_cmd_suffix);
-	return (rslt);
-}
-
-t_ast_tree_node	*simple_cmd2(t_parser *parser)
-{
-	char			*cmd_name;
-	t_ast_tree_node	*node_io_list;
-	t_ast_tree_node	*rslt;
-
-	if (call_term(parser, io_list, &node_io_list) == NULL)
-		return (NULL);
-	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, node_io_list, NULL, NO_ERR));
-	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
-	if (!rslt)
-		return (quit_production(parser, node_io_list, NULL, ERR_MALLOC));
-	ast_tree_attach(rslt, node_io_list, NULL);
-	return (rslt);
-}
-
-t_ast_tree_node	*simple_cmd3(t_parser *parser)
-{
-	return (io_list(parser));
-}
-
-t_ast_tree_node	*simple_cmd4(t_parser *parser)
-{
-	char			*cmd_name;
-	t_ast_tree_node	*node_cmd_suffix;
-	t_ast_tree_node	*rslt;
-
-	if (match(parser, T_WORD, &cmd_name) == FALSE)
-		return (quit_production(parser, NULL, NULL, ERR_EXPECTED_COMMAND));
-	if (call_term(parser, cmd_suffix, &node_cmd_suffix) == NULL)
-	{
-		free(cmd_name);
-		return (NULL);
-	}
-	rslt = ast_tree_create_node(cmd_name, NODE_COMMAND);
-	if (!rslt)
-		return (quit_production(parser, node_cmd_suffix, NULL, ERR_MALLOC));
-	ast_tree_attach(rslt, NULL, node_cmd_suffix);
-	return (rslt);
 }
 
 t_arg	*new_arg(char *value, t_token_type token_type)
@@ -131,23 +65,41 @@ t_arg	*new_arg(char *value, t_token_type token_type)
 
 t_ast_tree_node *simple_command(t_parser *parser)
 {
+	t_dlist			*args;
+	t_token_type	type;
+	t_arg			*arg;
+	t_dlist			*elem;
+
+	args = NULL;
 	while (true)
 	{
-		if (is_a_redirection(*parser))
+		type = curr_type(*parser);
+		if (is_a_redirection(type))
 		{
-			parser->tkns = parser->tkns->next;
-			if (cast_tkn(parser->tkns)->type == T_WORD)
+			consume_token(parser);
+			if (curr_type(*parser) == T_WORD)
 			{
-
+				arg = new_arg(parser->curr_tkn->val, type);
+				if (arg)
+					return (NULL);
+				elem = ft_dlstnew(arg);
+				if (!elem)
+					return (NULL);
+				ft_dlstadd_back(&args, elem);
 			}
 			else
-			{
-				// ca va pas il y a une erreur
-			}
+				return (NULL);
 		}
-		if (cast_tkn(parser->tkns)->type == T_WORD)
+		if (type == T_WORD)
 		{
-
+			arg = new_arg(parser->curr_tkn->val, type);
+			if (arg)
+				return (NULL);
+			elem = ft_dlstnew(arg);
+			if (!elem)
+				return (NULL);
+			ft_dlstadd_back(&args, elem);
+			consume_token(parser);
 		}
 		else
 			break ;

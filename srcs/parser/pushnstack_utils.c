@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:54:22 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 17:32:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 18:14:50 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,8 @@ void	consume_token(t_parser *parser)
 	parser->curr_tkn = (t_token *) parser->tkns->content;
 }
 
-bool	is_a_redirection(t_parser parser)
+bool	is_a_redirection(t_token_type type)
 {
-	t_token_type	type;
-
-	type = cast_tkn(parser.tkns)->type;
 	if (type == T_GRT || type == T_LESS ||
 		type == T_DGRT || type == T_DLESS)
 		return (true);

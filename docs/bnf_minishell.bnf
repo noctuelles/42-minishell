@@ -7,9 +7,6 @@
 /* < file1 > file2 echo bonjour > file1 */
 
 <pipeline>			::=		<simple_command>	'|'			<pipeline>
-					  |		<simple_command>	'&&'
-					  |		<simple_command>	'||'
-					  |		<simple_command>	')'
 					  |		<simple_command>	'rien'
 
 <simple_command>	::=		<io_list>			<word>		<cmd_suffix>

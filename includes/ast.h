@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 17:47:49 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 18:20:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,8 @@ typedef enum	s_node_type
 	NODE_PIPE,
 	NODE_COMMAND,
 	NODE_EMPTY_COMMAND,
-	NODE_COMMAND_SUFFIX,
-	NODE_IO_LIST,
-	NODE_PRIORITY_AND,
-	NODE_PRIORITY_OR,
 	NODE_LOGICAL_AND,
 	NODE_LOGICAL_OR,
-	NODE_IO_REDIRECT_STDIN,
-	NODE_IO_REDIRECT_FILE,
-	NODE_IO_REDIRECT_FILE_APPEND,
-	NODE_IO_REDIRECT_HERE_DOC,
 }	t_node_type;
 
 typedef enum	e_arg_type
@@ -50,7 +42,6 @@ typedef struct	s_arg
 typedef struct	s_ast_tree_node
 {
 	t_node_type				type;
-	char					*value;
 	t_dlist					*args;
 	struct s_ast_tree_node	*left;
 	struct s_ast_tree_node	*right;
@@ -58,7 +49,7 @@ typedef struct	s_ast_tree_node
 
 /* ast.c */
 
-t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type);
+t_ast_tree_node	*ast_tree_create_node(t_dlist *args, t_node_type type);
 void			ast_tree_apply_preorder(t_ast_tree_node *root);
 void			ast_tree_print_graph(t_ast_tree_node *root);
 void			ast_tree_delete_node(void *node);
