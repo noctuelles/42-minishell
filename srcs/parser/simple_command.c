@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 19:59:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:15:01 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 bool	is_a_redirection(t_token_type type)
 {
-	if (type == T_GRT || type == T_LESS ||
-		type == T_DGRT || type == T_DLESS)
+	if (type == T_GRT || type == T_LESS
+		|| type == T_DGRT || type == T_DLESS)
 		return (true);
 	else
 		return (false);
@@ -55,7 +55,7 @@ static t_arg	*handle_redirection_tkn(t_parser *parser, t_dlist **args,
 	return (arg);
 }
 
-static t_dlist *parse_simple_cmd(t_parser *parser)
+static t_dlist	*parse_simple_cmd(t_parser *parser)
 {
 	t_dlist			*args;
 	t_token_type	type;

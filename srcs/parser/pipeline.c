@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 19:28:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:14:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 static bool	is_valid_terminal(t_token_type type)
 {
-	if (type == T_NULL || type == T_LOG_AND || type == T_LOG_OR ||
-		type == T_CL_PRT)
+	if (type == T_NULL || type == T_LOG_AND || type == T_LOG_OR
+		|| type == T_CL_PRT)
 		return (true);
 	else
 		return (false);

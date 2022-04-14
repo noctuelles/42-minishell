@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 20:02:12 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:14:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	*quit_parsing(t_parser *parser)
 static bool	is_correct_start_tkn(t_parser *parser)
 {
 	t_token_type	type;
-	
+
 	type = curr_type(*parser);
 	if (type == T_OP_PRT || type == T_WORD || is_a_redirection(type))
 		return (true);

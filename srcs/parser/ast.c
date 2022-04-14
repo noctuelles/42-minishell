@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 19:56:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:07:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void iter_args(void *parg)
 		fputs("'>>' ", stdout); 
 	if (arg->type == ARG_REDIRECT_HERE_DOC)
 		fputs("'<<' ", stdout); 
-	printf("\"%s\" - ", arg->value);
+	printf("\"%s\"   ", arg->value);
 }
 
 void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
