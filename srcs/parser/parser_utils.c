@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 16:22:37 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 19:36:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,24 @@ void	*set_parser_errcode(t_parser *parser, t_parser_errcode errcode)
 	return (NULL);
 }
 
-t_bool	match(t_parser *parser, t_token_type type, char **value)
+t_token_type	curr_type(t_parser parser)
 {
-	t_token	*tkn;
+	return (parser.curr_tkn->type);
+}
 
-	if (parser->tkns == NULL)
-		return (false);
-	tkn = (t_token *) parser->tkns->content;
-	parser->last_used_tkn = tkn;
-	if (tkn->type == type)
-	{
-		if (value != NULL)
-		{
-			*value = ft_strdup(tkn->val);
-			if (!(*value))
-			{
-				parser->errcode = ERR_MALLOC;
-				return (FALSE);
-			}
-		}
-		parser->tkns = parser->tkns->next;
-		return (TRUE);
-	}
+void	consume_token(t_parser *parser)
+{
 	parser->tkns = parser->tkns->next;
-	return (FALSE);
+	parser->curr_tkn = (t_token *) parser->tkns->content;
+}
+
+void	rollback_token(t_parser *parser)
+{
+	parser->tkns = parser->tkns->prev;
+	parser->curr_tkn = (t_token *) parser->tkns->content;
+}
+
+t_token	*cast_tkn(t_dlist *elem)
+{
+	return ((t_token *) elem->content);
 }

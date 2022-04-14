@@ -6,11 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 16:54:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 19:56:47 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include "parser.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -39,7 +40,23 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 	return (root);
 }
 
-/*void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
+static void iter_args(void *parg)
+{
+	t_arg	*arg;
+
+	arg = parg;
+	if (arg->type == ARG_REDIRECT_FILE)
+		fputs("'>' ", stdout); 
+	if (arg->type == ARG_REDIRECT_STDIN)
+		fputs("'<' ", stdout); 
+	if (arg->type == ARG_REDIRECT_FILE_APPEND)
+		fputs("'>>' ", stdout); 
+	if (arg->type == ARG_REDIRECT_HERE_DOC)
+		fputs("'<<' ", stdout); 
+	printf("\"%s\" - ", arg->value);
+}
+
+void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 {
 	char	*new_prefix;
 
@@ -50,17 +67,10 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 			fputs("├──", stdout);
 		else
 			fputs("└──", stdout);
-		if (node->value)
+		if (node->args)
 		{
-			if (node->type == NODE_IO_REDIRECT_STDIN)
-				printf("< ");
-			if (node->type == NODE_IO_REDIRECT_FILE)
-				printf("> ");
-			if (node->type == NODE_IO_REDIRECT_FILE_APPEND)
-				printf(">> ");
-			if (node->type == NODE_IO_REDIRECT_HERE_DOC)
-				printf("<< ");
-			printf("%s\n", node->value);
+			ft_dlstiter(node->args, iter_args);
+			fputs("\n", stdout);
 		}
 		else
 		{
@@ -70,8 +80,6 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 				printf("||\n");
 			else if (node->type == NODE_PIPE)
 				printf("|\n");
-			else if (node->type == NODE_IO_LIST)
-				printf("<>");
 		}
 		new_prefix = (char *) malloc((ft_strlen(prefix) + 8 + 1) * sizeof(char));
 		new_prefix[0] = '\0';
@@ -83,7 +91,7 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 		ast_print_tree(new_prefix, node->left, true);
 		ast_print_tree(new_prefix, node->right, false);
 	}
-}*/
+}
 
 void	ast_tree_delete_node(void *node)
 {
@@ -94,6 +102,7 @@ void	ast_tree_delete_node(void *node)
 		ast_tree_delete_node(tree_node->left);
 	if (tree_node->right != NULL)
 		ast_tree_delete_node(tree_node->right);
-	// free les args
+	if (tree_node->args != NULL)
+		ft_dlstclear(&tree_node->args, free_arg);
 	free(tree_node);
 }

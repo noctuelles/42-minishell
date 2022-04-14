@@ -6,12 +6,23 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:15:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 16:55:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 19:38:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
+
+static bool	is_top_an_operator(t_parser parser)
+{
+	t_token	*top_tkn;
+
+	top_tkn = parser.op_stack.top->content;
+	if (top_tkn->type == T_LOG_AND || top_tkn->type == T_LOG_OR)
+		return (true);
+	else
+		return (false);
+}
 
 static t_ast_tree_node	*create_node(t_parser *parser, t_token_type type)
 {

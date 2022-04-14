@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 16:55:35 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 20:02:12 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 static void	*quit_parsing(t_parser *parser)
 {
+	if (curr_type(*parser) == T_NULL)
+		rollback_token(parser);
 	if (parser->errcode != ERR_MALLOC)
 	{
 		if (parser->last_used_tkn)
@@ -35,13 +37,24 @@ static void	*quit_parsing(t_parser *parser)
 	return (NULL);
 }
 
+static bool	is_correct_start_tkn(t_parser *parser)
+{
+	t_token_type	type;
+	
+	type = curr_type(*parser);
+	if (type == T_OP_PRT || type == T_WORD || is_a_redirection(type))
+		return (true);
+	set_parser_errcode(parser, ERR_EXPECTED_COMMAND);
+	return (false);
+}
+
 static t_ast_tree_node	*parse_from_tkns(t_parser *parser)
 {
 	t_ast_tree_node	*root;
 
 	while (curr_type(*parser) != T_NULL)
 	{
-		if (curr_type(*parser) != T_OP_PRT && curr_type(*parser) != T_WORD)
+		if (!is_correct_start_tkn(parser))
 			return (quit_parsing(parser));
 		if (handle_cmd_start(parser) == -1)
 			return (quit_parsing(parser));
@@ -50,17 +63,7 @@ static t_ast_tree_node	*parse_from_tkns(t_parser *parser)
 	}
 	if (assemble_out_stack_top(parser, 1, false) == -1)
 		return (quit_parsing(parser));
-	if (parser->output_stack.top == NULL)
-	{
-		root = ast_tree_create_node(NULL, NODE_EMPTY_COMMAND);
-		if (!root)
-		{
-			set_parser_errcode(parser, ERR_MALLOC);
-			return (quit_parsing(parser));
-		}
-	}
-	else
-		root = (t_ast_tree_node *) parser->output_stack.top->content;
+	root = (t_ast_tree_node *) parser->output_stack.top->content;
 	return (root);
 }
 
@@ -73,11 +76,9 @@ t_ast_tree_node	*parse(t_dlist **tkns)
 	parser.tkns = *tkns;
 	parser.curr_tkn = (t_token *) parser.tkns->content;
 	ast_root = parse_from_tkns(&parser);
-	if (!ast_root)
-	{
-		return (NULL);
-	}
 	ft_dlstclear(tkns, free_token);
-	//ast_print_tree("", ast_root, false);
+	if (!ast_root)
+		return (NULL);
+	ast_print_tree("", ast_root, false);
 	return (ast_root);
 }
