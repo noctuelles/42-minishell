@@ -133,14 +133,12 @@ int main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				tkns = get_tokens(str, env_var);
+				tkns = lex_str(str);
 				if (tkns)
 				{
 					ft_printf("\n{1;4;33}Token(s) :{0}\n\n");
 					ft_dlstiter(tkns, print_tokens);
 					root = parse(&tkns);
-					if (root)
-						ast_tree_delete_node(root);
 				}
 			}
 		}

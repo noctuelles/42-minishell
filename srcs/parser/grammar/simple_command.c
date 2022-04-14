@@ -6,32 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 18:22:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:49:32 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "ast.h"
 #include <stdlib.h>
-
-t_ast_tree_node	*simple_cmd(t_parser *parser)
-{
-	t_ast_tree_node	*node;
-	t_dlist			*save;
-
-	save = parser->tkns;
-	if (call_production(parser, &simple_cmd1, &node, save) != NULL)
-		return (node);
-	if (call_production(parser, &simple_cmd2, &node, save) != NULL)
-		return (node);
-	if (call_production(parser, &simple_cmd3, &node, save) != NULL)
-		return (node);
-	if (call_production(parser, &simple_cmd4, &node, save) != NULL)
-		return (node);
-	if (call_production(parser, &simple_cmd5, &node, save) != NULL)
-		return (node);
-	return (NULL);
-}
 
 t_arg	*new_arg(char *value, t_token_type token_type)
 {
@@ -63,7 +44,7 @@ t_arg	*new_arg(char *value, t_token_type token_type)
 	return (arg);
 }
 
-t_ast_tree_node *simple_command(t_parser *parser)
+t_dlist *simple_command(t_parser *parser)
 {
 	t_dlist			*args;
 	t_token_type	type;
@@ -71,6 +52,11 @@ t_ast_tree_node *simple_command(t_parser *parser)
 	t_dlist			*elem;
 
 	args = NULL;
+	if (curr_type(*parser) == T_NULL)
+	{
+		rollback_token(parser);
+		return (set_parser_errcode(parser, ERR_EXPECTED_COMMAND));
+	}
 	while (true)
 	{
 		type = curr_type(*parser);
@@ -80,28 +66,50 @@ t_ast_tree_node *simple_command(t_parser *parser)
 			if (curr_type(*parser) == T_WORD)
 			{
 				arg = new_arg(parser->curr_tkn->val, type);
-				if (arg)
-					return (NULL);
+				if (!arg)
+					return (set_parser_errcode(parser, ERR_MALLOC));
 				elem = ft_dlstnew(arg);
 				if (!elem)
-					return (NULL);
+					return (set_parser_errcode(parser, ERR_MALLOC));
 				ft_dlstadd_back(&args, elem);
+				consume_token(parser);
 			}
 			else
+			{
+				if (type == T_DLESS)
+					parser->errcode = ERR_UNEXPECTED_IO_HEREDOC_TOKEN;
+				else
+					parser->errcode = ERR_UNEXPECTED_IO_TOKEN;
 				return (NULL);
+			}
 		}
-		if (type == T_WORD)
+		else if (type == T_WORD)
 		{
 			arg = new_arg(parser->curr_tkn->val, type);
-			if (arg)
-				return (NULL);
+			if (!arg)
+				return (set_parser_errcode(parser, ERR_MALLOC));
 			elem = ft_dlstnew(arg);
 			if (!elem)
-				return (NULL);
+				return (set_parser_errcode(parser, ERR_MALLOC));
 			ft_dlstadd_back(&args, elem);
 			consume_token(parser);
 		}
 		else
 			break ;
 	}
+	return (args);
+}
+
+t_ast_tree_node	*simple_cmd(t_parser *parser)
+{
+	t_dlist			*args;
+	t_ast_tree_node	*node;
+
+	args = simple_command(parser);
+	if (args == NULL)
+		return (NULL);
+	node = ast_tree_create_node(args, NODE_COMMAND);
+	if (!node)
+		return (NULL);
+	return (node);
 }

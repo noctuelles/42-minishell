@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:57:15 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:55:34 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:22:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,35 +43,4 @@ t_bool	match(t_parser *parser, t_token_type type, char **value)
 	}
 	parser->tkns = parser->tkns->next;
 	return (FALSE);
-}
-
-/* call_production() call a production rule, saving the index in the current
- * to be restore upon completion of the rule if restore is set to TRUE.  */
-
-t_ast_tree_node	*call_production(t_parser *parser,
-		t_ast_tree_node *(*fprod)(t_parser *), t_ast_tree_node **root,
-		t_dlist *save)
-{
-	parser->tkns = save;
-	*root = fprod(parser);
-	return (*root);
-}
-
-t_ast_tree_node	*call_term(t_parser *parser,
-		t_ast_tree_node *(fterm)(t_parser *), t_ast_tree_node **root)
-{
-	*root = fterm(parser);
-	return (*root);
-}
-
-void	*quit_production(t_parser *parser, t_ast_tree_node *left,
-		t_ast_tree_node *right, t_parser_errcode errcode)
-{
-	if (left != NULL)
-		ast_tree_delete_node(left);
-	if (right != NULL)
-		ast_tree_delete_node(right);
-	if (errcode != NO_ERR && parser->errcode != ERR_MALLOC)
-		parser->errcode = errcode;
-	return (NULL);
 }

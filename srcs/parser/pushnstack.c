@@ -6,18 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:15:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:54:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:55:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-
-static void	update_tkns(t_parser *parser)
-{
-	parser->tkns = parser->last_used_tkn->lst_elem;
-	parser->curr_tkn = (t_token *) parser->tkns->content;
-}
 
 static t_ast_tree_node	*create_node(t_parser *parser, t_token_type type)
 {
@@ -72,10 +66,7 @@ int	handle_cmd_start(t_parser *parser)
 		if (!node_pipeline)
 			return (-1);
 		else
-		{
 			push_stack(parser, &parser->output_stack, node_pipeline);
-			update_tkns(parser);
-		}
 	}
 	return (0);
 }

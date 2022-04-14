@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 18:21:02 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:54:50 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 	return (root);
 }
 
-void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
+/*void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 {
 	char	*new_prefix;
 
@@ -83,7 +83,7 @@ void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 		ast_print_tree(new_prefix, node->left, true);
 		ast_print_tree(new_prefix, node->right, false);
 	}
-}
+}*/
 
 void	ast_tree_delete_node(void *node)
 {
@@ -94,7 +94,6 @@ void	ast_tree_delete_node(void *node)
 		ast_tree_delete_node(tree_node->left);
 	if (tree_node->right != NULL)
 		ast_tree_delete_node(tree_node->right);
-	if (tree_node->value != NULL)
-		free(tree_node->value);
+	// free les args
 	free(tree_node);
 }

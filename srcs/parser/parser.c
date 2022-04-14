@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:51:24 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:55:35 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,11 @@ t_ast_tree_node	*parse(t_dlist **tkns)
 	parser.tkns = *tkns;
 	parser.curr_tkn = (t_token *) parser.tkns->content;
 	ast_root = parse_from_tkns(&parser);
-	ft_dlstclear(tkns, free_token);
 	if (!ast_root)
+	{
 		return (NULL);
-	ast_print_tree("", ast_root, false);
+	}
+	ft_dlstclear(tkns, free_token);
+	//ast_print_tree("", ast_root, false);
 	return (ast_root);
 }

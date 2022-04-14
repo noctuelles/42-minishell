@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:54:22 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 18:14:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/14 16:49:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ t_token	*cast_tkn(t_dlist *elem)
 void	consume_token(t_parser *parser)
 {
 	parser->tkns = parser->tkns->next;
+	parser->curr_tkn = (t_token *) parser->tkns->content;
+}
+
+void	rollback_token(t_parser *parser)
+{
+	parser->tkns = parser->tkns->prev;
 	parser->curr_tkn = (t_token *) parser->tkns->content;
 }
 
