@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 13:25:36 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 14:56:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # include "libft.h"
 # include <stdbool.h>
+
+/*******************************************************************************
+ *                                  Macros                                     *
+ ******************************************************************************/
 
 # define STR_PIPE             "|"
 # define STR_LOG_OR           "||"
@@ -33,6 +37,10 @@
 
 # define SQUOTE               '\''
 # define DQUOTE               '"'
+
+/*******************************************************************************
+ *                              Typedef & Enum                                 *
+ ******************************************************************************/
 
 typedef enum e_token_type
 {
@@ -77,12 +85,18 @@ typedef struct s_lexer
 	bool			bbreak;
 }				t_lexer;
 
+/*******************************************************************************
+ *                            Functions Prototype                              *
+ ******************************************************************************/
+
+/* lexer.c */
+
+t_dlist	*lex_str(const char *str);
+
 /* lexer_mem_utils.c */
 
 t_token	*new_token(char *val, size_t len, t_token_type type);
 void	free_token(void *tkn);
-t_lexer	*new_lexer(void);
-void	free_lexer(t_lexer *lexer);
 
 /* lexer_utils.c */
 
@@ -91,26 +105,5 @@ t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
 t_token	search_existing_token(const char *str);
-
-/* lexer_post_process.c */
-
-void	remove_quote_from_tkns(t_lexer *lexer);
-void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
-
-/* lexer.c */
-
-t_dlist	*lex_str(const char *str);
-
-/* tokens.c */
-
-t_dlist	*get_tokens(char *str, t_dlist *env_var);
-
-/* lexer_post_process.c */
-
-void	expand_var_from_tkns(t_dlist *lst_var, t_lexer *lexer);
-
-/* lexer_var_expansion.c */
-
-char	*expand_tkn(t_dlist *lst_var, char *str);
 
 #endif

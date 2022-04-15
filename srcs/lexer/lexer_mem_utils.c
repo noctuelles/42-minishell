@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 13:25:49 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 14:54:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,4 @@ void	free_token(void *tkn)
 	if (ptkn->type == T_WORD)
 		free(ptkn->val);
 	free(ptkn);
-}
-
-t_lexer	*new_lexer(void)
-{
-	t_lexer	*lexer;
-
-	lexer = (t_lexer *) ft_calloc(1, sizeof(t_lexer));
-	if (!lexer)
-		return (NULL);
-	return (lexer);
-}
-
-void	free_lexer(t_lexer *lexer)
-{
-	ft_dlstclear(&lexer->tkns, free_token);
-	free(lexer);
 }
