@@ -6,11 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 13:56:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:36:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 15:13:02 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "parser.h"
 #include "lexer.h"
 #include <stdbool.h>
 #include <stdlib.h>
@@ -78,7 +79,7 @@ t_dlist	*insert_list(t_dlist **main_lst, t_dlist *to_insert, t_dlist *elem)
 		elem->next->prev = lst_last;
 		lst_last->next = elem->next;
 	}
-	free_token(elem->content);
+	free_arg(elem->content);
 	free(elem);
 	return (lst_last);
 }

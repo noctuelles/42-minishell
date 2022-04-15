@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 13:18:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 15:12:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ t_arg	*add_to_args_cpy(t_lexer *lex, t_arg *old_arg)
 		return (NULL);
 	}
 	arg->wldc_lst = old_arg->wldc_lst;
-	old_arg->wldc_lst = NULL;
 	elem = ft_dlstnew((void *) arg);
 	if (!elem)
 	{

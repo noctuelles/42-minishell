@@ -114,6 +114,16 @@ int main(int argc, char **argv, char **envp)
 				{
 					ft_printf("\n{1;4;33}Initial tree :{0}\n\n");
 					ast_print_tree("", root, false);
+					t_dlist	*elem = root->args;
+					while (elem)
+					{
+						t_arg *arg = elem->content;
+						elem = var_expansion(&root->args, elem, arg, env_var);
+						if (elem)
+							elem = elem->next;
+						else
+							break ;
+					}
 					ast_tree_delete_node(root);
 					/*if (root)
 					{
