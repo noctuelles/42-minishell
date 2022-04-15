@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 18:10:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:25:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ int	execute_file(t_command *command, t_minishell minishell,
 	vars = minishell.vars;
 	if (command->name != NULL)
 	{
-		add_command_to_args(command);
 		if (forking)
 		{
 			pipe_and_fork(pipefd, command, &pid);

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:12:13 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:00:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 13:55:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_dlist	*push_stack(t_parser *parser, t_parse_stack *stack, void *content)
 	return (elem);
 }
 
-void	pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times)
+void	pop_stack(t_parse_stack *stack, size_t times)
 {
 	t_dlist	*top_prev;
 	size_t	i;
@@ -35,7 +35,7 @@ void	pop_stack(t_parse_stack *stack, void (*del)(void *), size_t times)
 	while (i < times)
 	{
 		top_prev = stack->top->prev;
-		ft_dlstdelone(&stack->cnt, stack->top, del);
+		ft_dlstdelone(&stack->cnt, stack->top, NULL);
 		stack->top = top_prev;
 		i++;
 	}

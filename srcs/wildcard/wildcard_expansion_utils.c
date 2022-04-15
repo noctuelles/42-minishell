@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:51:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 13:19:51 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * interpretable means that the wildcard wasn't quoted.
  * */
 
-static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
+static bool	match_pattern(t_arg *arg, char *filename, char *pattern)
 {
 	size_t	i;
 	size_t	j;
@@ -31,7 +31,8 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 	j = 0;
 	while (pattern[j] != '\0')
 	{
-		if (pattern[j] == '*' && is_intrp_wldc(tkn->wldc_lst, &pattern[j]))
+		//printf("%p : %c ->> %p\n", &pattern[j], pattern[j], (char *) arg->wldc_lst->content);
+		if (pattern[j] == '*' && is_intrp_wldc(arg->wldc_lst, &pattern[j]))
 			break ;
 		if (filename[i++] != pattern[j++])
 			return (false);
@@ -48,7 +49,7 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 		i++;
 	if (filename[i] == '\0')
 		return (false);
-	return (match_pattern(tkn, &filename[i], &pattern[j + 1]));
+	return (match_pattern(arg, &filename[i], &pattern[j + 1]));
 }
 
 /* new_file_elem() creates a new double linked list element from a dirent
@@ -57,23 +58,16 @@ static bool	match_pattern(t_token *tkn, char *filename, char *pattern)
 
 static t_dlist	*new_file_elem(struct dirent *dir_ent)
 {
-	t_token	*tkn;
+	t_arg	*arg;
 	t_dlist	*elem;
-	char	*filename_dup;
 
-	filename_dup = ft_strdup(dir_ent->d_name);
-	if (!filename_dup)
+	arg = new_arg(dir_ent->d_name, T_WORD, true);
+	if (!arg)
 		return (NULL);
-	tkn = new_token(filename_dup, ft_strlen(filename_dup), T_WORD);
-	if (!tkn)
-	{
-		free(filename_dup);
-		return (NULL);
-	}
-	elem = ft_dlstnew((void *) tkn);
+	elem = ft_dlstnew((void *) arg);
 	if (!elem)
 	{
-		free_token(tkn);
+		free_arg(arg);
 		return (NULL);
 	}
 	return (elem);
@@ -86,13 +80,13 @@ static t_dlist	*new_file_elem(struct dirent *dir_ent)
  * If not, the function return.
  * If any allocation error occurs, it returns -1. */
 
-int	add_file_to_list(t_token *tkn, t_dlist **files, struct dirent *dir_ent)
+int	add_file_to_list(t_arg *arg, t_dlist **files, struct dirent *dir_ent)
 {
 	t_dlist	*elem;
 
 	if (dir_ent->d_type != DT_UNKNOWN && dir_ent->d_name[0] != '.')
 	{
-		if (match_pattern(tkn, dir_ent->d_name, tkn->val) == true)
+		if (match_pattern(arg, dir_ent->d_name, arg->value) == true)
 		{
 			elem = new_file_elem(dir_ent);
 			if (!elem)

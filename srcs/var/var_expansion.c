@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:53:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 12:10:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,48 +24,48 @@ static void	update_quote(char *str, char *quote)
 		*quote = '\0';
 }
 
-static t_dlist	*post_process(t_dlist **tkns, t_dlist *elem, t_token *tkn)
+static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg)
 {
 	t_dlist	*next;
 	t_dlist	*subtkns;
 
-	if (tkn->val[0] == '\0')
+	if (arg->value[0] == '\0')
 	{
 		next = elem->next;
-		ft_dlstdelone(tkns, elem, free_token);
+		ft_dlstdelone(args, elem, free_arg);
 		return (next);
 	}
 	else
 	{
-		subtkns = tokenize_from_tkn(tkn, tkn->val);
+		subtkns = tokenize_from_arg(arg, arg->value);
 		if (subtkns == NULL)
 			return (NULL);
-		return (insert_list(tkns, subtkns, elem));
+		return (insert_list(args, subtkns, elem));
 	}
 }
 
-t_dlist	*var_expansion(t_dlist **tkns, t_dlist *elem,
-		t_token *tkn, t_dlist *env_var)
+t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
+		t_arg *arg, t_dlist *env_var)
 {
 	ssize_t	i;
-	t_dlist	*subtkns;
+	t_dlist	*subargs;
 
 	i = 0;
-	while (tkn->val[i] != '\0')
+	while (arg->value[i] != '\0')
 	{
-		if (tkn->val[i] == SQUOTE || tkn->val[i] == DQUOTE)
-			update_quote(&tkn->val[i], &tkn->quote);
-		else if (tkn->quote != SQUOTE && tkn->val[i] == '$')
+		if (arg->value[i] == SQUOTE || arg->value[i] == DQUOTE)
+			update_quote(&arg->value[i], &arg->quote);
+		else if (arg->value[i] != SQUOTE && arg->value[i] == '$')
 		{
-			i = include_variable(tkn, get_var_info(&tkn->val[i + 1], env_var));
+			i = include_variable(arg, get_var_info(&arg->value[i + 1], env_var));
 			if (i == -2)
 				return (NULL);
 		}
 		i++;
 	}
-	subtkns = post_process(tkns, elem, tkn);
-	if (subtkns == NULL)
+	subargs = post_process(args, elem, arg);
+	if (subargs == NULL)
 		return (NULL);
 	else
-		return (subtkns);
+		return (subargs);
 }

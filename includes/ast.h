@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 10:43:41 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:20:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,6 @@ typedef enum	s_node_type
 	NODE_LOGICAL_OR,
 }	t_node_type;
 
-typedef enum	e_arg_type
-{
-	ARG_WORD,
-	ARG_REDIRECT_STDIN,
-	ARG_REDIRECT_FILE,
-	ARG_REDIRECT_FILE_APPEND,
-	ARG_REDIRECT_HERE_DOC
-}	t_arg_type;
-
-typedef struct	s_arg
-{
-	char		*value;
-	t_arg_type	type;
-}	t_arg;
-
 typedef struct	s_ast_tree_node
 {
 	t_node_type				type;
@@ -63,5 +48,7 @@ void			ast_tree_print_graph(t_ast_tree_node *root);
 void			ast_tree_delete_node(void *node);
 t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 		t_ast_tree_node *right);
+
+void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left);
 
 #endif

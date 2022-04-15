@@ -13,64 +13,64 @@
 #include "minishell.h"
 #include <stdlib.h>
 
-static t_list	*handle_escaping(t_token *tkn, char **str)
+static t_list	*handle_escaping(t_arg *arg, char **str)
 {
 	char	*pstr;
 	char	quote;
 
 	pstr = *str;
-	if (add_to_list(&tkn->rem_quote_lst, pstr) == NULL)
+	if (add_to_list(&arg->rem_quote_lst, pstr) == NULL)
 		return (NULL);
 	quote = *pstr++;
 	while (*pstr)
 	{
-		if (*pstr == quote && !is_expnd_quote(tkn->quote_lst, pstr))
+		if (*pstr == quote && !is_expnd_quote(arg->quote_lst, pstr))
 			break ;
 		pstr++;
 	}
-	if (add_to_list(&tkn->rem_quote_lst, pstr) == NULL)
+	if (add_to_list(&arg->rem_quote_lst, pstr) == NULL)
 		return (NULL);
 	pstr++;
 	*str = pstr;
-	return (tkn->rem_quote_lst);
+	return (arg->rem_quote_lst);
 }
 
 static inline t_dlist	*clean(t_dlist **list)
 {
-	ft_dlstclear(list, free_token);
+	ft_dlstclear(list, free_arg);
 	return (NULL);
 }
 
-static inline t_dlist	*finish_tokenizing(t_lexer *lex, t_token *old_tkn)
+static inline t_dlist	*finish_tokenizing(t_lexer *lex, t_arg *old_arg)
 {
 	if (lex->prev != lex->str)
 	{
-		if (add_to_tkns_cpy(lex, old_tkn) == NULL)
+		if (add_to_args_cpy(lex, old_arg) == NULL)
 			return (NULL);
 	}
 	return (lex->tkns);
 }
 
-static t_token	*handle_new_token(t_lexer *lex, t_token *old_tkn)
+static t_arg	*handle_new_token(t_lexer *lex, t_arg *old_arg)
 {
-	t_token	*tkn;
+	t_arg	*arg;
 
-	tkn = old_tkn;
+	arg = old_arg;
 	if (lex->bbreak && lex->str != lex->prev)
 	{
-		tkn = add_to_tkns_cpy(lex, old_tkn);
-		if (tkn == NULL)
+		arg = add_to_args_cpy(lex, old_arg);
+		if (arg == NULL)
 			return (NULL);
 	}
 	else if (*lex->str == '*')
 	{
-		if (add_to_list(&old_tkn->wldc_lst, lex->str) == NULL)
+		if (add_to_list(&old_arg->wldc_lst, lex->str) == NULL)
 			return (NULL);
 	}
-	return (tkn);
+	return (arg);
 }
 
-t_dlist	*tokenize_from_tkn(t_token *old_tkn, char *str)
+t_dlist	*tokenize_from_arg(t_arg *old_arg, char *str)
 {
 	t_lexer	lex;
 
@@ -81,18 +81,18 @@ t_dlist	*tokenize_from_tkn(t_token *old_tkn, char *str)
 	while (*lex.str)
 	{
 		check_for_break(&lex);
-		if (handle_new_token(&lex, old_tkn) == NULL)
+		if (handle_new_token(&lex, old_arg) == NULL)
 			return (clean(&lex.tkns));
 		if (lex.bbreak)
 			update_prev(&lex);
 		else if ((*lex.str == SQUOTE || *lex.str == DQUOTE)
-			&& !is_expnd_quote(old_tkn->quote_lst, lex.str))
+			&& !is_expnd_quote(old_arg->quote_lst, lex.str))
 		{
-			if (handle_escaping(old_tkn, &lex.str) == NULL)
+			if (handle_escaping(old_arg, &lex.str) == NULL)
 				return (clean(&lex.tkns));
 		}
 		else
 			lex.str++;
 	}
-	return (finish_tokenizing(&lex, old_tkn));
+	return (finish_tokenizing(&lex, old_arg));
 }

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 16:50:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:24:06 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include "env.h"
 # include "signals.h"
 # include "builtins.h"
+# include "parser.h"
 
 # define COMMAND_NOT_FOUND "Minishell: %s: command not found\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"
@@ -57,12 +58,6 @@ typedef struct s_command
 	pid_t				pid;
 	struct s_command	*next;
 }	t_command;
-
-typedef struct s_args
-{
-	char			*value;
-	struct s_args	*next;
-}	t_args;
 
 void		add_command_to_args(t_command *command);
 char		*ft_strtrunc(char **str, const char delim);

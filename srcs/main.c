@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 17:59:04 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:23:21 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,8 @@ char	*before_read(t_dlist **vars, t_minishell minishell)
 	return (str);
 }
 
-void	start_exec(t_minishell *minishell, t_dlist *tkns)
+void	start_exec(t_minishell *minishell, t_ast_tree_node	*root)
 {
-	t_ast_tree_node	*root;
-
-	root = parse(&tkns);
 	if (root != NULL)
 	{
 		if (root->type == NODE_COMMAND || root->type == NODE_PIPE)
@@ -148,7 +145,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_dlist			*vars;
 	char			*str;
-	t_dlist			*tkns;
+	t_ast_tree_node	*root;
 	t_minishell		minishell;
 
 	(void)argc;
@@ -163,10 +160,9 @@ int	main(int argc, char **argv, char **envp)
 		if (strcmp(str, "") == 0)
 			continue ;
 		add_history(str);
-		tkns = get_tokens(str, vars);
-		free(str);
-		if (tkns)
-			start_exec(&minishell, tkns);
+		root = parse_from_str(str);
+		if (root)
+			start_exec(&minishell, root);
 	}
 	return (0);
 }

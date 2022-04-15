@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/15 10:46:39 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/15 16:24:23 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,6 @@ SRCS			=	main.c \
 					$(addprefix lexer/, \
 						lexer_mem_utils.c \
 						lexer_utils.c \
-						tokens.c \
 						lexer.c) \
 					$(addprefix parser/, \
 						args.c \
