@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:03:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:19:31 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,15 @@
 
 extern int	g_sigint;
 
-void	append_arg(t_ast_tree_node *node, t_args **el, t_args **args,
-	t_command *command)
+void	count_arg(t_arg *node, int *arg_count)
 {
-	t_args	*elem;
-
-	elem = *el;
-	if (node->type == NODE_COMMAND_SUFFIX && node->value != NULL
-		&& !command->error)
-	{
-		if (*args == NULL)
-		{
-			*args = calloc(sizeof(t_args), 1);
-			(*args)->next = NULL;
-			(*args)->value = node->value;
-		}
-		else
-		{
-			elem = *args;
-			while (elem->next != NULL)
-				elem = elem->next;
-			elem->next = calloc(sizeof(t_args), 1);
-			elem->next->next = NULL;
-			elem->next->value = node->value;
-		}
-	}
+	if (node->type == ARG_WORD)
+		(*arg_count)++;
 }
 
-void	set_io_stdin(t_ast_tree_node *node, t_command *command)
+void	set_io_stdin(t_arg *node, t_command *command)
 {
-	if (node->type == NODE_IO_REDIRECT_STDIN && !command->error
-		&& node->value != NULL)
+	if (node->type == ARG_REDIRECT_STDIN && !command->error)
 	{
 		if (command->io_in_redirect > 0)
 			close(command->io_in_redirect);
@@ -60,10 +38,9 @@ void	set_io_stdin(t_ast_tree_node *node, t_command *command)
 	}
 }
 
-void	set_io_stdout(t_ast_tree_node *node, t_command *command)
+void	set_io_stdout(t_arg *node, t_command *command)
 {
-	if (node->type == NODE_IO_REDIRECT_FILE && !command->error
-		&& node->value != NULL)
+	if (node->type == ARG_REDIRECT_FILE && !command->error)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
@@ -78,10 +55,9 @@ void	set_io_stdout(t_ast_tree_node *node, t_command *command)
 	}
 }
 
-void	set_io_stdout_append(t_ast_tree_node *node, t_command *command)
+void	set_io_stdout_append(t_arg *node, t_command *command)
 {
-	if (node->type == NODE_IO_REDIRECT_FILE_APPEND && !command->error
-		&& node->value != NULL)
+	if (node->type == ARG_REDIRECT_FILE_APPEND && !command->error)
 	{
 		if (command->io_out_redirect > 0)
 			close(command->io_out_redirect);
@@ -97,7 +73,7 @@ void	set_io_stdout_append(t_ast_tree_node *node, t_command *command)
 	}
 }
 
-int	treat_line(char *line, t_ast_tree_node *node, int pipefd[2])
+int	treat_line(char *line, t_arg *node, int pipefd[2])
 {
 	if (strcmp(line, node->value) != 0)
 	{
@@ -109,7 +85,7 @@ int	treat_line(char *line, t_ast_tree_node *node, int pipefd[2])
 		return (1);
 }
 
-void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
+void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 {
 	char	*line;
 	int		count;
@@ -138,7 +114,7 @@ void	here_doc_read(t_ast_tree_node *node, int pipefd[2], t_command *command)
 	}
 }
 
-void	here_doc_logic(t_ast_tree_node *node, t_command *command)
+void	here_doc_logic(t_arg *node, t_command *command)
 {
 	int		pipefd[2];
 
@@ -156,75 +132,55 @@ void	here_doc_logic(t_ast_tree_node *node, t_command *command)
 	command->io_in_redirect = pipefd[0];
 }
 
-void	parse_tree(t_ast_tree_node *node, t_command *command, t_args **args)
+void	parse_list(t_dlist *node, t_command *command, int *arg_count)
 {
-	t_args	*elem;
-
-	append_arg(node, &elem, args, command);
-	set_io_stdin(node, command);
-	set_io_stdout(node, command);
-	set_io_stdout_append(node, command);
-	if (node->type == NODE_IO_REDIRECT_HERE_DOC && node->value != NULL)
-		here_doc_logic(node, command);
-	if (node->left != NULL && !command->error)
-		parse_tree(node->left, command, args);
-	if (node->right != NULL && !command->error)
-		parse_tree(node->right, command, args);
+	count_arg(node->content, arg_count);
+	set_io_stdin(node->content, command);
+	set_io_stdout(node->content, command);
+	set_io_stdout_append(node->content, command);
+	if (((t_arg *)node->content)->type == ARG_REDIRECT_HERE_DOC)
+		here_doc_logic(node->content, command);
+	if (node->next != NULL)
+		parse_list(node->next, command, arg_count);
 }
 
-t_command	*prepare_command(bool piped, t_ast_tree_node *node, t_args **args)
+t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count)
 {
 	t_command	*command;
 
 	command = calloc(sizeof(t_command), 1);
 	command->is_piped = piped;
-	command->name = strdup(node->value);
+	command->name = strdup(((t_arg *)node->args->content)->value);
 	command->original_name = NULL;
 	command->io_in_redirect = -1;
 	command->io_out_redirect = -1;
 	command->error = false;
-	*args = NULL;
-	if (node->left != NULL)
-		parse_tree(node->left, command, args);
-	if (node->right != NULL)
-		parse_tree(node->right, command, args);
+	*arg_count = 0;
+	if (node->args->next != NULL)
+		parse_list(node->args->next, command, arg_count);
 	return (command);
-}
-
-void	set_args(t_command *command, t_args *args)
-{
-	int		i;
-	t_args	*elem;
-
-	i = 0;
-	while (args)
-	{
-		command->args[i] = strdup(args->value);
-		elem = args;
-		args = args->next;
-		free(elem);
-		i++;
-	}
-	command->args[i] = NULL;
 }
 
 t_command	*parse_command(t_ast_tree_node *node, bool piped)
 {
 	t_command	*command;
-	t_args		*args;
-	int			length;
-	t_args		*elem;
+	int			args_count;
+	t_dlist		*elem;
+	int			i;
 
-	command = prepare_command(piped, node, &args);
-	length = 0;
-	elem = args;
-	while (elem)
+	command = prepare_command(piped, node, &args_count);
+	command->args = calloc(sizeof(char *), args_count + 1);
+	elem = node->args;
+	i = 0;
+	while(elem)
 	{
-		length++;
+		if(((t_arg *)elem->content)->type == ARG_WORD)
+		{
+			command->args[i] = strdup(((t_arg *)elem->content)->value);
+			i++;
+		}
 		elem = elem->next;
 	}
-	command->args = calloc(sizeof(char *), length + 1);
-	set_args(command, args);
 	command->next = NULL;
 	return (command);
 }
@@ -250,6 +206,7 @@ t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 
 	(void)vars;
 	first = NULL;
+	// Expansion on the current node
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false);
