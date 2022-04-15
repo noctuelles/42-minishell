@@ -121,4 +121,9 @@ void			free_arg(void *parg);
 t_arg			*add_arg_to_list(t_parser *parser, t_dlist **args,
 		t_token_type type);
 
+/* node_expansion.c */
+
+t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
+		t_dlist *env_var);
+
 #endif
