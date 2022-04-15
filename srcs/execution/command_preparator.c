@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:42:50 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:26:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,4 @@ void	replace_by_path(t_command *command, t_dlist *vars)
 		}
 		command = command->next;
 	}
-}
-
-void	add_command_to_args(t_command *command)
-{
-	char	**args;
-	int		length;
-	int		i;
-
-	args = command->args;
-	length = 0;
-	while (args[length])
-		length++;
-	command->args = malloc(sizeof(char *) * (length + 2));
-	command->args[0] = command->original_name;
-	i = -1;
-	while (++i < length)
-		command->args[i + 1] = args[i];
-	command->args[i + 1] = NULL;
-	free(args);
 }
