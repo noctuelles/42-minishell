@@ -1,0 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   args.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/14 19:20:25 by plouvel           #+#    #+#             */
+/*   Updated: 2022/04/14 19:21:14 by plouvel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parser.h"
+#include <stdlib.h>
+
+static t_arg	*new_arg(char *value, t_token_type token_type)
+{
+	t_arg		*arg;
+	char		*arg_value;
+	t_arg_type	arg_type;
+
+	arg_type = ARG_WORD;
+	if (token_type == T_GRT)
+		arg_type = ARG_REDIRECT_FILE;
+	else if (token_type == T_LESS)
+		arg_type = ARG_REDIRECT_STDIN;
+	else if (token_type == T_DGRT)
+		arg_type = ARG_REDIRECT_FILE_APPEND;
+	else if (token_type == T_DLESS)
+		arg_type = ARG_REDIRECT_HERE_DOC;
+	arg = (t_arg *) malloc(sizeof(t_arg));
+	if (!arg)
+		return (NULL);
+	arg_value = ft_strdup(value);
+	if (!arg_value)
+	{
+		free(arg);
+		return (NULL);
+	}
+	arg->type = arg_type;
+	arg->value = arg_value;
+	return (arg);
+}
+
+void	free_arg(void *parg)
+{
+	t_arg	*arg;
+
+	arg = (t_arg *) parg;
+	free(arg->value);
+	free(arg);
+}
+
+t_arg	*add_arg_to_list(t_parser *parser, t_dlist **args, t_token_type type)
+{
+	t_arg	*arg;
+	t_dlist	*elem;
+
+	arg = new_arg(parser->curr_tkn->val, type);
+	if (!arg)
+		return (NULL);
+	elem = ft_dlstnew(arg);
+	if (!elem)
+	{
+		free_arg(arg);
+		return (NULL);
+	}
+	ft_dlstadd_back(args, elem);
+	consume_token(parser);
+	return (arg);
+}

@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/13 13:55:15 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/15 10:46:39 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,21 +54,14 @@ SRCS			=	main.c \
 						tokens.c \
 						lexer.c) \
 					$(addprefix parser/, \
+						args.c \
 						ast.c \
 						parser.c \
 						parser_utils.c \
 						stack.c \
-						$(addprefix ast/, \
-							ast.c) \
-						$(addprefix grammar/, \
-							cmd_suffix.c \
-							io_list.c \
-							io_redirect.c \
-							pipeline.c \
-							pipeline_appendix.c \
-							simple_command.c \
-							simple_command_appendix.c) \
-						) \
+						pipeline.c \
+						pushnstack.c \
+						simple_command.c) \
 					$(addprefix utils/, \
 						io_utils.c \
 						linked_list_utils.c) \

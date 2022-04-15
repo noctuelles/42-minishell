@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 10:02:54 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/15 10:43:41 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,40 @@
 typedef enum	s_node_type
 {
 	NODE_PIPE,
-	NODE_COMMAND_SUBSHELL,
 	NODE_COMMAND,
-
-	NODE_PRIORITY_AND,
-	NODE_PRIORITY_OR,
+	NODE_EMPTY_COMMAND,
 	NODE_LOGICAL_AND,
 	NODE_LOGICAL_OR,
-	NODE_EMPTY_COMMAND,
-	NODE_IO_LIST,
-	NODE_COMMAND_SUFFIX,
-	NODE_IO_REDIRECT_STDIN,
-	NODE_IO_REDIRECT_FILE,
-	NODE_IO_REDIRECT_FILE_APPEND,
-	NODE_IO_REDIRECT_HERE_DOC,
 }	t_node_type;
+
+typedef enum	e_arg_type
+{
+	ARG_WORD,
+	ARG_REDIRECT_STDIN,
+	ARG_REDIRECT_FILE,
+	ARG_REDIRECT_FILE_APPEND,
+	ARG_REDIRECT_HERE_DOC
+}	t_arg_type;
+
+typedef struct	s_arg
+{
+	char		*value;
+	t_arg_type	type;
+}	t_arg;
 
 typedef struct	s_ast_tree_node
 {
 	t_node_type				type;
-	char					*value;
+	t_dlist					*args;
 	struct s_ast_tree_node	*left;
 	struct s_ast_tree_node	*right;
 }	t_ast_tree_node;
 
-t_ast_tree_node	*ast_tree_create_node(char *value, t_node_type type);
-void	ast_tree_apply_preorder(t_ast_tree_node *root);
-void	ast_tree_print_graph(t_ast_tree_node *root);
+/* ast.c */
+
+t_ast_tree_node	*ast_tree_create_node(t_dlist *args, t_node_type type);
+void			ast_tree_apply_preorder(t_ast_tree_node *root);
+void			ast_tree_print_graph(t_ast_tree_node *root);
 void			ast_tree_delete_node(void *node);
 t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 		t_ast_tree_node *right);
