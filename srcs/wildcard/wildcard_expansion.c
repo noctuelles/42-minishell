@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/06 13:52:19 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 12:16:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static struct dirent	*_readdir(DIR *dir_stream, struct dirent **dir_ent)
  * If an error occurs, it returns the value of errno, and not NULL because files
  * can be NULL even if no error occurs.*/
 
-static int	scan_current_directory(t_dlist **files, t_token *tkn)
+static int	scan_current_directory(t_dlist **files, t_arg *arg)
 {
 	DIR				*dir_stream;
 	struct dirent	*dir_ent;
@@ -46,7 +46,7 @@ static int	scan_current_directory(t_dlist **files, t_token *tkn)
 		return (errno);
 	while (_readdir(dir_stream, &dir_ent))
 	{
-		if (add_file_to_list(tkn, files, dir_ent) == -1)
+		if (add_file_to_list(arg, files, dir_ent) == -1)
 			break ;
 	}
 	if (errno != ENO)
@@ -95,15 +95,15 @@ static bool	check_if_expandable(t_dlist *elem)
  * If an allocation error or an I/O error is found, the function returns NULL.
  * Because both cases returns NULL, must check errno. */
 
-t_dlist	*wildcard_expansion(t_dlist **tkns, t_dlist *elem, t_token *tkn)
+t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg)
 {
 	t_dlist	*files;
 
 	files = NULL;
-	if (ft_strchr(tkn->val, '=') != NULL && check_if_expandable(elem) == false)
+	if (ft_strchr(arg->value, '=') != NULL && check_if_expandable(elem) == false)
 		return (elem);
-	if (scan_current_directory(&files, tkn) != 0)
+	if (scan_current_directory(&files, arg) != 0)
 		return (NULL);
-	ft_lstclear(&tkn->wldc_lst, NULL);
-	return (insert_list(tkns, files, elem));
+	ft_lstclear(&arg->wldc_lst, NULL);
+	return (insert_list(args, files, elem));
 }

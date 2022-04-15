@@ -10,7 +10,7 @@
 #include "ft_printf.h"
 #include <unistd.h>
 
-bool DEBUG = false;
+bool DEBUG = true;
 
 char *get_type(t_token_type type)
 {
@@ -43,32 +43,36 @@ void	print_tokens(void *content)
 	
 	tkn = (t_token *) content;
 	ft_printf("\t< {32}%s{0} > {1}Type{0} <{1;36}%s{0}>", tkn->val, get_type(tkn->type));
-	if (tkn->type == T_WORD)
+	ft_putchar('\n');
+}
+
+void	print_args(void *content)
+{
+	t_arg	*arg;
+	
+	arg = (t_arg *) content;
+	ft_printf("\t< {32}%s{0} >", arg->value);
+	ft_printf(" {4;1}Wildcards{0} :");
+	if (arg->wldc_lst)
 	{
-		ft_printf(" {4;1}Wildcards{0} :");
-		if (tkn->wldc_lst)
+		ft_putstr("\n\n");
+		for (t_list *lst = arg->wldc_lst; lst != NULL; lst = lst->next)
 		{
-			ft_putstr("\n\n");
-			for (t_list *lst = tkn->wldc_lst; lst != NULL; lst = lst->next)
+			ft_printf("\t\t| {33}%p{0} : {34}'%c'{0} : ",
+					lst->content, * (char *) lst->content);
+			ft_putchar('"');
+			for (size_t i = 0; arg->value[i]; i++)
 			{
-				ft_printf("\t\t| {33}%p{0} : {34}'%c'{0} : ",
-						lst->content, * (char *) lst->content);
-				ft_putchar('"');
-				for (size_t i = 0; tkn->val[i]; i++)
-				{
-					if (&tkn->val[i] == (char *) lst->content)
-						ft_printf("{1;91}%c{0}", tkn->val[i]);
-					else
-						ft_printf("{1;37}%c{0}", tkn->val[i]);
-				}
-				ft_putstr("\"\n");
+				if (&arg->value[i] == (char *) lst->content)
+					ft_printf("{1;91}%c{0}", arg->value[i]);
+				else
+					ft_printf("{1;37}%c{0}", arg->value[i]);
 			}
+			ft_putstr("\"\n");
 		}
-		else
-			ft_printf("\n\n\t\t| {31}None.{0}\n");
 	}
 	else
-		ft_putchar('\n');
+		ft_printf("\n\n\t\t| {31}None.{0}\n");
 	ft_putchar('\n');
 }
 
@@ -105,30 +109,32 @@ int main(int argc, char **argv, char **envp)
 		{
 			if (DEBUG)
 			{
-				tkns = lex_str(str);
-				if (tkns)
+				root = parse_from_str(str);
+				if (root)
 				{
-					ft_printf("\n{1;4;33}Initial token(s) :{0}\n\n");
-					ft_dlstiter(tkns, print_tokens);
-					ft_printf("\n{1;4;33}After variable expansion :{0}\n\n");
-					for (t_dlist *elem = tkns; elem; elem = elem->next)
+					ft_printf("\n{1;4;33}Initial tree :{0}\n\n");
+					ast_print_tree("", root, false);
+					ast_tree_delete_node(root);
+					/*if (root)
 					{
-						t_token *tkn = (t_token *) elem->content;
-						if (tkn->type == T_WORD)
-							elem = var_expansion(&tkns, elem, tkn, env_var);
-					}
-					printf("\n");
-					ft_dlstiter(tkns, print_tokens);
-					ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
-					for (t_dlist *elem = tkns; elem; elem = elem->next)
-					{
-						t_token *tkn = (t_token *) elem->content;
-						if (tkn->type == T_WORD)
-							elem = wildcard_expansion(&tkns, elem, tkn);
-					}
-					printf("\n");
-					ft_dlstiter(tkns, print_tokens);
-					ft_dlstclear(&tkns, free_token);
+						ft_printf("\n{1;4;33}After variable expansion :{0}\n\n");
+						for (t_dlist *elem = root->args; elem; elem = elem->next)
+						{
+							t_arg *arg = (t_arg *) elem->content;
+							elem = var_expansion(&root->args, elem, arg, env_var);
+						}
+						printf("\n");
+						ft_dlstiter(root->args, print_args);
+						ft_printf("\n{1;4;33}After wildcard expansion :{0}\n");
+						for (t_dlist *elem = root->args; elem; elem = elem->next)
+						{
+							t_arg *arg = (t_arg *) elem->content;
+							elem = wildcard_expansion(&root->args, elem, arg);
+						}
+						printf("\n");
+						ft_dlstiter(root->args, print_args);
+						ft_dlstclear(&tkns, free_token);
+					}*/
 				}
 			}
 			else
@@ -138,7 +144,6 @@ int main(int argc, char **argv, char **envp)
 				{
 					ft_printf("\n{1;4;33}Token(s) :{0}\n\n");
 					ft_dlstiter(tkns, print_tokens);
-					root = parse(&tkns);
 				}
 			}
 		}

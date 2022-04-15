@@ -6,14 +6,14 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/11 18:35:33 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 13:18:41 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 
-static void	copy(t_token *old_tkn, const char *s, char *str, size_t n)
+static void	copy(t_arg *old_arg, const char *s, char *str, size_t n)
 {
 	t_list	*elem;
 	size_t	i;
@@ -25,12 +25,12 @@ static void	copy(t_token *old_tkn, const char *s, char *str, size_t n)
 	{
 		if (s[i] == '*')
 		{
-			elem = is_intrp_wldc(old_tkn->wldc_lst, (char *) &s[i]);
+			elem = is_intrp_wldc(old_arg->wldc_lst, (char *) &s[i]);
 			if (elem)
 				elem->content = &str[j];
 		}
 		if ((s[i] == SQUOTE || s[i] == DQUOTE)
-			&& is_rem_quote(old_tkn->rem_quote_lst, (char *) &s[i]))
+			&& is_rem_quote(old_arg->rem_quote_lst, (char *) &s[i]))
 				i++;
 		else
 			str[j++] = s[i++];
@@ -38,46 +38,45 @@ static void	copy(t_token *old_tkn, const char *s, char *str, size_t n)
 	str[j] = '\0';
 }
 
-static char	*ft_strndup_tkn(t_token *old_tkn, const char *s, size_t n)
+static char	*ft_strndup_arg(t_arg *old_arg, const char *s, size_t n)
 {
 	char	*str;
 
 	if (!s || n == 0)
 		return (NULL);
-	str = (char *) malloc((n - ft_lstsize(old_tkn->rem_quote_lst) + 1)
+	str = (char *) malloc((n - ft_lstsize(old_arg->rem_quote_lst) + 1)
 			* sizeof(char));
 	if (!str)
 		return (NULL);
-	copy(old_tkn, s, str, n);
+	copy(old_arg, s, str, n);
 	return (str);
 }
 
-t_token	*add_to_tkns_cpy(t_lexer *lex, t_token *old_tkn)
+t_arg	*add_to_args_cpy(t_lexer *lex, t_arg *old_arg)
 {
 	char	*str;
 	t_dlist	*elem;
-	t_token	*tkn;
+	t_arg	*arg;
 
-	str = ft_strndup_tkn(old_tkn, lex->prev, lex->str - lex->prev);
+	str = ft_strndup_arg(old_arg, lex->prev, lex->str - lex->prev);
 	if (!str)
 		return (NULL);
-	tkn = new_token(str, lex->str - lex->prev, T_WORD);
-	if (!tkn)
+	arg = new_arg(str, T_WORD, false);
+	if (!arg)
 	{
 		free(str);
 		return (NULL);
 	}
-	tkn->wldc_lst = old_tkn->wldc_lst;
-	old_tkn->wldc_lst = NULL;
-	elem = ft_dlstnew((void *) tkn);
+	arg->wldc_lst = old_arg->wldc_lst;
+	old_arg->wldc_lst = NULL;
+	elem = ft_dlstnew((void *) arg);
 	if (!elem)
 	{
-		free_token(tkn);
+		free_arg(arg);
 		return (NULL);
 	}
 	ft_dlstadd_back(&lex->tkns, elem);
-	tkn->lst_elem = elem;
-	return (tkn);
+	return (arg);
 }
 
 void	check_for_break(t_lexer *lex)

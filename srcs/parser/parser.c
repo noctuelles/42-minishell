@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 20:14:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 14:31:32 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static bool	is_correct_start_tkn(t_parser *parser)
 	return (false);
 }
 
-static t_ast_tree_node	*parse_from_tkns(t_parser *parser)
+static t_ast_tree_node	*do_parse(t_parser *parser)
 {
 	t_ast_tree_node	*root;
 
@@ -63,11 +63,22 @@ static t_ast_tree_node	*parse_from_tkns(t_parser *parser)
 	}
 	if (assemble_out_stack_top(parser, 1, false) == -1)
 		return (quit_parsing(parser));
-	root = (t_ast_tree_node *) parser->output_stack.top->content;
-	return (root);
+	if (parser->output_stack.top)
+	{
+		root = (t_ast_tree_node *) parser->output_stack.top->content;
+		pop_stack(&parser->output_stack, 1);
+		return (root);
+	}
+	else
+		return (NULL);
 }
 
-t_ast_tree_node	*parse(t_dlist **tkns)
+/* parse_from_tkns() returns a valid AST tree for the given command.
+ * If no command was found or an error occured, parse returns NULL,
+ * while freeing everything in use including the tokens.
+ * The tokens are freed no mather what. */
+
+static t_ast_tree_node	*parse_from_tkns(t_dlist **tkns)
 {
 	t_parser		parser;
 	t_ast_tree_node	*ast_root;
@@ -75,10 +86,27 @@ t_ast_tree_node	*parse(t_dlist **tkns)
 	ft_memset(&parser, 0, sizeof(t_parser));
 	parser.tkns = *tkns;
 	parser.curr_tkn = (t_token *) parser.tkns->content;
-	ast_root = parse_from_tkns(&parser);
+	ast_root = do_parse(&parser);
 	ft_dlstclear(tkns, free_token);
 	if (!ast_root)
 		return (NULL);
-	ast_print_tree("", ast_root, false);
+	return (ast_root);
+}
+
+/* parse_from_str() returns a valid AST tree if str is following the minishell
+ * grammar.
+ * If no cmd was found in str or and error occured, the function returns NULL.*/
+
+t_ast_tree_node	*parse_from_str(char *str)
+{
+	t_dlist			*tkns;
+	t_ast_tree_node	*ast_root;
+
+	tkns = lex_str(str);
+	if (!tkns)
+		return (NULL);
+	ast_root = parse_from_tkns(&tkns);
+	if (!ast_root)
+		return (NULL);
 	return (ast_root);
 }

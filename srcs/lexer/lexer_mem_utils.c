@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/05 15:44:12 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 13:25:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@ t_token	*new_token(char *val, size_t len, t_token_type type)
 	tkn->val = val;
 	tkn->len = len;
 	tkn->type = type;
-	tkn->wldc_lst = NULL;
-	tkn->quote_lst = NULL;
-	tkn->rem_quote_lst  = NULL;
-	tkn->quote = '\0';
 	return (tkn);
 }
 
@@ -36,15 +32,7 @@ void	free_token(void *tkn)
 	
 	ptkn = (t_token *) tkn;
 	if (ptkn->type == T_WORD)
-	{
-		if (ptkn->wldc_lst)
-			ft_lstclear(&ptkn->wldc_lst, NULL);
-		if (ptkn->quote_lst)
-			ft_lstclear(&ptkn->quote_lst, NULL);
-		if (ptkn->rem_quote_lst)
-			ft_lstclear(&ptkn->rem_quote_lst, NULL);
 		free(ptkn->val);
-	}
 	free(ptkn);
 }
 

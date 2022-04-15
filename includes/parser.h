@@ -30,7 +30,8 @@ typedef enum e_parser_errcode
 	ERR_EXPECTED_COMMAND,
 	ERR_UNEXPECTED_TOKEN,
 	ERR_UNEXPECTED_IO_TOKEN,
-	ERR_UNEXPECTED_IO_HEREDOC_TOKEN
+	ERR_UNEXPECTED_IO_HEREDOC_TOKEN,
+	NO_CMD = -1
 }	t_parser_errcode;
 
 typedef struct	s_parse_stack
@@ -59,20 +60,18 @@ void	*set_parser_errcode(t_parser *parser, t_parser_errcode errcode);
 
 /* parser.c */
 
-t_ast_tree_node	*parse(t_dlist **tkns);
+t_ast_tree_node	*parse_from_str(char *str);
 
 /* Prototype for each production rules : */
 
 t_ast_tree_node	*pipeline(t_parser *parser);
-
 t_ast_tree_node *simple_cmd(t_parser *parser);
 
 /* stack.c */
 
 t_dlist			*push_stack(t_parser *parser, t_parse_stack *stack,
 		void *content);
-void			pop_stack(t_parse_stack *stack, void (*del)(void *),
-		size_t times);
+void	pop_stack(t_parse_stack *stack, size_t times);
 t_token_type	*new_token_type(t_token_type type);
 
 /* pushnstack.c */
@@ -90,6 +89,8 @@ void			rollback_token(t_parser *parser);
 
 /* args.c */
 
+
+t_arg	*new_arg(char *value, t_token_type token_type, bool dup);
 void	free_arg(void *parg);
 t_arg	*add_arg_to_list(t_parser *parser, t_dlist **args, t_token_type type);
 

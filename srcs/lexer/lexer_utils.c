@@ -101,9 +101,6 @@ t_token	set_token(t_token *tkn, char *val, size_t len,
 	tkn->val = val;
 	tkn->len = len;
 	tkn->type = type;
-	tkn->quote_lst = NULL;
-	tkn->wldc_lst = NULL;
-	tkn->quote = '\0';
 	return (*tkn);
 }
 
