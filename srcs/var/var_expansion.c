@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 01:56:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 15:58:44 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
 		i++;
 	}
 	subargs = post_process(args, elem, arg);
-	if (subargs == NULL)
+	if (subargs == NULL && errno != ENO)
 		return (print_errmsg());
 	else
 		return (subargs);

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:35:54 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 15:12:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 15:39:24 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_arg	*add_to_args_cpy(t_lexer *lex, t_arg *old_arg)
 	if (!str)
 		return (NULL);
 	arg = new_arg(str, T_WORD, false);
+	arg->type = old_arg->type;
 	if (!arg)
 	{
 		free(str);

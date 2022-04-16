@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 01:47:26 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 15:23:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,20 @@ static int	scan_current_directory(t_dlist **files, t_arg *arg)
 
 static bool	check_if_expandable(t_dlist *elem)
 {
-	t_token	*tkn;
+	t_arg	*arg;
 
-	if (elem->prev != NULL)
+	while (true)
 	{
-		while (elem->prev != NULL)
-		{
+		if (elem->prev == NULL)
+			break ;
+		else
 			elem = elem->prev;
-			tkn = elem->content;
-			if (tkn->type == T_PIPE || tkn->type == T_LOG_AND
-				|| tkn->type == T_LOG_OR)
-			{
-				tkn = elem->next->content;
-				break ;
-			}
-		}
-		while (tkn->type == T_OP_PRT)
-		{
-			elem = elem->next;
-			tkn = elem->content;
-		}
-		if (ft_strcmp(tkn->val, STR_BUILTIN_EXPORT) == 0)
-			return (false);
 	}
-	return (true);
+	arg = (t_arg *) elem->content;
+	if (ft_strcmp(arg->value, "export") == 0)
+		return (false);
+	else
+		return (true);
 }
 
 static void	*print_errmsg (int errcode)
