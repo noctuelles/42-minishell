@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:54:50 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 16:27:34 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,13 @@ int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
 	{
 		write(pipefd[1], line, strlen(line));
 		write(pipefd[1], "\n", 1);
+		free(line);
 		return (0);
 	}
 	else
 	{
 		command->here_doc = pipefd[0];
+		free(line);
 		return (1);
 	}
 }

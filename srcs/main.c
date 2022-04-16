@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 16:24:43 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 16:31:16 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,21 @@
 
 void	free_cmd(t_command *cmd)
 {
-	//int	i;
+	int	i;
 
-	/*if (cmd->name != cmd->original_name)
-	{
+	if (cmd->name )
 		free(cmd->name);
-		free(cmd->original_name);
-	}
-	else
-		free(cmd->name);
-	i = 0;
-	if (cmd->args && cmd->args[0])
+	i = -1;
+	if (cmd->args)
 	{
 		while (cmd->args[++i])
 			free(cmd->args[i]);
 	}
 	free(cmd->args);
-	if (cmd->io_in_redirect > 0)
-		close(cmd->io_in_redirect);
-	if (cmd->io_out_redirect > 0)
-		close(cmd->io_out_redirect);*/
+	if (cmd->io_in_fd > 0)
+		close(cmd->io_in_fd);
+	if (cmd->io_out_fd > 0)
+		close(cmd->io_out_fd);
 	free(cmd);
 }
 
@@ -160,6 +155,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		add_history(str);
 		root = parse_from_str(str);
+		free(str);
 		if (root)
 			start_exec(&minishell, root);
 	}
