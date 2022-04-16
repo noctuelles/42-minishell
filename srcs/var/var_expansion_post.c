@@ -59,12 +59,12 @@ static t_arg	*handle_new_token(t_lexer *lex, t_arg *old_arg)
 	if (lex->bbreak && lex->str != lex->prev)
 	{
 		arg = add_to_args_cpy(lex, old_arg);
-		if (arg == NULL)
+		if (!arg)
 			return (NULL);
 	}
 	else if (*lex->str == '*')
 	{
-		if (add_to_list(&old_arg->wldc_lst, lex->str) == NULL)
+		if (!add_to_list(&old_arg->wldc_lst, lex->str))
 			return (NULL);
 	}
 	return (arg);
