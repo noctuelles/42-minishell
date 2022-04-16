@@ -1,0 +1,5 @@
+cmd.args = NULL ==> skiper la commande, pipe vide
+
+ouvrir fd au fur et a mesure
+leaks
+PROTECTION APPEL SYSTEME !!!!

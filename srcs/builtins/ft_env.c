@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_mem_utils.c                                  :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 16:21:27 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/02/27 13:59:34 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/13 14:20:17 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "builtins.h"
 
-t_token	*new_token(char *val, size_t len, t_token_type type)
+int	ft_env(int argc, char **argv, t_dlist *env)
 {
-	t_token	*tkn;
-
-	tkn = (t_token *) malloc(sizeof(t_token));
-	if (!tkn)
-		return (NULL);
-	tkn->val = val;
-	tkn->len = len;
-	tkn->type = type;
-	return (tkn);
-}
-
-void	free_token(void *tkn)
-{
-	t_token	*ptkn;
-
-	ptkn = (t_token *) tkn;
-	if (ptkn->type == T_WORD)
-		free(ptkn->val);
-	free(ptkn);
+	(void)argc;
+	(void)argv;
+	while (env != NULL)
+	{
+		printf("%s=%s\n", ((t_var *)env->content)->name,
+			((t_var *)env->content)->value);
+		env = env->next;
+	}
+	return (1);
 }

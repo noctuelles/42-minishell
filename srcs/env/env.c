@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/03/04 17:42:21 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/13 14:21:03 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "libft.h"
-#include <stdlib.h> 
+#include "env.h"
 
 static char	*fill_envp_str(char **str, t_var var)
 {
@@ -68,4 +66,25 @@ char	**export_env(t_dlist *lst)
 	}
 	envp[i] = NULL;
 	return (envp);
+}
+
+void	refill_env(t_dlist **env)
+{
+	char	*pwd;
+	t_var	var;
+
+	if (get_var(*env, "PWD") == NULL)
+	{
+		pwd = calloc(sizeof(char), 1000);
+		pwd = getcwd(pwd, 1000);
+		if (!pwd)
+		{
+			perror("get working directory error");
+			return ;
+		}
+		var.name = "PWD";
+		var.value = pwd;
+		var.inherit = FALSE;
+		add_var(env, var);
+	}
 }

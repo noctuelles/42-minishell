@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_mem_utils.c                                  :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 16:21:27 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/02/27 14:05:23 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/13 13:26:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "builtins.h"
 
-t_token	*new_token(char *val, size_t len, t_token_type type)
+int	ft_unset(int argc, char **argv, t_dlist *env)
 {
-	t_token	*tkn;
+	int	i;
 
-	tkn = (t_token *) malloc(sizeof(t_token));
-	if (!tkn)
-		return (NULL);
-	tkn->val = val;
-	tkn->len = len;
-	tkn->type = type;
-	return (tkn);
-}
-
-void	free_token(void *tkn)
-{
-	t_token	*ptkn;
-
-	ptkn = (t_token *) tkn;
-	if (ptkn->type == T_WORD)
-		free(ptkn->val);
-	free(ptkn);
+	if (argc < 2)
+	{
+		printf(UNSET_NOT_ENOUGH, argv[0]);
+		return (1);
+	}
+	i = 0;
+	while (++i < argc)
+	{
+		if (get_var(env, argv[i]) != NULL)
+			del_var(&env, argv[i]);
+	}
+	return (0);
 }

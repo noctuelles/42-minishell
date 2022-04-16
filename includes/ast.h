@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:38:21 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/15 16:20:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,13 @@
 
 #include "libft.h"
 #include <stdbool.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+# include <stdio.h>
+# include <sys/wait.h>
 
 typedef enum	s_node_type
 {

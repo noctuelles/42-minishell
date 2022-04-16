@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:56:38 by plouvel          ###   ########.fr       */
+/*   Created: 2022/04/15 16:20:24 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/15 16:20:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "libft.h"
 # include <stdbool.h>
+# include <stdlib.h>
+# include <unistd.h>
+
+# include "libft.h"
 
 /*******************************************************************************
  *                                  Macros                                     *
@@ -61,6 +64,7 @@ typedef enum e_token_type
 
 typedef enum e_errcode
 {
+
 	ERR_NO,
 	ERR_MEM,
 	ERR_QUOTE,
@@ -101,7 +105,7 @@ void	free_token(void *tkn);
 /* lexer_utils.c */
 
 t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
-															t_token_type type);
+			t_token_type type);
 t_token	set_token(t_token *tkn, char *val, size_t len,
 			t_token_type type);
 t_token	search_existing_token(const char *str);

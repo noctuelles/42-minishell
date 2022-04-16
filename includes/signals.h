@@ -1,36 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_mem_utils.c                                  :+:      :+:    :+:   */
+/*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 16:21:27 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/04/13 13:32:11 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/13 14:19:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
-t_token	*new_token(char *val, size_t len, t_token_type type)
-{
-	t_token	*tkn;
+void	set_signals_as_prompt(void);
+void	set_signals_as_here_doc(void);
+void	set_signals_as_parent(void);
 
-	tkn = (t_token *) malloc(sizeof(t_token));
-	if (!tkn)
-		return (NULL);
-	tkn->val = val;
-	tkn->len = len;
-	tkn->type = type;
-	return (tkn);
-}
-
-void	free_token(void *tkn)
-{
-	t_token	*ptkn;
-
-	ptkn = (t_token *) tkn;
-	if (ptkn->type == T_WORD)
-		free(ptkn->val);
-	free(ptkn);
-}
+#endif

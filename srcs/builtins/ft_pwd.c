@@ -1,36 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_mem_utils.c                                  :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 16:21:27 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/02/27 14:19:13 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/13 13:27:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "builtins.h"
 
-t_token	*new_token(char *val, size_t len, t_token_type type)
+int	ft_pwd(int argc, char **argv, t_dlist *env)
 {
-	t_token	*tkn;
-
-	tkn = (t_token *) malloc(sizeof(t_token));
-	if (!tkn)
-		return (NULL);
-	tkn->val = val;
-	tkn->len = len;
-	tkn->type = type;
-	return (tkn);
-}
-
-void	free_token(void *tkn)
-{
-	t_token	*ptkn;
-
-	ptkn = (t_token *) tkn;
-	if (ptkn->type == T_WORD)
-		free(ptkn->val);
-	free(ptkn);
+	(void)argc;
+	(void)argv;
+	printf("%s\n", get_var(env, "PWD")->value);
+	return (0);
 }

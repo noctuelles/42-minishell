@@ -1,0 +1,6 @@
+*.o
+*.out
+.vscode
+bug.save
+minishell
+objs
