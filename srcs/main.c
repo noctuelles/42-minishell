@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 14:44:44 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 14:56:03 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*build_prompt_prefix(const char *user, const char *pwd)
 		return (NULL);
 	prompt[0] = '\0';
 	ft_strcat(prompt, user);
-	prompt[user_len] = '@';
+	prompt[user_len - 1] = '@';
 	ft_strcat(prompt, pwd);
 	ft_strcat(prompt, STR_PROMPT_ARROW);
 	return (prompt);
@@ -143,7 +143,7 @@ char	*read_from_user(t_dlist **vars, t_minishell minishell)
 
 	set_signals_as_prompt();
 	if (refill_env(vars) != 0)
-		return (NULL);
+		ft_exit(1, NULL, minishell, 0);
 	if (isatty(STDIN_FILENO) == 1)
 		str = prompt_and_read(*vars);
 	else
