@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:24:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 16:24:43 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 		ast_tree_delete_node(root);
 		return (cancel_everything(minishell.save_stdin, first));
 	}
-	forking = !(first->next == NULL && is_builtin(first->name));
+	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	//ast_tree_delete_node(root);
 	if (forking)
 		set_signals_as_parent();
