@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:13:40 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 14:25:36 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct s_var
 	char	*value;
 	size_t	name_len;
 	size_t	value_len;
-	t_bool	inherit;
 }	t_var;
 
 typedef struct s_minishell
@@ -37,7 +36,7 @@ typedef struct s_minishell
 }	t_minishell;
 
 t_var	*get_var(t_dlist *lst_var, char *name);
-t_dlist	*add_var(t_dlist **lst_var, t_var add_var);
+t_dlist	*add_var(t_dlist **lst_var, char *name, char *value);
 void	del_var(t_dlist **lst_var, char *name);
 void	free_var(void *dlst_content);
 t_dlist	*import_var(t_dlist **lst_var, char **envp);
@@ -46,6 +45,6 @@ char	**export_env(t_dlist *lst);
 t_dlist	*import_one_var(t_dlist **lst_var, char *value);
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name);
 void	free_env(t_dlist *env);
-void	refill_env(t_dlist **env);
+int	refill_env(t_dlist **env);
 
 #endif

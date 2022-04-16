@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:23:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 14:44:44 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "minishell.h"
 #include "get_next_line.h"
 #include "signals.h"
+#include "ft_dprintf.h"
 
 void	free_cmd(t_command *cmd)
 {
@@ -85,6 +86,25 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 	return (end_pipeline(minishell.save_stdin, status));
 }
 
+char	*build_prompt_prefix(const char *user, const char *pwd)
+{
+	char	*prompt;
+	size_t	user_len;
+	size_t	pwd_len;
+
+	user_len = ft_strlen(user);
+	pwd_len = ft_strlen(pwd);
+	prompt = malloc((user_len + pwd_len + 5) * sizeof(char));
+	if (!prompt)
+		return (NULL);
+	prompt[0] = '\0';
+	ft_strcat(prompt, user);
+	prompt[user_len] = '@';
+	ft_strcat(prompt, pwd);
+	ft_strcat(prompt, STR_PROMPT_ARROW);
+	return (prompt);
+}
+
 char	*prompt_and_read(t_dlist *vars)
 {
 	char	*user;
@@ -93,40 +113,51 @@ char	*prompt_and_read(t_dlist *vars)
 	char	*str;
 
 	if (get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
-		return (readline("Minishell > "));
+		return (readline(STR_STD_PROMPT));
 	user = get_var(vars, "USER")->value;
 	pwd = get_var(vars, "PWD")->value;
-	prompt = malloc(sizeof(char) * (
-				ft_strlen(user) + ft_strlen(pwd) + 6));
+	prompt = build_prompt_prefix(user, pwd);
 	if (!prompt)
 		return (NULL);
-	prompt[0] = '\0';
-	strcat(prompt, user);
-	strcat(prompt, "@");
-	strcat(prompt, pwd);
-	strcat(prompt, " > ");
 	str = readline(prompt);
 	free(prompt);
 	return (str);
 }
 
-char	*before_read(t_dlist **vars, t_minishell minishell)
+void	*display_error(void)
+{
+	ft_dprintf(STDERR_FILENO, STR_ERROR, strerror(errno));
+	return (NULL);
+}
+
+void	*display_error_more(const char *fcnt_name)
+{
+	ft_dprintf(STDERR_FILENO, STR_ERROR_M, fcnt_name, strerror(errno));
+	return (NULL);
+}
+
+char	*read_from_user(t_dlist **vars, t_minishell minishell)
 {
 	char	*str;
+	char	*pnw;
 
 	set_signals_as_prompt();
-	refill_env(vars);
-	if (isatty(0) == 1)
+	if (refill_env(vars) != 0)
+		return (NULL);
+	if (isatty(STDIN_FILENO) == 1)
 		str = prompt_and_read(*vars);
 	else
 	{
-		str = get_next_line(0);
-		if (str && strchr(str, '\n') != NULL)
-			*strchr(str, '\n') = 0;
+		str = get_next_line(STDIN_FILENO);
+		if (str)
+		{
+			pnw = ft_strchr(str, '\n');
+			if (pnw)
+				*pnw = '\0';
+		}
 	}
 	if (str == NULL)
 		ft_exit(1, NULL, minishell, 0);
-	refill_env(vars);
 	return (str);
 }
 
@@ -140,6 +171,8 @@ void	start_exec(t_minishell *minishell, t_ast_tree_node	*root)
 			parse_and_or(root, minishell);
 	}
 }
+
+#include <assert.h>
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -156,13 +189,16 @@ int	main(int argc, char **argv, char **envp)
 	minishell.vars = vars;
 	while (1)
 	{
-		str = before_read(&vars, minishell);
-		if (strcmp(str, "") == 0)
-			continue ;
-		add_history(str);
-		root = parse_from_str(str);
-		if (root)
-			start_exec(&minishell, root);
+		str = read_from_user(&vars, minishell);
+		if (str)
+		{
+			if (str[0] == '\0')
+				continue ;
+			add_history(str);
+			root = parse_from_str(str);
+			if (root)
+				start_exec(&minishell, root);
+		}
 	}
 	return (0);
 }
