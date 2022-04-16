@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 19:20:25 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 15:39:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 16:37:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ void	free_arg(void *parg)
 	t_arg	*arg;
 
 	arg = (t_arg *) parg;
+	if (arg->quote_lst)
+		ft_lstclear(&arg->quote_lst, NULL);
+	if (arg->rem_quote_lst)
+		ft_lstclear(&arg->rem_quote_lst, NULL);
+	if (arg->wldc_lst)
+		ft_lstclear(&arg->wldc_lst, NULL);
 	free(arg->value);
 	free(arg);
 }
