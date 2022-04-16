@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:20:31 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:23:56 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	count_arg(t_arg *node, int *arg_count)
 {
 	if (node->type == ARG_WORD)
 	{
+		printf("%s is a word\n", node->value);
 		(*arg_count)++;
 	}
 }
@@ -92,6 +93,7 @@ void	add_io(t_arg *node, t_command *command)
 {
 	if (node->type == ARG_REDIRECT_STDIN)
 	{
+		printf("%s is a stdin redirect\n", node->value);
 		ft_dlstadd_back(&(command->io_in), ft_dlstnew(node));
 		if(command->here_doc > 0)
 		{
@@ -100,7 +102,10 @@ void	add_io(t_arg *node, t_command *command)
 		}
 	}
 	if(node->type == ARG_REDIRECT_FILE || node->type == ARG_REDIRECT_FILE_APPEND)
+	{
+		printf("%s is a stdout redirect\n", node->value);
 		ft_dlstadd_back(&(command->io_out), ft_dlstnew(node));
+	}
 }
 
 int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
@@ -149,7 +154,7 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 void	here_doc_logic(t_arg *node, t_command *command)
 {
 	int		pipefd[2];
-
+	printf("%s is a here_doc redirect\n", node->value);
 	if (pipe(pipefd) < 0)
 	{
 		printf(PIPE_ERROR);
