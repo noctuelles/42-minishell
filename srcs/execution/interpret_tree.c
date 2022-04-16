@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:39:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:54:50 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,10 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 	t_command	*command;
 
 	command = calloc(sizeof(t_command), 1);
+	command->io_in = NULL;
+	command->io_out = NULL;
+	command->here_doc = -1;
+	command->empty_command = 0;
 	if(node->args != NULL)
 	{
 		command->is_piped = piped;
@@ -187,15 +191,13 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 			fprintf(stderr, COMMAND_NOT_FOUND, ((t_arg *)node->args->content)->value);
 			return (command);
 		}
-		command->io_in = NULL;
-		command->io_out = NULL;
-		command->here_doc = -1;
 		*arg_count = 1;
 		if (node->args->next != NULL)
 			parse_list(node->args->next, command, arg_count);
 	}
 	else
 	{
+		command->empty_command = 1;
 		command->name = NULL;
 	}
 	return (command);
@@ -249,7 +251,7 @@ t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 
 	(void)vars;
 	first = NULL;
-	//apply_expansion_on_node(root, vars);
+	apply_expansion_on_node(root, vars);
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false, vars);

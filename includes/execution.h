@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:13:28 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:53:59 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_command
 	int					io_out_fd;
 	bool				is_piped;
 	pid_t				pid;
+	int					empty_command;
 	struct s_command	*next;
 }	t_command;
 
