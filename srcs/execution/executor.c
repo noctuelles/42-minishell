@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:25:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:11:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,12 @@ void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 	}
 }
 
-void	file_error(t_command *command, int *error, int type)
-{
-	int	err;
-
-	if (error != NULL)
-		*error = 1;
-	err = 0;
-	if (type == 1)
-		err = command->in_errno;
-	if (type == 2)
-		err = command->out_errno;
-	fprintf(stderr, ERROR_ERRNO, command->in_name, strerror(err));
-}
-
 void	close_all_error(t_command *command, int code)
 {
-	if (command->io_in_redirect > 0)
-		close(command->io_in_redirect);
-	if (command->io_out_redirect > 0)
-		close(command->io_out_redirect);
+	if (command->io_in_fd > 0)
+		close(command->io_in_fd);
+	if (command->io_out_fd > 0)
+		close(command->io_out_fd);
 	exit(code);
 }
 
@@ -67,19 +53,13 @@ void	dup_for_redirections(t_command *command, int pid)
 	error = 0;
 	if (pid == 0)
 	{
-		if (command->io_in_redirect != -1)
+		if (command->io_in_fd != -1)
 		{
-			if (command->io_in_redirect == -2)
-				file_error(command, &error, 1);
-			else
-				dup_and_close(command->io_in_redirect, 0);
+			dup_and_close(command->io_in_fd, 0);
 		}
-		if (command->io_out_redirect != -1)
+		if (command->io_out_fd != -1)
 		{
-			if (command->io_out_redirect == -2)
-				file_error(command, &error, 2);
-			else
-				dup_and_close(command->io_out_redirect, 1);
+			dup_and_close(command->io_out_fd, 1);
 		}
 		if (error)
 			close_all_error(command, -1);
@@ -107,7 +87,7 @@ void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 
 void	executing(t_command *command, t_minishell minishell, int save_stdin)
 {
-	if (!is_builtin(command->original_name))
+	if (!is_builtin(command->args[0]))
 	{
 		execve(command->name, command->args, export_env(minishell.vars));
 		perror(EXECUTION_ERROR);
@@ -124,16 +104,11 @@ int	simple_builtin(t_command *command, t_minishell minishell, int save_stdin)
 	int	ret;
 
 	save_stdout = -1;
-	if (command->io_out_redirect != -1)
+	if (command->io_out_fd != -1)
 	{
-		if (command->io_out_redirect == -2)
-			file_error(command, NULL, 2);
-		else
-		{
 			save_stdout = dup(1);
-			dup2(command->io_out_redirect, 1);
-			close(command->io_out_redirect);
-		}
+			dup2(command->io_out_fd, 1);
+			close(command->io_out_fd);
 	}
 	ret = exec_builtin(command, minishell, save_stdin, 0);
 	dup2(save_stdout, 1);
@@ -149,6 +124,8 @@ int	execute_file(t_command *command, t_minishell minishell,
 	t_dlist	*vars;
 
 	vars = minishell.vars;
+	if(!prepare_fd(command))
+		return (1);
 	if (command->name != NULL)
 	{
 		if (forking)

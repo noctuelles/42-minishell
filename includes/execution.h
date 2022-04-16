@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:24:06 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:13:28 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,13 @@ extern int	g_sigint;
 typedef struct s_command
 {
 	char				*name;
-	char				*original_name;
 	char				**args;
-	int					in_errno;
-	char				*in_name;
-	int					io_in_redirect;
-	int					out_errno;
-	char				*out_name;
-	int					io_out_redirect;
+	int					here_doc;
+	t_dlist				*io_in;
+	t_dlist				*io_out;
+	int					io_in_fd;
+	int					io_out_fd;
 	bool				is_piped;
-	bool				error;
 	pid_t				pid;
 	struct s_command	*next;
 }	t_command;
@@ -78,5 +75,6 @@ void		parse_and_or(t_ast_tree_node *node, t_minishell *minishell);
 int			execute_pipeline(t_ast_tree_node *root, t_minishell minishell);
 int			execute_file(t_command *command, t_minishell minishell,
 				int forking, int save_stdin);
+int			prepare_fd(t_command *command);
 
 #endif

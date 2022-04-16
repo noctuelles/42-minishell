@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:23:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:12:03 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 
 void	free_cmd(t_command *cmd)
 {
-	int	i;
+	//int	i;
 
-	if (cmd->name != cmd->original_name)
+	/*if (cmd->name != cmd->original_name)
 	{
 		free(cmd->name);
 		free(cmd->original_name);
@@ -45,7 +45,7 @@ void	free_cmd(t_command *cmd)
 	if (cmd->io_in_redirect > 0)
 		close(cmd->io_in_redirect);
 	if (cmd->io_out_redirect > 0)
-		close(cmd->io_out_redirect);
+		close(cmd->io_out_redirect);*/
 	free(cmd);
 }
 
@@ -74,7 +74,6 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 		return (cancel_everything(minishell.save_stdin, first));
 	}
 	forking = !(first->next == NULL && is_builtin(first->name));
-	replace_by_path(first, minishell.vars);
 	ast_tree_delete_node(root);
 	if (forking)
 		set_signals_as_parent();

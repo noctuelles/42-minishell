@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:53:29 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 15:20:31 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,65 +15,95 @@
 
 extern int	g_sigint;
 
+char	*create_path(char *path, char *command_name)
+{
+	char	*exec_path;
+
+	exec_path = malloc(sizeof(char)
+			* (strlen(path) + strlen(command_name) + 2));
+	exec_path[0] = '\0';
+	strcat(exec_path, path);
+	strcat(exec_path, "/");
+	strcat(exec_path, command_name);
+	return (exec_path);
+}
+
+void	not_found(char **exec_path)
+{
+	free(*exec_path);
+	*exec_path = NULL;
+}
+
+char	*get_path_from_env(char *command_name, t_dlist *vars)
+{
+	char	*path;
+	char	*cpy;
+	int		found;
+	char	*exec_path;
+
+	found = 0;
+	exec_path = NULL;
+	if (get_var(vars, "PATH") != NULL)
+	{
+		cpy = strdup(get_var(vars, "PATH")->value);
+		path = cpy;
+		while (ft_strtrunc(&path, ':'))
+		{
+			if (!found)
+			{
+				exec_path = create_path(path, command_name);
+				if (access(exec_path, F_OK) == 0)
+					found = 1;
+				else
+					not_found(&exec_path);
+			}
+		}
+		free(cpy);
+	}
+	return (exec_path);
+}
+
+char 	*get_path_from_name(char *name, t_dlist *vars)
+{
+	if (strchr(name, '/') == NULL)
+	{
+		if (!is_builtin(name))
+			return(get_path_from_env(name, vars));
+		else
+			return (name);
+	}
+	else
+	{
+		if (access(name, F_OK))
+			return (name);
+		return (NULL);
+	}
+}
+
 void	count_arg(t_arg *node, int *arg_count)
 {
 	if (node->type == ARG_WORD)
+	{
 		(*arg_count)++;
-}
-
-void	set_io_stdin(t_arg *node, t_command *command)
-{
-	if (node->type == ARG_REDIRECT_STDIN && !command->error)
-	{
-		if (command->io_in_redirect > 0)
-			close(command->io_in_redirect);
-		command->io_in_redirect = open(node->value, O_RDONLY);
-		if (command->io_in_redirect < 0)
-		{
-			command->io_in_redirect = -2;
-			command->in_errno = errno;
-			command->error = true;
-		}
-		command->in_name = node->value;
 	}
 }
 
-void	set_io_stdout(t_arg *node, t_command *command)
+void	add_io(t_arg *node, t_command *command)
 {
-	if (node->type == ARG_REDIRECT_FILE && !command->error)
+	if (node->type == ARG_REDIRECT_STDIN)
 	{
-		if (command->io_out_redirect > 0)
-			close(command->io_out_redirect);
-		command->io_out_redirect = open(node->value, O_WRONLY | O_CREAT, 0644);
-		if (command->io_out_redirect < 0)
+		ft_dlstadd_back(&(command->io_in), ft_dlstnew(node));
+		if(command->here_doc > 0)
 		{
-			command->io_out_redirect = -2;
-			command->out_errno = errno;
-			command->error = true;
+			close(command->here_doc);
+			command->here_doc = -1;
 		}
-		command->out_name = node->value;
 	}
+	if(node->type == ARG_REDIRECT_FILE || node->type == ARG_REDIRECT_FILE_APPEND)
+		ft_dlstadd_back(&(command->io_out), ft_dlstnew(node));
 }
 
-void	set_io_stdout_append(t_arg *node, t_command *command)
-{
-	if (node->type == ARG_REDIRECT_FILE_APPEND && !command->error)
-	{
-		if (command->io_out_redirect > 0)
-			close(command->io_out_redirect);
-		command->io_out_redirect = open(node->value,
-				O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (command->io_out_redirect < 0)
-		{
-			command->io_out_redirect = -2;
-			command->out_errno = errno;
-			command->error = true;
-		}
-		command->out_name = node->value;
-	}
-}
-
-int	treat_line(char *line, t_arg *node, int pipefd[2])
+int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
 {
 	if (strcmp(line, node->value) != 0)
 	{
@@ -82,7 +112,10 @@ int	treat_line(char *line, t_arg *node, int pipefd[2])
 		return (0);
 	}
 	else
+	{
+		command->here_doc = pipefd[0];
 		return (1);
+	}
 }
 
 void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
@@ -96,7 +129,7 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 		line = readline("> ");
 		if (line != NULL)
 		{
-			if (treat_line(line, node, pipefd))
+			if (treat_line(line, node, pipefd, command))
 				break ;
 			count++;
 		}
@@ -104,7 +137,6 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 		{
 			if (g_sigint)
 			{
-				command->error = true;
 				printf("\n");
 				break ;
 			}
@@ -118,8 +150,6 @@ void	here_doc_logic(t_arg *node, t_command *command)
 {
 	int		pipefd[2];
 
-	if (command->io_in_redirect > 0)
-		close(command->io_in_redirect);
 	if (pipe(pipefd) < 0)
 	{
 		printf(PIPE_ERROR);
@@ -129,57 +159,69 @@ void	here_doc_logic(t_arg *node, t_command *command)
 	here_doc_read(node, pipefd, command);
 	set_signals_as_prompt();
 	close(pipefd[1]);
-	command->io_in_redirect = pipefd[0];
+	command->here_doc = pipefd[0];
 }
 
 void	parse_list(t_dlist *node, t_command *command, int *arg_count)
 {
 	count_arg(node->content, arg_count);
-	set_io_stdin(node->content, command);
-	set_io_stdout(node->content, command);
-	set_io_stdout_append(node->content, command);
+	add_io(node->content, command);
 	if (((t_arg *)node->content)->type == ARG_REDIRECT_HERE_DOC)
 		here_doc_logic(node->content, command);
-	if (node->next != NULL)
+	if (node->next != NULL && !g_sigint)
 		parse_list(node->next, command, arg_count);
 }
 
-t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count)
+t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_dlist *vars)
 {
 	t_command	*command;
 
 	command = calloc(sizeof(t_command), 1);
-	command->is_piped = piped;
-	command->name = strdup(((t_arg *)node->args->content)->value);
-	command->original_name = NULL;
-	command->io_in_redirect = -1;
-	command->io_out_redirect = -1;
-	command->error = false;
-	*arg_count = 0;
-	if (node->args->next != NULL)
-		parse_list(node->args->next, command, arg_count);
+	if(node->args != NULL)
+	{
+		command->is_piped = piped;
+		command->name = get_path_from_name(((t_arg *)node->args->content)->value, vars);
+		if(!command->name)
+		{
+			fprintf(stderr, COMMAND_NOT_FOUND, ((t_arg *)node->args->content)->value);
+			return (command);
+		}
+		command->io_in = NULL;
+		command->io_out = NULL;
+		command->here_doc = -1;
+		*arg_count = 1;
+		if (node->args->next != NULL)
+			parse_list(node->args->next, command, arg_count);
+	}
+	else
+	{
+		command->name = NULL;
+	}
 	return (command);
 }
 
-t_command	*parse_command(t_ast_tree_node *node, bool piped)
+t_command	*parse_command(t_ast_tree_node *node, bool piped, t_dlist *vars)
 {
 	t_command	*command;
 	int			args_count;
 	t_dlist		*elem;
 	int			i;
 
-	command = prepare_command(piped, node, &args_count);
-	command->args = calloc(sizeof(char *), args_count + 1);
-	elem = node->args;
-	i = 0;
-	while(elem)
+	command = prepare_command(piped, node, &args_count, vars);
+	if(command->name != NULL && !g_sigint)
 	{
-		if(((t_arg *)elem->content)->type == ARG_WORD)
+		command->args = calloc(sizeof(char *), args_count + 1);
+		elem = node->args;
+		i = 0;
+		while(elem)
 		{
-			command->args[i] = strdup(((t_arg *)elem->content)->value);
-			i++;
+			if(((t_arg *)elem->content)->type == ARG_WORD)
+			{
+				command->args[i] = strdup(((t_arg *)elem->content)->value);
+				i++;
+			}
+			elem = elem->next;
 		}
-		elem = elem->next;
 	}
 	command->next = NULL;
 	return (command);
@@ -207,19 +249,19 @@ t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
 	(void)vars;
 	first = NULL;
 	apply_expansion_on_node(root, vars);
-	// Expansion on the current node
 	if (root->type == NODE_COMMAND)
 	{
-		first = parse_command(root, false);
+		first = parse_command(root, false, vars);
 	}
 	else
 	{
-		while (root->type == NODE_PIPE)
+		while (root->type == NODE_PIPE && !g_sigint)
 		{
-			add_command(parse_command(root->left, true), &first);
+			add_command(parse_command(root->left, true, vars), &first);
 			root = root->right;
 		}
-		add_command(parse_command(root, false), &first);
+		if(!g_sigint)
+			add_command(parse_command(root, false, vars), &first);
 	}
 	return (first);
 }
