@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 19:20:25 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:51:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 02:21:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ t_arg	*new_arg(char *value, t_token_type token_type, bool dup)
 		free(arg);
 		return (NULL);
 	}
+	arg->quote = '\0';
 	arg->type = arg_type;
 	arg->value = arg_value;
 	return (arg);

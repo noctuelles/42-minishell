@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 17:34:49 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 01:56:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/16 02:23:07 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
 	{
 		if (arg->value[i] == SQUOTE || arg->value[i] == DQUOTE)
 			update_quote(&arg->value[i], &arg->quote);
-		else if (arg->value[i] != SQUOTE && arg->value[i] == '$')
+		else if (arg->quote != SQUOTE && arg->value[i] == '$')
 		{
 			i = include_variable(arg, get_var_info(&arg->value[i + 1],
 					env_var));
