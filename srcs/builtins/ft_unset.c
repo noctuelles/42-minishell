@@ -6,13 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 14:05:23 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:26:49 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:24:43 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-int	ft_unset(int argc, char **argv, t_dlist *env)
+int	ft_unset(int argc, char **argv, t_minishell *minishell)
 {
 	int	i;
 
@@ -24,8 +24,8 @@ int	ft_unset(int argc, char **argv, t_dlist *env)
 	i = 0;
 	while (++i < argc)
 	{
-		if (get_var(env, argv[i]) != NULL)
-			del_var(&env, argv[i]);
+		if (get_var(minishell->vars, argv[i]) != NULL)
+			del_var(&(minishell->vars), argv[i]);
 	}
 	return (0);
 }

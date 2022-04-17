@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 14:13:40 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:33:14 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 # include "libft.h"
 
+# include "ast.h"
+
 typedef struct s_var
 {
 	char	*name;
@@ -31,9 +33,10 @@ typedef struct s_var
 
 typedef struct s_minishell
 {
-	t_dlist	*vars;
-	int		last_ret;
-	int		save_stdin;
+	t_dlist			*vars;
+	int				last_ret;
+	int				save_stdin;
+	t_ast_tree_node	*root;
 }	t_minishell;
 
 t_var	*get_var(t_dlist *lst_var, char *name);

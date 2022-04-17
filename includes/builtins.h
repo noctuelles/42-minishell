@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:14:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 16:53:09 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:20:35 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ absolute path>\n"
 # define UNSET_NOT_ENOUGH "Minishell: %s: not enough arguments\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"
 
-int		ft_cd(int argc, char **argv, t_dlist *env);
-int		ft_echo(int argc, char **argv, t_dlist *env);
-int		ft_env(int argc, char **argv, t_dlist *env);
-int		ft_export(int argc, char **argv, t_dlist *env);
-int		ft_pwd(int argc, char **argv, t_dlist *env);
-int		ft_unset(int argc, char **argv, t_dlist *env);
-int		ft_exit(int argc, char **argv, t_minishell minishell, int save_stdin);
+int		ft_cd(int argc, char **argv, t_minishell *minishell);
+int		ft_echo(int argc, char **argv, t_minishell *minishell);
+int		ft_env(int argc, char **argv, t_minishell *minishell);
+int		ft_export(int argc, char **argv, t_minishell *minishell);
+int		ft_pwd(int argc, char **argv, t_minishell *minishell);
+int		ft_unset(int argc, char **argv, t_minishell *minishell);
+int		ft_exit(int argc, char **argv, t_minishell *minishell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:17:43 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 13:21:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:23:32 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ int	is_option_string(char *str)
 	return (1);
 }
 
-int	ft_echo(int argc, char **argv, t_dlist *env)
+int	ft_echo(int argc, char **argv, t_minishell *minishell)
 {
 	int	is_option;
 	int	i;
 
-	(void) env;
+	(void) minishell;
 	is_option = 0;
 	if (argc > 1 && is_option_string(argv[1]))
 	{

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:53:59 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:35:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,19 @@ typedef struct s_command
 
 void		add_command_to_args(t_command *command);
 char		*ft_strtrunc(char **str, const char delim);
-t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars);
-void		replace_by_path(t_command *command, t_dlist *vars);
-int			execute_file(t_command *command, t_minishell minishell,
-				int forking, int save_stdin);
+t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell);
+void		replace_by_path(t_command *command, t_minishell *minishell);
 int			is_builtin(char *str);
-int			exec_builtin(t_command *command, t_minishell minishell,
-				int save_stdin, int forking);
+int			exec_builtin(t_command *command, t_minishell *minishell, int forking);
 void		free_cmd(t_command *cmd);
-int			cancel_everything(int save_stdin, t_command *cmd);
+int			cancel_everything(t_minishell *minishell, t_command *cmd);
 int			treat_return_code(t_command **cmd, int ret, int *status,
 				int *last_pid);
 int			wait_for_result(int count, int last_pid, int status);
-int			end_pipeline(int save_stdin, int status);
+int			end_pipeline(t_minishell *minishell, int status);
 void		parse_and_or(t_ast_tree_node *node, t_minishell *minishell);
-int			execute_pipeline(t_ast_tree_node *root, t_minishell minishell);
-int			execute_file(t_command *command, t_minishell minishell,
-				int forking, int save_stdin);
+int			execute_pipeline(t_ast_tree_node *root, t_minishell *minishell);
+int			execute_file(t_command *command, t_minishell *minishell, int forking);
 int			prepare_fd(t_command *command);
 
 #endif

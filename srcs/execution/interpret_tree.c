@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 16:27:34 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:42:52 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	not_found(char **exec_path)
 	*exec_path = NULL;
 }
 
-char	*get_path_from_env(char *command_name, t_dlist *vars)
+char	*get_path_from_env(char *command_name, t_minishell *minishell)
 {
 	char	*path;
 	char	*cpy;
@@ -43,9 +43,9 @@ char	*get_path_from_env(char *command_name, t_dlist *vars)
 
 	found = 0;
 	exec_path = NULL;
-	if (get_var(vars, "PATH") != NULL)
+	if (get_var(minishell->vars, "PATH") != NULL)
 	{
-		cpy = strdup(get_var(vars, "PATH")->value);
+		cpy = strdup(get_var(minishell->vars, "PATH")->value);
 		path = cpy;
 		while (ft_strtrunc(&path, ':'))
 		{
@@ -63,12 +63,12 @@ char	*get_path_from_env(char *command_name, t_dlist *vars)
 	return (exec_path);
 }
 
-char 	*get_path_from_name(char *name, t_dlist *vars)
+char 	*get_path_from_name(char *name, t_minishell *minishell)
 {
 	if (strchr(name, '/') == NULL)
 	{
 		if (!is_builtin(name))
-			return(get_path_from_env(name, vars));
+			return(get_path_from_env(name, minishell));
 		else
 			return (name);
 	}
@@ -175,7 +175,7 @@ void	parse_list(t_dlist *node, t_command *command, int *arg_count)
 		parse_list(node->next, command, arg_count);
 }
 
-t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_dlist *vars)
+t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_minishell *minishell)
 {
 	t_command	*command;
 
@@ -187,7 +187,7 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 	if(node->args != NULL)
 	{
 		command->is_piped = piped;
-		command->name = get_path_from_name(((t_arg *)node->args->content)->value, vars);
+		command->name = get_path_from_name(((t_arg *)node->args->content)->value, minishell);
 		if(!command->name)
 		{
 			fprintf(stderr, COMMAND_NOT_FOUND, ((t_arg *)node->args->content)->value);
@@ -205,14 +205,14 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 	return (command);
 }
 
-t_command	*parse_command(t_ast_tree_node *node, bool piped, t_dlist *vars)
+t_command	*parse_command(t_ast_tree_node *node, bool piped, t_minishell *minishell)
 {
 	t_command	*command;
 	int			args_count;
 	t_dlist		*elem;
 	int			i;
 
-	command = prepare_command(piped, node, &args_count, vars);
+	command = prepare_command(piped, node, &args_count, minishell);
 	if(command->name != NULL && !g_sigint)
 	{
 		command->args = calloc(sizeof(char *), args_count + 1);
@@ -247,26 +247,26 @@ void	add_command(t_command *cmd, t_command **lst)
 	}
 }
 
-t_command	*parse_commands(t_ast_tree_node *root, t_dlist *vars)
+t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 {
 	t_command	*first;
 
-	(void)vars;
+	(void)minishell->vars;
 	first = NULL;
-	apply_expansion_on_node(root, vars);
+	apply_expansion_on_node(root, minishell->vars);
 	if (root->type == NODE_COMMAND)
 	{
-		first = parse_command(root, false, vars);
+		first = parse_command(root, false, minishell);
 	}
 	else
 	{
 		while (root->type == NODE_PIPE && !g_sigint)
 		{
-			add_command(parse_command(root->left, true, vars), &first);
+			add_command(parse_command(root->left, true, minishell), &first);
 			root = root->right;
 		}
 		if(!g_sigint)
-			add_command(parse_command(root, false, vars), &first);
+			add_command(parse_command(root, false, minishell), &first);
 	}
 	return (first);
 }
@@ -279,7 +279,7 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 		|| node->left->type == NODE_LOGICAL_OR)
 		parse_and_or(node->left, minishell);
 	else if (node->left->type == NODE_COMMAND || node->left->type == NODE_PIPE)
-		minishell->last_ret = execute_pipeline(node->left, *minishell);
+		minishell->last_ret = execute_pipeline(node->left, minishell);
 	node->left = NULL;
 	if ((minishell->last_ret == 0 && node->type == NODE_LOGICAL_AND)
 		|| (minishell->last_ret != 0 && node->type == NODE_LOGICAL_OR))
@@ -289,7 +289,7 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 			parse_and_or(node->right, minishell);
 		else if (node->right->type == NODE_COMMAND
 			|| node->right->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(node->right, *minishell);
+			minishell->last_ret = execute_pipeline(node->right, minishell);
 		node->right = NULL;
 	}
 	ast_tree_delete_node(node);

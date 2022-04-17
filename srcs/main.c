@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 16:31:16 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:21:09 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	init_variable(int *forking, int *count, int *status, int *last_pid)
 	*last_pid = 0;
 }
 
-int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
+int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 {
 	int			forking;
 	int			count;
@@ -61,31 +61,31 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell minishell)
 	t_command	*first;
 
 	init_variable(&forking, &count, &status, &last_pid);
-	minishell.save_stdin = dup(0);
-	first = parse_commands(root, minishell.vars);
+	minishell->save_stdin = dup(0);
+	first = parse_commands(root, minishell);
 	if (g_sigint)
 	{
 		ast_tree_delete_node(root);
-		return (cancel_everything(minishell.save_stdin, first));
+		return (cancel_everything(minishell, first));
 	}
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
-	//ast_tree_delete_node(root);
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
-		count += treat_return_code(&first, execute_file(first, minishell,
-					forking, minishell.save_stdin), &status, &last_pid);
+		count += treat_return_code(&first, execute_file(first, minishell, forking), &status, &last_pid);
 	status = wait_for_result(count, last_pid, status);
-	return (end_pipeline(minishell.save_stdin, status));
+	return (end_pipeline(minishell, status));
 }
 
-char	*prompt_and_read(t_dlist *vars)
+char	*prompt_and_read(t_minishell *minishell)
 {
 	char	*user;
 	char	*pwd;
 	char	*prompt;
 	char	*str;
+	t_dlist	*vars;
 
+	vars = minishell->vars;
 	if (get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
 		return (readline("Minishell > "));
 	user = get_var(vars, "USER")->value;
@@ -104,14 +104,14 @@ char	*prompt_and_read(t_dlist *vars)
 	return (str);
 }
 
-char	*before_read(t_dlist **vars, t_minishell minishell)
+char	*before_read(t_dlist **vars, t_minishell *minishell)
 {
 	char	*str;
 
 	set_signals_as_prompt();
 	refill_env(vars);
 	if (isatty(0) == 1)
-		str = prompt_and_read(*vars);
+		str = prompt_and_read(minishell);
 	else
 	{
 		str = get_next_line(0);
@@ -119,7 +119,7 @@ char	*before_read(t_dlist **vars, t_minishell minishell)
 			*strchr(str, '\n') = 0;
 	}
 	if (str == NULL)
-		ft_exit(1, NULL, minishell, 0);
+		ft_exit(1, NULL, minishell);
 	refill_env(vars);
 	return (str);
 }
@@ -129,7 +129,7 @@ void	start_exec(t_minishell *minishell, t_ast_tree_node	*root)
 	if (root != NULL)
 	{
 		if (root->type == NODE_COMMAND || root->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(root, *minishell);
+			minishell->last_ret = execute_pipeline(root, minishell);
 		else
 			parse_and_or(root, minishell);
 	}
@@ -150,7 +150,7 @@ int	main(int argc, char **argv, char **envp)
 	minishell.vars = vars;
 	while (1)
 	{
-		str = before_read(&vars, minishell);
+		str = before_read(&vars, &minishell);
 		if (strcmp(str, "") == 0)
 			continue ;
 		add_history(str);

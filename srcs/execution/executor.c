@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:57:23 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:38:21 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,20 +85,22 @@ void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 		command->pid = *pid;
 }
 
-void	executing(t_command *command, t_minishell minishell, int save_stdin)
+void	executing(t_command *command, t_minishell *minishell)
 {
 	if (!is_builtin(command->args[0]))
 	{
-		execve(command->name, command->args, export_env(minishell.vars));
+		execve(command->name, command->args, export_env(minishell->vars));
 		perror(EXECUTION_ERROR);
 		close_all_error(command, errno);
 	}
 	else
-		exit(exec_builtin(command,
-				minishell, save_stdin, 1));
+	{
+		minishell->last_ret = 1;
+		exit(exec_builtin(command, minishell, 1));
+	}
 }
 
-int	simple_builtin(t_command *command, t_minishell minishell, int save_stdin)
+int	simple_builtin(t_command *command, t_minishell *minishell)
 {
 	int	save_stdout;
 	int	ret;
@@ -110,20 +112,19 @@ int	simple_builtin(t_command *command, t_minishell minishell, int save_stdin)
 			dup2(command->io_out_fd, 1);
 			close(command->io_out_fd);
 	}
-	ret = exec_builtin(command, minishell, save_stdin, 0);
+	ret = exec_builtin(command, minishell, 0);
 	dup2(save_stdout, 1);
 	close(save_stdout);
 	return (ret);
 }
 
-int	execute_file(t_command *command, t_minishell minishell,
-	int forking, int save_stdin)
+int	execute_file(t_command *command, t_minishell *minishell, int forking)
 {
 	pid_t	pid;
 	int		pipefd[2];
 	t_dlist	*vars;
 
-	vars = minishell.vars;
+	vars = minishell->vars;
 	if(!prepare_fd(command))
 		return (1);
 	if (command->name != NULL)
@@ -133,14 +134,14 @@ int	execute_file(t_command *command, t_minishell minishell,
 			pipe_and_fork(pipefd, command, &pid);
 			if (pid == 0)
 			{
-				executing(command, minishell, save_stdin);
+				executing(command, minishell);
 				return (1);
 			}
 			else
 				return (4242);
 		}
 		else
-			return (simple_builtin(command, minishell, save_stdin));
+			return (simple_builtin(command, minishell));
 	}
 	else
 	{

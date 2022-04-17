@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/13 16:51:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:40:11 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,23 @@ int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 	return (count);
 }
 
-int	end_pipeline(int save_stdin, int status)
+int	end_pipeline(t_minishell *minishell, int status)
 {
 	set_signals_as_prompt();
 	g_sigint = 0;
 	close(0);
-	dup2(save_stdin, 0);
-	close(save_stdin);
+	dup2(minishell->save_stdin, 0);
+	close(minishell->save_stdin);
 	return (status);
 }
 
-int	cancel_everything(int save_stdin, t_command *cmd)
+int	cancel_everything(t_minishell *minishell, t_command *cmd)
 {
 	t_command	*tmp;
 
 	g_sigint = 0;
-	dup2(save_stdin, 0);
-	close(save_stdin);
+	dup2(minishell->save_stdin, 0);
+	close(minishell->save_stdin);
 	while (cmd)
 	{
 		tmp = cmd->next;
