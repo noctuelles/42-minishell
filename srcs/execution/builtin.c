@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:36:17 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:40:08 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,6 @@ int	is_builtin(char *str)
 	if (strcmp(str, "exit") == 0)
 		return (1);
 	return (0);
-}
-
-void	free_all(t_command *cmd, t_minishell *minishell)
-{
-	t_command	*tmp;
-
-	free_env(minishell->vars);
-	while (cmd)
-	{
-		tmp = cmd->next;
-		free_cmd(cmd);
-		cmd = tmp;
-	}
 }
 
 int	execute_basic(char *str, int count, char **argv, t_minishell *minishell)
@@ -84,6 +71,10 @@ int	exec_builtin(t_command *command, t_minishell *minishell, int forking)
 		ft_exit(count, argv, minishell);
 	}
 	if (forking)
-		free_all(command, minishell);
+	{
+		free_env(minishell->vars);
+		free_command_pipeline(minishell->current_pipeline_first);
+		ast_tree_delete_node(minishell->root);
+	}
 	return (res);
 }

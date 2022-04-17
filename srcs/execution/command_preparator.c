@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/16 15:42:13 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:49:29 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ int	prepare_fd(t_command *command)
 	command->io_in_fd = -1;
 	command->io_out_fd = -1;
 	if(command->here_doc > 0)
+	{
 		command->io_in_fd = command->here_doc;
+		command->here_doc = -1;
+	}
 	else
 	{
 		elem = command->io_in;

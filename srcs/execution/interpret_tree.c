@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:57:07 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:30:57 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,15 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 	return (exec_path);
 }
 
-char 	*get_path_from_name(char *name, t_minishell *minishell)
+char 	*get_path_from_name(char *name, t_minishell *minishell, t_command *command)
 {
 	if (strchr(name, '/') == NULL)
 	{
 		if (!is_builtin(name))
+		{
+			command->is_name_malloc = 1;
 			return(get_path_from_env(name, minishell));
+		}
 		else
 			return (name);
 	}
@@ -184,10 +187,11 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 	command->io_out = NULL;
 	command->here_doc = -1;
 	command->empty_command = 0;
+	command->is_name_malloc = 0;
 	if(node->args != NULL)
 	{
 		command->is_piped = piped;
-		command->name = get_path_from_name(((t_arg *)node->args->content)->value, minishell);
+		command->name = get_path_from_name(((t_arg *)node->args->content)->value, minishell, command);
 		if(!command->name)
 		{
 			fprintf(stderr, COMMAND_NOT_FOUND, ((t_arg *)node->args->content)->value);
@@ -222,7 +226,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped, t_minishell *minishe
 		{
 			if(((t_arg *)elem->content)->type == ARG_WORD)
 			{
-				command->args[i] = strdup(((t_arg *)elem->content)->value);
+				command->args[i] = ((t_arg *)elem->content)->value;
 				i++;
 			}
 			elem = elem->next;
@@ -279,7 +283,7 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 		|| node->left->type == NODE_LOGICAL_OR)
 		parse_and_or(node->left, minishell);
 	else if (node->left->type == NODE_COMMAND || node->left->type == NODE_PIPE)
-		minishell->last_ret = execute_pipeline(node->left, minishell);
+		minishell->last_ret = execute_pipeline(node->left, minishell) % 256;
 	node->left = NULL;
 	if ((minishell->last_ret == 0 && node->type == NODE_LOGICAL_AND)
 		|| (minishell->last_ret != 0 && node->type == NODE_LOGICAL_OR))
@@ -289,8 +293,7 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 			parse_and_or(node->right, minishell);
 		else if (node->right->type == NODE_COMMAND
 			|| node->right->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(node->right, minishell);
+			minishell->last_ret = execute_pipeline(node->right, minishell) % 256;
 		node->right = NULL;
 	}
-	ast_tree_delete_node(node);
 }

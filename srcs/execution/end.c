@@ -6,11 +6,42 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:40:11 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:49:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
+void	free_cmd(t_command *cmd)
+{
+	if(cmd->name && cmd->is_name_malloc)
+		free(cmd->name);
+	free(cmd->args);
+	if (cmd->io_in_fd > 0)
+		close(cmd->io_in_fd);
+	if (cmd->io_out_fd > 0)
+		close(cmd->io_out_fd);
+	if(cmd->here_doc > 0)
+		close(cmd->here_doc);
+	free(cmd);
+}
+
+void	free_command_pipeline(t_command *first)
+{
+	t_command *tmp;
+
+	while(first != NULL)
+	{
+		tmp = first->next;
+		free_cmd(first);
+		first = tmp;
+	}
+}
+
+void	free_for_end(t_minishell *minishell)
+{
+	(void)minishell;
+}
 
 void	treat_result(int pid, int wait_status, int *pipeline_result,
 	int last_pid)
@@ -72,17 +103,11 @@ int	end_pipeline(t_minishell *minishell, int status)
 
 int	cancel_everything(t_minishell *minishell, t_command *cmd)
 {
-	t_command	*tmp;
-
+	set_signals_as_prompt();
 	g_sigint = 0;
 	dup2(minishell->save_stdin, 0);
 	close(minishell->save_stdin);
-	while (cmd)
-	{
-		tmp = cmd->next;
-		free_cmd(cmd);
-		cmd = tmp;
-	}
+	free_command_pipeline(cmd);
 	return (130);
 }
 

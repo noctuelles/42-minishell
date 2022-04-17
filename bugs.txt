@@ -1,0 +1,3 @@
+cd .. | echo a     -->     double free
+cd awdwa | ls      -->     open fd
+echo a && echo b   -->     leaks

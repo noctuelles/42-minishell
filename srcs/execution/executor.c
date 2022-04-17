@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:38:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 17:00:07 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	close_all_error(t_command *command, int code)
 void	dup_and_close(int fd1, int fd2)
 {
 	dup2(fd1, fd2);
-	close(fd1);
+	if(fd1 > 0)
+		close(fd1);
 }
 
 void	dup_for_redirections(t_command *command, int pid)
@@ -114,7 +115,8 @@ int	simple_builtin(t_command *command, t_minishell *minishell)
 	}
 	ret = exec_builtin(command, minishell, 0);
 	dup2(save_stdout, 1);
-	close(save_stdout);
+	if(save_stdout > 0)
+		close(save_stdout);
 	return (ret);
 }
 
@@ -147,9 +149,10 @@ int	execute_file(t_command *command, t_minishell *minishell, int forking)
 	{
 		if(forking)
 		{
-			pipe_and_fork(pipefd, command, &pid);
-			if(pid == 0)
-				exit(1);
+			pipe(pipefd);
+			dup2(pipefd[0], 0);
+			close(pipefd[0]);
+			close(pipefd[1]);
 		}
 		if(command->empty_command)
 			return (1);

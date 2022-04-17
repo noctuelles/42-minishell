@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 14:57:32 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:37:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ t_dlist	*import_in_env(t_dlist **lst_var, t_var var)
 	}
 	else
 	{
+		free(get_var(*lst_var, var.name)->value);
 		get_var(*lst_var, var.name)->value = strdup(var.value);
 		get_var(*lst_var, var.name)->value_len = strlen(var.value);
 	}

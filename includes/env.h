@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 15:03:56 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:28:06 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_minishell
 	int				last_ret;
 	int				save_stdin;
 	t_ast_tree_node	*root;
+	void			*current_pipeline_first;
 }	t_minishell;
 
 t_var	*get_var(t_dlist *lst_var, char *name);

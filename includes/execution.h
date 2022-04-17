@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:35:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:29:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include "builtins.h"
 # include "parser.h"
 
+
 # define COMMAND_NOT_FOUND "Minishell: %s: command not found\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"
 # define PIPE_ERROR "Minishell: Pipe error occured\n"
@@ -45,6 +46,7 @@ extern int	g_sigint;
 typedef struct s_command
 {
 	char				*name;
+	int					is_name_malloc;
 	char				**args;
 	int					here_doc;
 	t_dlist				*io_in;
@@ -73,5 +75,6 @@ void		parse_and_or(t_ast_tree_node *node, t_minishell *minishell);
 int			execute_pipeline(t_ast_tree_node *root, t_minishell *minishell);
 int			execute_file(t_command *command, t_minishell *minishell, int forking);
 int			prepare_fd(t_command *command);
+void	free_command_pipeline(t_command *first);
 
 #endif

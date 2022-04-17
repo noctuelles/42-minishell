@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 15:00:58 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 16:47:30 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,6 @@
 #include "get_next_line.h"
 #include "signals.h"
 #include "ft_dprintf.h"
-
-void	free_cmd(t_command *cmd)
-{
-	int	i;
-
-	if (cmd->name )
-		free(cmd->name);
-	i = -1;
-	if (cmd->args)
-	{
-		while (cmd->args[++i])
-			free(cmd->args[i]);
-	}
-	free(cmd->args);
-	if (cmd->io_in_fd > 0)
-		close(cmd->io_in_fd);
-	if (cmd->io_out_fd > 0)
-		close(cmd->io_out_fd);
-	free(cmd);
-}
 
 void	init_variable(int *forking, int *count, int *status, int *last_pid)
 {
@@ -64,17 +44,16 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	init_variable(&forking, &count, &status, &last_pid);
 	minishell->save_stdin = dup(0);
 	first = parse_commands(root, minishell);
+	minishell->current_pipeline_first = first;
 	if (g_sigint)
-	{
-		ast_tree_delete_node(root);
 		return (cancel_everything(minishell, first));
-	}
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
 		count += treat_return_code(&first, execute_file(first, minishell, forking), &status, &last_pid);
 	status = wait_for_result(count, last_pid, status);
+	free_command_pipeline(first);
 	return (end_pipeline(minishell, status));
 }
 
@@ -153,24 +132,19 @@ char	*read_from_user(t_minishell *minishell)
 	return (str);
 }
 
-void	start_exec(t_minishell *minishell, t_ast_tree_node	*root)
+void	start_exec(t_minishell *minishell)
 {
-	if (root != NULL)
-	{
-		if (root->type == NODE_COMMAND || root->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(root, minishell);
-		else
-			parse_and_or(root, minishell);
-	}
+	if (minishell->root->type == NODE_COMMAND || minishell->root->type == NODE_PIPE)
+		minishell->last_ret = execute_pipeline(minishell->root, minishell);
+	else
+		parse_and_or(minishell->root, minishell);
+	ast_tree_delete_node(minishell->root);
 }
-
-#include <assert.h>
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_dlist			*vars;
 	char			*str;
-	t_ast_tree_node	*root;
 	t_minishell		minishell;
 
 	(void)argc;
@@ -187,9 +161,10 @@ int	main(int argc, char **argv, char **envp)
 			if (str[0] == '\0')
 				continue ;
 			add_history(str);
-			root = parse_from_str(str);
-			if (root)
-				start_exec(&minishell, root);
+			minishell.root = parse_from_str(str);
+			free(str);
+			if (minishell.root)
+				start_exec(&minishell);
 		}
 	}
 	return (0);
