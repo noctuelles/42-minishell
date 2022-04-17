@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 14:31:34 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:57:32 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,29 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-t_dlist	*add_var(t_dlist **lst_var, t_var add_var)
+t_dlist	*add_var(t_dlist **lst_var, char *name, char *value)
 {
 	t_var	*var;
 	t_dlist	*elem;
 
-	var = (t_var *) malloc(sizeof(t_var));
+	var = (t_var *) ft_calloc(1, sizeof(t_var));
 	if (!var)
 		return (NULL);
+	var->name = ft_strdup(name);
+	var->value = ft_strdup(value);
+	if (!var->name || !var->value)
+	{
+		free_var(var);
+		return (NULL);
+	}
+	var->name_len = ft_strlen(name);
+	var->value_len = ft_strlen(value);
 	elem = ft_dlstnew(var);
 	if (!elem)
 	{
-		free(var);
+		free_var(var);
 		return (NULL);
 	}
-	var->name = strdup(add_var.name);
-	var->name_len = ft_strlen(add_var.name);
-	var->value = strdup(add_var.value);
-	var->value_len = ft_strlen(add_var.value);
-	var->inherit = add_var.inherit;
-	elem->content = (void *) var;
 	ft_dlstadd_back(lst_var, elem);
 	return (*lst_var);
 }
@@ -99,8 +102,7 @@ t_dlist	*import_var(t_dlist **lst_var, char **envp)
 			}
 			j++;
 		}
-		var.inherit = TRUE;
-		if (!add_var(lst_var, var))
+		if (!add_var(lst_var, var.name, var.value))
 			return (NULL);
 		i++;
 	}
@@ -124,10 +126,9 @@ bool	is_valid_variable_name(char *str)
 
 t_dlist	*import_in_env(t_dlist **lst_var, t_var var)
 {
-	var.inherit = FALSE;
 	if (get_var(*lst_var, var.name) == NULL)
 	{
-		if (!add_var(lst_var, var))
+		if (!add_var(lst_var, var.name, var.value))
 			return (NULL);
 	}
 	else
@@ -162,18 +163,6 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 		return (*lst_var);
 	}
 	return (import_in_env(lst_var, var));
-}
-
-t_dlist	*import_empty_var(t_dlist **lst_var, char *name)
-{
-	t_var	var;
-
-	var.name = name;
-	var.value = "";
-	var.inherit = FALSE;
-	if (!add_var(lst_var, var))
-		return (NULL);
-	return (*lst_var);
 }
 
 /* get_var() returns a pointer to a shell variable, searching by it's name.

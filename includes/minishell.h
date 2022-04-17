@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 14:43:49 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:56:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,22 @@
 # define WHT "\e[0;37m"
 # define RST "\e[0m"
 
-
+# define STR_PROMPT_ARROW       " > "
+# define STR_STD_PROMPT          "minishell" STR_PROMPT_ARROW
 # define STR_PARSE_ERROR        "minishell : %s: near token '%s'.\n"
 # define STR_ERROR              "minishell : %s.\n"
 # define STR_ERROR_M            "minishell : %s: %s.\n"
 # define STR_MALLOC             "malloc"
 # define STR_OPENDIR            "opendir"
 # define STR_READDIR            "readdir"
+# define STR_GETCWD             "readdir"
 # define CURRENT_DIR            "."
 
 # define ENO                    0
 
 # define STR_BUILTIN_EXPORT     "export"
+
+void	*display_error_more(const char *fcnt_name);
 
 /* io_utils.c */
 

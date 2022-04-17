@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   args.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 19:20:25 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 15:39:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/17 14:57:15 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ t_arg	*new_arg(char *value, t_token_type token_type, bool dup)
 		free(arg);
 		return (NULL);
 	}
+	arg->quote = '\0';
 	arg->type = arg_type;
 	arg->value = arg_value;
 	return (arg);

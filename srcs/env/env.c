@@ -6,11 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:21:03 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/16 14:31:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "minishell.h"
+#include <errno.h>
 
 static char	*fill_envp_str(char **str, t_var var)
 {
@@ -68,23 +70,53 @@ char	**export_env(t_dlist *lst)
 	return (envp);
 }
 
-void	refill_env(t_dlist **env)
+static int	get_current_working_dir(char **cwd)
 {
-	char	*pwd;
-	t_var	var;
+	size_t	buff_size;
 
+	buff_size = 100;
+	*cwd = (char *) malloc(buff_size * sizeof(char));
+	if (!*cwd)
+		return (-1);
+	*cwd = getcwd(*cwd, buff_size);
+	while (*cwd == NULL)
+	{
+		free(cwd);
+		if (errno == ERANGE)
+		{
+			buff_size *= 2;
+			*cwd = (char *) malloc(buff_size * sizeof(char));
+			if (!cwd)
+				return (-1);
+		}
+		else
+			return (-2);
+		*cwd = getcwd(*cwd, buff_size);
+	}
+	return (0);
+}
+
+int	refill_env(t_dlist **env)
+{
+	int		retcode;
+	char	*cwd;
+
+	retcode = 0;
 	if (get_var(*env, "PWD") == NULL)
 	{
-		pwd = calloc(sizeof(char), 1000);
-		pwd = getcwd(pwd, 1000);
-		if (!pwd)
+		retcode = get_current_working_dir(&cwd);
+		if (retcode == 0)
 		{
-			perror("get working directory error");
-			return ;
+			if (!add_var(env, "PWD", cwd))
+			{
+				free(cwd);
+				retcode = -1;
+			}
 		}
-		var.name = "PWD";
-		var.value = pwd;
-		var.inherit = FALSE;
-		add_var(env, var);
 	}
+	if (retcode == -1)
+		display_error_more(STR_MALLOC);
+	else if (retcode == -2)
+		display_error_more(STR_GETCWD);
+	return (retcode);
 }

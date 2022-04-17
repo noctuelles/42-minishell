@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:24:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 14:56:32 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	ft_export(int argc, char **argv, t_minishell *minishell)
 		else
 		{
 			if (get_var(env, argv[i]) == NULL)
-				import_empty_var(&env, argv[i]);
+				add_var(&env, argv[i], "");
 		}
 	}
 	return (0);
