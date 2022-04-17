@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 10:45:16 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 22:08:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,15 @@ void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 		new_prefix = (char *) malloc((ft_strlen(prefix) + 8 + 1) * sizeof(char));
 		new_prefix[0] = '\0';
 		ft_strcat(new_prefix, prefix);
+		if (*prefix != '\0')
+			free(prefix);
 		if (is_left)
 			ft_strcat(new_prefix, "|    ");
 		else
 			ft_strcat(new_prefix, "     ");
 		ast_print_tree(new_prefix, node->left, true);
 		ast_print_tree(new_prefix, node->right, false);
+		free(new_prefix);
 	}
 }
 
