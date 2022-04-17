@@ -1,4 +1,8 @@
-cd .. | echo a     -->     double free
-cd awdwa | ls      -->     open fd
-echo a && echo b   -->     leaks
-ls | exit 1 | cat  -->     leaks
+cd .. | echo a     							-->     double free
+cd awdwa | ls      							-->     open fd
+echo a && echo b   							-->     leaks
+ls | exit 1 | cat  							-->     leaks
+rm current dir + unset PWD					-->	    free invalid pointer
+Minishell: ./minishell: command not found   -->	    ???
+exit 12										-->     exit with 127]
+cat << eof1 << eof2 << eof3 -e > f1 > f2    -->	    ou sont les fichiers ?
