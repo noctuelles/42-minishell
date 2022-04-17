@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 14:31:34 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/17 15:03:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	**export_env(t_dlist *lst)
 	return (envp);
 }
 
-static int	get_current_working_dir(char **cwd)
+int	get_current_working_dir(char **cwd)
 {
 	size_t	buff_size;
 

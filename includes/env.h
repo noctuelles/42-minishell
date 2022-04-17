@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:56:17 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 15:03:56 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value);
 t_dlist	*import_empty_var(t_dlist **lst_var, char *name);
 void	free_env(t_dlist *env);
 int	refill_env(t_dlist **env);
+int	get_current_working_dir(char **cwd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:23:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/17 15:03:41 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ int	ft_cd(int argc, char **argv, t_minishell *minishell)
 	if (chdir(argv[1]) == 0)
 	{
 		old_pwd = get_var(env, "PWD")->value;
-		pwd = calloc(sizeof(char), 1000);
-		pwd = getcwd(pwd, 1000);
-		if (!pwd)
+		if (get_current_working_dir(&pwd) != 0)
 		{
 			printf(ERROR_ERRNO, argv[0], strerror(errno));
 			return (1);
