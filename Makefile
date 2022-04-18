@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/18 13:18:15 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/18 13:51:52 by plouvel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ################################################################################
 
 NAME		= 	minishell
-CC			= 	cc
+CC			= 	clang
 CFLAGS		=	
 LFLAGS		=	-lreadline
 
@@ -147,7 +147,7 @@ endif
 ifeq (noflag, $(filter noflag,$(MAKECMDGOALS)))
 	CFLAGS	+=	-Wall -Wextra
 else
-	CFLAGS	+=	-Wall -Wextra -Werror -g3
+	CFLAGS	+=	-Wall -Wextra -Werror -g3 -fsanitize=address
 endif
 ifeq (debug, $(filter debug,$(MAKECMDGOALS)))
 	CFLAGS	+=	-g3

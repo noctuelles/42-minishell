@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 10:10:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:01:47 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_var
 typedef struct s_minishell
 {
 	char			*cmd_str;
+	int				err;
 	t_dlist			*vars;
 	int				last_ret;
 	int				save_stdin;

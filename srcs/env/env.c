@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 10:03:28 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 13:53:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	get_current_working_dir(char **cwd)
 	*cwd = getcwd(*cwd, buff_size);
 	while (*cwd == NULL)
 	{
-		free(cwd);
+		free(*cwd);
 		if (errno == ERANGE)
 		{
 			buff_size *= 2;

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 17:00:07 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:37:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,7 @@ int	execute_file(t_command *command, t_minishell *minishell, int forking)
 {
 	pid_t	pid;
 	int		pipefd[2];
-	t_dlist	*vars;
 
-	vars = minishell->vars;
 	if(!prepare_fd(command))
 		return (1);
 	if (command->name != NULL)

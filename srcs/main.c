@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 10:30:34 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:08:16 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ char	*read_from_user(t_minishell *minishell)
 	char	*pnw;
 
 	set_signals_as_prompt();
-	if (refill_env(&(minishell->vars)) != 0)
+	if (refill_env(&minishell->vars) != 0)
 		ft_exit(1, NULL, minishell);
 	if (isatty(STDIN_FILENO) == 1)
 		str = prompt_and_read(minishell->vars);

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 10:30:01 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 13:57:47 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define STR_MALLOC             "malloc"
 # define STR_OPENDIR            "opendir"
 # define STR_READDIR            "readdir"
-# define STR_GETCWD             "readdir"
+# define STR_GETCWD             "getcwd"
 # define CURRENT_DIR            "."
 # define STR_ENV_WARNING        STR_SHELL_NAME ": warning: you seems to have \
 launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
