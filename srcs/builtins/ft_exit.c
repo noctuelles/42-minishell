@@ -6,18 +6,21 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:56:15 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 18:15:11 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-int	end_program(t_minishell *minishell)
+int	end_program(t_minishell *minishell, int exit_code)
 {
 	clean_everything(minishell);
 	close(minishell->save_stdin);
 	close(0);
-	exit(minishell->last_ret);
+	if(exit_code < 0)
+		exit(minishell->last_ret);
+	else
+		exit(exit_code);
 	return (1);
 }
 
@@ -26,7 +29,7 @@ void	init(int argc, t_minishell *minishell)
 	if (isatty(0) == 1)
 		fprintf(stderr, "exit\n");
 	if (argc == 1)
-		end_program(minishell);
+		end_program(minishell, -1);
 }
 
 void	check_long(char **argv, t_minishell *minishell)
@@ -36,14 +39,14 @@ void	check_long(char **argv, t_minishell *minishell)
 	{
 		fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		minishell->last_ret = 2;
-		end_program(minishell);
+		end_program(minishell, -1);
 	}
 	if (argv[1][0] != '-' && (strcmp(argv[1], "9223372036854775807") > 0
 		|| strlen(argv[1]) > 19))
 	{
 		fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		minishell->last_ret = 2;
-		end_program(minishell);
+		end_program(minishell, -1);
 	}
 }
 
@@ -63,6 +66,7 @@ int	ft_exit(int argc, char **argv, t_minishell *minishell)
 	i = -1;
 	if (argv[1][i + 1] == '-')
 		i++;
+	exit_code = 0;
 	while (argv[1][++i])
 	{
 		if (argv[1][i] >= '0' && argv[1][i] <= '9')
@@ -76,5 +80,5 @@ int	ft_exit(int argc, char **argv, t_minishell *minishell)
 		return (1);
 	}
 	check_long(argv, minishell);
-	return (end_program(minishell));
+	return (end_program(minishell, exit_code));
 }
