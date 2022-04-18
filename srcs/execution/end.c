@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:59:37 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 17:21:51 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	free_cmd(t_command *cmd)
 		close(cmd->io_out_fd);
 	if(cmd->here_doc > 0)
 		close(cmd->here_doc);
+	ft_dlstclear(&(cmd->io_in), NULL);
+	ft_dlstclear(&(cmd->io_out), NULL);
 	free(cmd);
 }
 
