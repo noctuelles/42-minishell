@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:54:02 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 10:22:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:41:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,21 @@ t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
 	return (root);
 }
 
-static void iter_args(void *parg)
+void	ast_tree_delete_node(void *node)
+{
+	t_ast_tree_node	*tree_node;
+
+	tree_node = (t_ast_tree_node *) node;
+	if (tree_node->left != NULL)
+		ast_tree_delete_node(tree_node->left);
+	if (tree_node->right != NULL)
+		ast_tree_delete_node(tree_node->right);
+	if (tree_node->args != NULL)
+		ft_dlstclear(&tree_node->args, free_arg);
+	free(tree_node);
+}
+
+/*static void iter_args(void *parg)
 {
 	t_arg	*arg;
 
@@ -54,8 +68,9 @@ static void iter_args(void *parg)
 	if (arg->type == ARG_REDIRECT_HERE_DOC)
 		fputs("'<<' ", stdout); 
 	printf("\"%s\"   ", arg->value);
-}
+}*/
 
+/*
 void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 {
 	char	*new_prefix;
@@ -92,17 +107,4 @@ void	ast_print_tree(char *prefix, t_ast_tree_node *node, bool is_left)
 		ast_print_tree(new_prefix, node->right, false);
 	}
 }
-
-void	ast_tree_delete_node(void *node)
-{
-	t_ast_tree_node	*tree_node;
-
-	tree_node = (t_ast_tree_node *) node;
-	if (tree_node->left != NULL)
-		ast_tree_delete_node(tree_node->left);
-	if (tree_node->right != NULL)
-		ast_tree_delete_node(tree_node->right);
-	if (tree_node->args != NULL)
-		ft_dlstclear(&tree_node->args, free_arg);
-	free(tree_node);
-}
+*/

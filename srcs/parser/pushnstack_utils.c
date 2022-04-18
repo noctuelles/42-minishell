@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 03:40:06 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 04:05:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:43:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool	is_top_an_operator(t_parser parser)
 	else
 		return (false);
 }
+
 bool	check_opening_prt(t_parser *parser)
 {
 	if (parser->op_stack.top == NULL)
