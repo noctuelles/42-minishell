@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/17 15:01:53 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/18 13:18:15 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ SRCS			=	main.c \
 						stack.c \
 						pipeline.c \
 						pushnstack.c \
+						pushnstack_utils.c \
 						node_expansion.c \
 						simple_command.c) \
 					$(addprefix utils/, \
