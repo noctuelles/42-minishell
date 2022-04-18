@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 10:21:58 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:20:07 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 /* iter() iterates throught the list tkns, by aplying to each of the element of
  * tkns the function f. */
 
-static t_dlist	*iter(t_dlist **args, t_dlist *env_var, t_dlist *(*f)())
+static t_dlist	*iter(t_dlist **args, t_minishell *minishell, t_dlist *(*f)())
 {
 	t_arg	*arg;
 	t_dlist	*elem;
@@ -30,7 +30,7 @@ static t_dlist	*iter(t_dlist **args, t_dlist *env_var, t_dlist *(*f)())
 	{
 		next = elem->next;
 		arg = (t_arg *) elem->content;
-		elem = f(args, elem, arg, env_var);
+		elem = f(args, elem, arg, minishell);
 		if (elem == NULL && errno != ENO)
 			return (NULL);
 		else if (elem != next)
@@ -40,7 +40,7 @@ static t_dlist	*iter(t_dlist **args, t_dlist *env_var, t_dlist *(*f)())
 }
 
 t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
-		t_dlist *env_var)
+		t_minishell *minishell)
 {
 	t_ast_tree_node	*cmd_node;
 	t_dlist			*new_args;
@@ -48,16 +48,16 @@ t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
 	if (root->type == NODE_PIPE)
 	{
 		cmd_node = root->left;
-		if (!apply_expansion_on_node(root->right, env_var))
+		if (!apply_expansion_on_node(root->right, minishell))
 			return (NULL);
 	}
 	if (root->type == NODE_COMMAND)
 		cmd_node = root;
-	new_args = iter(&cmd_node->args, env_var, var_expansion);
+	new_args = iter(&cmd_node->args, minishell, var_expansion);
 	if (!new_args)
 		return (NULL);
 	cmd_node->args = new_args;
-	new_args = iter(&cmd_node->args, env_var, wildcard_expansion);
+	new_args = iter(&cmd_node->args, minishell, wildcard_expansion);
 	if (!new_args)
 		return (NULL);
 	cmd_node->args = new_args;

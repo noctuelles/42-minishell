@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/18 13:18:15 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/18 15:41:28 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ################################################################################
 
 NAME		= 	minishell
-CC			= 	cc
+CC			= 	clang
 CFLAGS		=	
 LFLAGS		=	-lreadline
 
@@ -30,6 +30,7 @@ VOGSPHERE	=
 SRCS_EXTENSION	=	.c
 SRCS_PATH		=	./srcs
 SRCS			=	main.c \
+					prompt.c \
 					ft_strtrunc.c \
 					signals.c \
 					$(addprefix builtins/, \

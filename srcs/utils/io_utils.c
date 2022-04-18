@@ -6,11 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:19:21 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 03:31:10 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 15:06:05 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "ft_dprintf.h"
 
 char	*get_lexer_error(t_lexer_errcode errcode)
 {
@@ -37,4 +38,16 @@ char	*get_parser_error(t_parser_errcode errcode)
 		return (STR_MALLOC);
 	else
 		return (STR_SYNTAX_ERROR);
+}
+
+void	*display_error(void)
+{
+	ft_dprintf(STDERR_FILENO, STR_ERROR, strerror(errno));
+	return (NULL);
+}
+
+void	*display_error_more(const char *fcnt_name)
+{
+	ft_dprintf(STDERR_FILENO, STR_ERROR_M, fcnt_name, strerror(errno));
+	return (NULL);
 }

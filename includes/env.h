@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 10:10:25 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:41:01 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_var
 	char	*value;
 	size_t	name_len;
 	size_t	value_len;
+	bool	return_value;
 }	t_var;
 
 typedef struct s_minishell

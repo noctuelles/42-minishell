@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Updated: 2022/04/17 22:08:13 by dhubleur         ###   ########.fr       */
-/*   Updated: 2022/04/18 10:21:31 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:38:32 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,15 @@ static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg)
 	}
 }
 
-static void	*print_errmsg(void)
-{
-	ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
-	return (NULL);
-}
-
 t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
-		t_arg *arg, t_dlist *env_var)
+		t_arg *arg, t_minishell *minishell)
 {
 	ssize_t	i;
 	t_dlist	*subargs;
 
 	i = 0;
+	if (arg->value[0] == '$' && arg->value[1] == '\0')
+		return (elem);
 	while (arg->value[i] != '\0')
 	{
 		if (arg->value[i] == SQUOTE || arg->value[i] == DQUOTE)
@@ -66,15 +62,15 @@ t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
 		else if (arg->quote != SQUOTE && arg->value[i] == '$')
 		{
 			i = include_variable(arg, get_var_info(&arg->value[i + 1],
-						env_var));
+						minishell));
 			if (i == -2)
-				return (print_errmsg());
+				return (display_error_more(STR_MALLOC));
 		}
 		i++;
 	}
 	subargs = post_process(args, elem, arg);
 	if (subargs == NULL && errno != ENO)
-		return (print_errmsg());
+		return (display_error_more(STR_MALLOC));
 	else
 		return (subargs);
 }

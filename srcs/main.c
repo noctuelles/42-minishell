@@ -5,25 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:55:33 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
+/*   Updated: 2022/04/18 15:40:03 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "parser.h"
-#include "ast.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
 #include "execution.h"
 #include "minishell.h"
-#include "get_next_line.h"
-#include "signals.h"
 #include "ft_dprintf.h"
+#include <stdlib.h>
+#include <readline/history.h>
+#include <signal.h>
 
 void	init_variable(int *forking, int *count, int *status, int *last_pid)
 {
@@ -56,81 +48,6 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	if(g_sigint)
 		return (pipeline_clean(minishell, 130));
 	return (pipeline_clean(minishell, minishell->last_ret));
-}
-
-char	*build_prompt_prefix(const char *user, const char *pwd)
-{
-	char	*prompt;
-	size_t	user_len;
-	size_t	pwd_len;
-
-	user_len = ft_strlen(user);
-	pwd_len = ft_strlen(pwd);
-	prompt = malloc((user_len + pwd_len + 5) * sizeof(char));
-	if (!prompt)
-		return (NULL);
-	prompt[0] = '\0';
-	ft_strcat(prompt, user);
-	prompt[user_len - 1] = '@';
-	ft_strcat(prompt, pwd);
-	ft_strcat(prompt, STR_PROMPT_ARROW);
-	return (prompt);
-}
-
-char	*prompt_and_read(t_dlist *vars)
-{
-	char	*user;
-	char	*pwd;
-	char	*prompt;
-	char	*str;
-
-	if (get_var(vars, "PWD") == NULL || get_var(vars, "USER") == NULL)
-		return (readline(STR_STD_PROMPT));
-	user = get_var(vars, "USER")->value;
-	pwd = get_var(vars, "PWD")->value;
-	prompt = build_prompt_prefix(user, pwd);
-	if (!prompt)
-		return (NULL);
-	str = readline(prompt);
-	free(prompt);
-	return (str);
-}
-
-void	*display_error(void)
-{
-	ft_dprintf(STDERR_FILENO, STR_ERROR, strerror(errno));
-	return (NULL);
-}
-
-void	*display_error_more(const char *fcnt_name)
-{
-	ft_dprintf(STDERR_FILENO, STR_ERROR_M, fcnt_name, strerror(errno));
-	return (NULL);
-}
-
-char	*read_from_user(t_minishell *minishell)
-{
-	char	*str;
-	char	*pnw;
-
-	set_signals_as_prompt();
-	if (refill_env(&(minishell->vars)) != 0)
-		ft_exit(1, NULL, minishell);
-	if (isatty(STDIN_FILENO) == 1)
-		str = prompt_and_read(minishell->vars);
-	else
-	{
-		str = get_next_line(STDIN_FILENO);
-		if (str)
-		{
-			pnw = ft_strchr(str, '\n');
-			if (pnw)
-				*pnw = '\0';
-		}
-	}
-	if (str == NULL)
-		ft_exit(1, NULL, minishell);
-	return (str);
 }
 
 void	start_exec(t_minishell *minishell)
