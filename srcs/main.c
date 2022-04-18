@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:32:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:55:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	status = wait_for_result(count, last_pid, status);
 	if(g_sigint)
 		return (pipeline_clean(minishell, 130));
-	return (end_pipeline(minishell, minishell->status));
+	return (pipeline_clean(minishell, minishell->last_ret));
 }
 
 char	*build_prompt_prefix(const char *user, const char *pwd)
@@ -140,6 +140,7 @@ void	start_exec(t_minishell *minishell)
 	else
 		parse_and_or(minishell->root, minishell);
 	ast_tree_delete_node(minishell->root);
+	minishell->root = NULL;
 }
 
 void	*setup_minishell(int argc, char **argv, t_minishell *minishell,
@@ -162,6 +163,8 @@ int	main(int argc, char **argv, char **envp)
 
 	if (!setup_minishell(argc, argv, &minishell, envp))
 		return (1);
+	minishell.root = NULL;
+	minishell.current_pipeline_first = NULL;
 	while (1)
 	{
 		minishell.cmd_str = read_from_user(&minishell);
@@ -171,7 +174,7 @@ int	main(int argc, char **argv, char **envp)
 				continue ;
 			add_history(minishell.cmd_str);
 			minishell.root = parse_from_str(minishell.cmd_str);
-			free(minishell.cmd_str);
+			//free(minishell.cmd_str);
 			if (minishell.root)
 				start_exec(&minishell);
 		}

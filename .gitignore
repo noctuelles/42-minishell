@@ -4,3 +4,4 @@
 bug.save
 minishell
 objs
+.ignore_readline

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:37:04 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:56:15 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	end_program(t_minishell *minishell)
 {
-	close(0);
+	clean_everything(minishell);
 	close(minishell->save_stdin);
-	free_env(minishell->vars);
+	close(0);
 	exit(minishell->last_ret);
 	return (1);
 }

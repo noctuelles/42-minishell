@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:14:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:20:35 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:45:02 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ int		ft_export(int argc, char **argv, t_minishell *minishell);
 int		ft_pwd(int argc, char **argv, t_minishell *minishell);
 int		ft_unset(int argc, char **argv, t_minishell *minishell);
 int		ft_exit(int argc, char **argv, t_minishell *minishell);
+void	clean_everything(t_minishell *minishell);
 
 #endif

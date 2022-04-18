@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 13:32:53 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:59:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	pipeline_clean(t_minishell *minishell, int code)
 	g_sigint = 0;
 	dup2(minishell->save_stdin, 0);
 	close(minishell->save_stdin);
-	free_command_pipeline(cmd);
-	return (code)
+	free_command_pipeline(minishell->current_pipeline_first);
+	minishell->current_pipeline_first = NULL;
+	return (code);
 }
