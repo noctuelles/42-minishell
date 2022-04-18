@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 13:57:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:16:07 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,11 @@ size_t	compute_str_size(t_dlist *files);
 /* var_expansion.c */
 
 t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
-		t_arg *arg, t_dlist *env_var);
+		t_arg *arg, t_minishell *minishell);
 
 /* var_expansion_utils.c */
 
-t_var	get_var_info(char *str, t_dlist *env_var);
+t_var	get_var_info(char *str, t_minishell *minishell);
 ssize_t	include_variable(t_arg *arg, t_var var);
 
 /* var_expansion_post.c */

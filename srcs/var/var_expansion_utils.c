@@ -6,17 +6,30 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 14:30:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 14:42:56 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
 
+static t_var	get_return_code(int last_ret)
+{
+	t_var	var;
+
+	var.name_len = 1;
+	var.value = ft_itoa(last_ret);
+	if (!var.value)
+		return (var);
+	var.value_len = ft_strlen(var.value);
+	var.return_value = true;
+	return (var);
+}
+
 /* get_var_info() will read the variable name and return informations if
  * the variable exist in the double linked list env_var. */
 
-t_var	get_var_info(char *str, t_dlist *env_var)
+t_var	get_var_info(char *str, t_minishell *minishell)
 {
 	t_var	*var;
 	t_var	default_var;
@@ -24,11 +37,13 @@ t_var	get_var_info(char *str, t_dlist *env_var)
 	char	temp;
 
 	i = 0;
+	if (*str == '?' && *(str + 1) == '\0')
+		return (get_return_code(minishell->last_ret));
 	while (ft_isalnum(str[i]) || str[i] == '_')
 		i++;
 	temp = str[i];
 	str[i] = '\0';
-	var = get_var(env_var, str);
+	var = get_var(minishell->vars, str);
 	str[i] = temp;
 	if (var)
 		return (*var);
@@ -60,6 +75,8 @@ static ssize_t	copy_var(t_list **quote_lst, char *new_str, t_var var, size_t i)
 		}
 		new_str[i++] = var.value[k++];
 	}
+	if (var.return_value)
+		free(var.value);
 	return (i);
 }
 

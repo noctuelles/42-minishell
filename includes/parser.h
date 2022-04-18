@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 11:05:25 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:33:38 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 14:20:30 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,6 @@ t_arg			*add_arg_to_list(t_parser *parser, t_dlist **args,
 /* node_expansion.c */
 
 t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
-		t_dlist *env_var);
+		t_minishell *minishell);
 
 #endif

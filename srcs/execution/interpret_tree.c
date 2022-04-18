@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:30:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 14:21:13 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 
 	(void)minishell->vars;
 	first = NULL;
-	apply_expansion_on_node(root, minishell->vars);
+	apply_expansion_on_node(root, minishell);
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false, minishell);
