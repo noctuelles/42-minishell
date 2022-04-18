@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:56:32 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 20:16:23 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,24 @@ void	print_string_escape_quote(char *str)
 	free(new_str);
 }
 
+t_dlist	*print_var(t_dlist *env)
+{
+	printf(EXPORT_LIST, ((t_var *)env->content)->name);
+	print_string_escape_quote(((t_var *)env->content)->value);
+	printf("\"\n");
+	return (env->next);
+}
+
 int	ft_export(int argc, char **argv, t_minishell *minishell)
 {
-	int	i;
+	int		i;
 	t_dlist	*env;
 
 	env = minishell->vars;
 	if (argc < 2)
 	{
 		while (env != NULL)
-		{
-			printf(EXPORT_LIST, ((t_var *)env->content)->name);
-			print_string_escape_quote(((t_var *)env->content)->value);
-			printf("\"\n");
-			env = env->next;
-		}
+			env = print_var(env);
 		return (0);
 	}
 	i = 0;

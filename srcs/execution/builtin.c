@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 15:34:31 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 20:17:57 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ int	execute_basic(char *str, int count, char **argv, t_minishell *minishell)
 
 void	clean_everything(t_minishell *minishell)
 {
-	if(minishell->vars)
+	if (minishell->vars)
 		free_env(minishell->vars);
-	if(minishell->current_pipeline_first)
+	if (minishell->current_pipeline_first)
 		free_command_pipeline(minishell->current_pipeline_first);
-	if(minishell->root)
+	if (minishell->root)
 		ast_tree_delete_node(minishell->root);
 	close(minishell->save_stdin);
 }

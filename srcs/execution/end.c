@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 18:03:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 20:18:13 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void	free_cmd(t_command *cmd)
 {
-	if(cmd->name && cmd->is_name_malloc)
+	if (cmd->name && cmd->is_name_malloc)
 		free(cmd->name);
 	free(cmd->args);
 	if (cmd->io_in_fd > 0)
 		close(cmd->io_in_fd);
 	if (cmd->io_out_fd > 0)
 		close(cmd->io_out_fd);
-	if(cmd->here_doc > 0)
+	if (cmd->here_doc > 0)
 		close(cmd->here_doc);
 	ft_dlstclear(&(cmd->io_in), NULL);
 	ft_dlstclear(&(cmd->io_out), NULL);
@@ -30,9 +30,9 @@ void	free_cmd(t_command *cmd)
 
 void	free_command_pipeline(t_command *first)
 {
-	t_command *tmp;
+	t_command	*tmp;
 
-	while(first != NULL)
+	while (first != NULL)
 	{
 		tmp = first->next;
 		free_cmd(first);
