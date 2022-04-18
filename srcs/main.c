@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:47:30 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 10:17:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,28 +141,34 @@ void	start_exec(t_minishell *minishell)
 	ast_tree_delete_node(minishell->root);
 }
 
+void	*setup_minishell(int argc, char **argv, t_minishell *minishell,
+		char **envp)
+{
+	(void) argc;
+	(void) argv;
+	ft_memset(minishell, 0, sizeof(t_minishell));
+	minishell->vars = import_var(&minishell->vars, envp);
+	if (!minishell->vars && errno != 0)
+		return (display_error_more(STR_MALLOC));
+	return (minishell);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_dlist			*vars;
-	char			*str;
 	t_minishell		minishell;
 
-	(void)argc;
-	(void)argv;
-	vars = NULL;
-	vars = import_var(&vars, envp);
-	minishell.last_ret = 0;
-	minishell.vars = vars;
+	if (!setup_minishell(argc, argv, &minishell, envp))
+		return (1);
 	while (1)
 	{
-		str = read_from_user(&minishell);
-		if (str)
+		minishell.cmd_str = read_from_user(&minishell);
+		if (minishell.cmd_str)
 		{
-			if (str[0] == '\0')
+			if (minishell.cmd_str[0] == '\0')
 				continue ;
-			add_history(str);
-			minishell.root = parse_from_str(str);
-			free(str);
+			add_history(minishell.cmd_str);
+			minishell.root = parse_from_str(minishell.cmd_str);
+			free(minishell.cmd_str);
 			if (minishell.root)
 				start_exec(&minishell);
 		}

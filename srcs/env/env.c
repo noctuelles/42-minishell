@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 15:03:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 10:03:28 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	get_current_working_dir(char **cwd)
 		{
 			buff_size *= 2;
 			*cwd = (char *) malloc(buff_size * sizeof(char));
-			if (!cwd)
+			if (!*cwd)
 				return (-1);
 		}
 		else
@@ -108,11 +108,9 @@ int	refill_env(t_dlist **env)
 		if (retcode == 0)
 		{
 			if (!add_var(env, "PWD", cwd))
-			{
-				free(cwd);
 				retcode = -1;
-			}
 		}
+		free(cwd);
 	}
 	if (retcode == -1)
 		display_error_more(STR_MALLOC);
