@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:06:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 15:40:42 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 18:47:30 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,13 @@
 static char	*build_prompt_prefix(const char *user, const char *pwd)
 {
 	char	*prompt;
-	size_t	user_len;
-	size_t	pwd_len;
 
-	user_len = ft_strlen(user);
-	pwd_len = ft_strlen(pwd);
-	prompt = malloc((user_len + pwd_len + 5) * sizeof(char));
+	prompt = malloc((ft_strlen(user) + ft_strlen(pwd) + 5) * sizeof(char));
 	if (!prompt)
 		return (NULL);
 	prompt[0] = '\0';
 	ft_strcat(prompt, user);
-	prompt[user_len - 1] = '@';
+	ft_strcat(prompt, "@");
 	ft_strcat(prompt, pwd);
 	ft_strcat(prompt, STR_PROMPT_ARROW);
 	return (prompt);
