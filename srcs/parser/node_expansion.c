@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 14:20:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:13:16 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,10 @@ t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
 	if (!new_args)
 		return (NULL);
 	cmd_node->args = new_args;
+	if (minishell->ambiguous_redir)
+	{
+		ft_dlstclear(&root->args, free_arg);
+		minishell->ambiguous_redir = false;
+	}
 	return (root);
 }

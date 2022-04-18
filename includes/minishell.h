@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 15:09:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:17:03 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ t_dlist	*insert_list(t_dlist **main_lst, t_dlist *to_insert, t_dlist *elem);
 /* wildcard_expansion.c */
 
 void	print_tokens(void *content);
-t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg);
+t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg,
+		t_minishell *minishell);
 
 /* wildcard_expansion_utils.c */
 

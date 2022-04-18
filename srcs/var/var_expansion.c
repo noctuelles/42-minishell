@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Updated: 2022/04/17 22:08:13 by dhubleur         ###   ########.fr       */
-/*   Updated: 2022/04/18 14:38:32 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:12:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	update_quote(char *str, char *quote)
 		*quote = '\0';
 }
 
-static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg)
+static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg,
+		t_minishell *minishell)
 {
 	t_dlist	*next;
 	t_dlist	*subtkns;
@@ -42,6 +43,12 @@ static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg)
 		subtkns = tokenize_from_arg(arg, arg->value);
 		if (subtkns == NULL)
 			return (NULL);
+		if (ft_dlstsize(subtkns) > 1 && arg->type != ARG_WORD)
+		{
+			ft_dprintf(STDERR_FILENO, STR_ERROR_M, "ambiguous redirect",
+					arg->value);
+			minishell->ambiguous_redir = true;
+		}
 		return (insert_list(args, subtkns, elem));
 	}
 }
@@ -68,7 +75,7 @@ t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
 		}
 		i++;
 	}
-	subargs = post_process(args, elem, arg);
+	subargs = post_process(args, elem, arg, minishell);
 	if (subargs == NULL && errno != ENO)
 		return (display_error_more(STR_MALLOC));
 	else

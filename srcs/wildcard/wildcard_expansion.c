@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 02:44:39 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 18:28:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,11 @@ static bool	check_if_expandable(t_dlist *elem)
 static void	*print_errmsg(int errcode)
 {
 	if (errcode == -1)
-		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_OPENDIR, strerror(errno));
+		display_error_more(STR_OPENDIR);
 	else if (errcode == -2)
-		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_READDIR, strerror(errno));
+		display_error_more(STR_READDIR);
 	else if (errcode == -3)
-		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
+		display_error_more(STR_MALLOC);
 	return (NULL);
 }
 
@@ -102,7 +102,8 @@ static void	*print_errmsg(int errcode)
  * If an allocation error or an I/O error is found, the function returns NULL.
  * Because both cases returns NULL, must check errno. */
 
-t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg)
+t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg,
+		t_minishell *minishell)
 {
 	t_dlist	*files;
 	int		errcode;
@@ -116,5 +117,11 @@ t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg)
 	errcode = scan_current_directory(&files, arg);
 	if (errcode != 0)
 		return (print_errmsg(errcode));
+	if (ft_dlstsize(files) > 1 && arg->type != ARG_WORD)
+	{
+		ft_dprintf(STDERR_FILENO, STR_ERROR_M, "ambiguous redirect",
+				arg->value);
+		minishell->ambiguous_redir = true;
+	}
 	return (insert_list(args, files, elem));
 }
