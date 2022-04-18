@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 15:40:03 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 18:03:14 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	status = wait_for_result(count, last_pid, status);
 	if(g_sigint)
 		return (pipeline_clean(minishell, 130));
-	return (pipeline_clean(minishell, minishell->last_ret));
+	return (pipeline_clean(minishell, status));
 }
 
 void	start_exec(t_minishell *minishell)
@@ -91,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 				continue ;
 			add_history(minishell.cmd_str);
 			minishell.root = parse_from_str(minishell.cmd_str);
-			//free(minishell.cmd_str);
+			free(minishell.cmd_str);
 			if (minishell.root)
 				start_exec(&minishell);
 		}
