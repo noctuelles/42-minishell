@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:49:29 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 15:46:39 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,20 @@ int	prepare_fd(t_command *command)
 			if(!open_in(arg, command))
 				return (0);
 		}
-		elem = command->io_out;
-		if(elem)
+	}
+	elem = command->io_out;
+	if(elem)
+	{
+		arg = elem->content;
+		while(elem->next != NULL)
 		{
-			arg = elem->content;
-			while(elem->next != NULL)
-			{
-				if(!open_out(arg, command))
-					return (0);
-				elem = elem->next;
-				arg = elem->content;
-			}
 			if(!open_out(arg, command))
 				return (0);
+			elem = elem->next;
+			arg = elem->content;
 		}
+		if(!open_out(arg, command))
+			return (0);
 	}
 	return (1);
 }
