@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 10:30:34 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 13:32:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,16 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	first = parse_commands(root, minishell);
 	minishell->current_pipeline_first = first;
 	if (g_sigint)
-		return (cancel_everything(minishell, first));
+		return (pipeline_clean(minishell, 130));
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
 		count += treat_return_code(&first, execute_file(first, minishell, forking), &status, &last_pid);
 	status = wait_for_result(count, last_pid, status);
-	free_command_pipeline(first);
-	return (end_pipeline(minishell, status));
+	if(g_sigint)
+		return (pipeline_clean(minishell, 130));
+	return (end_pipeline(minishell, minishell->status));
 }
 
 char	*build_prompt_prefix(const char *user, const char *pwd)

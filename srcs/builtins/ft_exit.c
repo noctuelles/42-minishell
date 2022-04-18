@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:43:15 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:37:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	check_long(char **argv, t_minishell *minishell)
 void	exit_error(char **argv, t_minishell *minishell)
 {
 	fprintf(stderr, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
-	free_env(minishell->vars);
+	clean_everything(minishell);
 	exit(1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:30:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:33:19 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,6 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 		parse_and_or(node->left, minishell);
 	else if (node->left->type == NODE_COMMAND || node->left->type == NODE_PIPE)
 		minishell->last_ret = execute_pipeline(node->left, minishell) % 256;
-	node->left = NULL;
 	if ((minishell->last_ret == 0 && node->type == NODE_LOGICAL_AND)
 		|| (minishell->last_ret != 0 && node->type == NODE_LOGICAL_OR))
 	{
@@ -294,6 +293,5 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 		else if (node->right->type == NODE_COMMAND
 			|| node->right->type == NODE_PIPE)
 			minishell->last_ret = execute_pipeline(node->right, minishell) % 256;
-		node->right = NULL;
 	}
 }
