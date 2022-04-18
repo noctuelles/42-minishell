@@ -4,3 +4,4 @@
 -  catch le sigterm en mode parent
 - here_doc: vu qu on respecte le sujet et pas bash, respecter le containing
 - cd avec env -i, crash 
+- protect pwd

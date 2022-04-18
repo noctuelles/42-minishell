@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 18:15:11 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 20:14:52 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	end_program(t_minishell *minishell, int exit_code)
 	clean_everything(minishell);
 	close(minishell->save_stdin);
 	close(0);
-	if(exit_code < 0)
+	if (exit_code < 0)
 		exit(minishell->last_ret);
 	else
 		exit(exit_code);
