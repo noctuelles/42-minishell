@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 21:31:50 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 14:42:56 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 14:54:16 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_var	get_var_info(char *str, t_minishell *minishell)
 	char	temp;
 
 	i = 0;
-	if (*str == '?' && *(str + 1) == '\0')
+	if (*str == '?')
 		return (get_return_code(minishell->last_ret));
 	while (ft_isalnum(str[i]) || str[i] == '_')
 		i++;
