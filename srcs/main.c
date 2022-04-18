@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 20:36:52 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 10:17:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 10:30:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void	*setup_minishell(int argc, char **argv, t_minishell *minishell,
 	minishell->vars = import_var(&minishell->vars, envp);
 	if (!minishell->vars && errno != 0)
 		return (display_error_more(STR_MALLOC));
+	else if (!minishell->vars)
+		ft_dprintf(STDERR_FILENO, STR_ENV_WARNING);
 	return (minishell);
 }
 

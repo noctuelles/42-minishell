@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 16:26:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 10:30:01 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,19 @@
 # define WHT "\e[0;37m"
 # define RST "\e[0m"
 
+# define STR_SHELL_NAME         "minishell"
 # define STR_PROMPT_ARROW       " > "
-# define STR_STD_PROMPT          "minishell" STR_PROMPT_ARROW
-# define STR_PARSE_ERROR        "minishell : %s: near token '%s'.\n"
-# define STR_ERROR              "minishell : %s.\n"
-# define STR_ERROR_M            "minishell : %s: %s.\n"
+# define STR_STD_PROMPT         STR_SHELL_NAME STR_PROMPT_ARROW
+# define STR_PARSE_ERROR        STR_SHELL_NAME ": %s: near token '%s'.\n"
+# define STR_ERROR              STR_SHELL_NAME ": %s.\n"
+# define STR_ERROR_M            STR_SHELL_NAME ": %s: %s.\n"
 # define STR_MALLOC             "malloc"
 # define STR_OPENDIR            "opendir"
 # define STR_READDIR            "readdir"
 # define STR_GETCWD             "readdir"
 # define CURRENT_DIR            "."
+# define STR_ENV_WARNING        STR_SHELL_NAME ": warning: you seems to have \
+launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
 
 # define ENO                    0
 
