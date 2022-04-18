@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 11:29:23 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:54:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:57:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_token	*new_token(char *val, size_t len, t_token_type type)
 void	free_token(void *tkn)
 {
 	t_token	*ptkn;
-	
+
 	ptkn = (t_token *) tkn;
 	if (ptkn->type == T_WORD)
 		free(ptkn->val);

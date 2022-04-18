@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:00:24 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:31:32 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:48:51 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ static t_ast_tree_node	*parse_from_tkns(t_dlist **tkns)
 
 /* parse_from_str() returns a valid AST tree if str is following the minishell
  * grammar.
- * If no cmd was found in str or and error occured, the function returns NULL.*/
+ * If no cmd was found in str or and error occured, the function returns
+ * NULL.*/
 
 t_ast_tree_node	*parse_from_str(char *str)
 {

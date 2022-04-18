@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 15:58:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:49:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static t_dlist	*iter(t_dlist **args, t_dlist *env_var, t_dlist *(*f)())
 	return (*args);
 }
 
-t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root, t_dlist *env_var)
+t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
+		t_dlist *env_var)
 {
 	t_ast_tree_node	*cmd_node;
 	t_dlist			*new_args;

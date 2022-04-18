@@ -1,11 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */ /*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/01 16:12:00 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:54:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -13,56 +14,6 @@
 #include "minishell.h"
 #include <stdlib.h>
 #include <unistd.h>
-
-/* add_to_lexer() add to the lexer the lexicon define by three properties :
- *
- * -> It's value.
- * -> His lenght.
- * -> His type.
- *
- * The lexicon array (ref. as the tokens array) is dynamically allocated,
- * check the file lexer_memutils.c :
- *
- *      -> It has a base size of 2 tokens. It realloc the array if we're getting
- *      out of bound by a factor of 2.
- *      We're calling grow_tkns_array only if if we haven't allocated tkns,
- *      or if we're in the situation described below.
- *
- *      Arrays is better than linked list : in the parsing phase, looking at the
- *      next token or the previous token will be easier with array than with
- *      list, and faster. We sacrifice a bit of memory for convenience and
- *      speed.
- *
- * If the token a String (not an existing token), we're calling ft_strndup to
- * duplicate the token.
- *  */
-
-char	*ft_strndup_wld(t_list *wldc_lst, const char *s, size_t n)
-{
-	char	*str;
-	size_t	i;
-	t_list	*elem;
-
-	if (!s || n == 0)
-		return (NULL);
-	str = (char *) malloc((n + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (s[i] != '\0' && i < n)
-	{
-		if (s[i] == '*')
-		{
-			elem = is_intrp_wldc(wldc_lst, (char *) &s[i]);
-			if (elem)
-				elem->content = &str[i];
-		}
-		str[i] = s[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
 
 t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 															t_token_type type)
@@ -91,7 +42,6 @@ t_token	*add_to_tkns(t_dlist **tkns, char *val, size_t len,
 		return (NULL);
 	}
 	ft_dlstadd_back(tkns, elem);
-	tkn->lst_elem = elem;
 	return (tkn);
 }
 

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/16 15:23:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:44:39 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static bool	check_if_expandable(t_dlist *elem)
 		return (true);
 }
 
-static void	*print_errmsg (int errcode)
+static void	*print_errmsg(int errcode)
 {
 	if (errcode == -1)
 		ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_OPENDIR, strerror(errno));
@@ -110,11 +110,11 @@ t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg)
 	files = NULL;
 	if (ft_strchr(arg->value, '*') == NULL)
 		return (elem);
-	if (ft_strchr(arg->value, '=') != NULL && check_if_expandable(elem) == false)
+	if (ft_strchr(arg->value, '=') != NULL
+		&& check_if_expandable(elem) == false)
 		return (elem);
 	errcode = scan_current_directory(&files, arg);
 	if (errcode != 0)
 		return (print_errmsg(errcode));
-	ft_lstclear(&arg->wldc_lst, NULL);
 	return (insert_list(args, files, elem));
 }

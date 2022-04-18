@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:15:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 14:15:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:48:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	handle_cmd_start(t_parser *parser)
 		if (!node_pipeline)
 			return (-1);
 		else if (!push_stack(parser, &parser->output_stack, node_pipeline))
-				return (-1);
+			return (-1);
 	}
 	return (0);
 }

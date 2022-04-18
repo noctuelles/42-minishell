@@ -114,8 +114,8 @@ int main(int argc, char **argv, char **envp)
 				{
 					ft_printf("\n{1;4;33}Initial tree :{0}\n\n");
 					ast_print_tree("", root, false);
-					apply_expansion_on_node(root, env_var);
 					ft_printf("\n{1;4;33}Expanded tree :{0}\n\n");
+					apply_expansion_on_node(root, env_var);
 					ast_print_tree("", root, false);
 					ast_tree_delete_node(root);
 					/*if (root)
