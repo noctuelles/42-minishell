@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:47:34 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 10:03:22 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 10:22:55 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ static int	finish_lexing(t_lexer *lexer, char *str)
 /* fill_lexer_from_str() fill the lexer from a string.
  * It breaks the string str into multiple tokens. */
 
-static int fill_lexer_from_str(t_lexer *lexer, char *str)
+static int	fill_lexer_from_str(t_lexer *lexer, char *str)
 {
 	t_token		tkn;
 
-	lexer->prev = str;
 	while (*str)
 	{
 		tkn = search_existing_token(str);
 		if ((tkn.type != T_NULL) && str != lexer->prev)
 		{
-			if (!add_to_tkns(&lexer->tkns, lexer->prev, str - lexer->prev, T_WORD))
+			if (!add_to_tkns(&lexer->tkns, lexer->prev, str - lexer->prev,
+					T_WORD))
 				return (ERR_MEM);
 		}
 		if (tkn.type != T_NULL)
@@ -120,6 +120,7 @@ t_dlist	*lex_str(const char *str)
 	int		ret;
 
 	ft_memset(&lexer, 0, sizeof(lexer));
+	lexer.prev = (char *) str;
 	ret = fill_lexer_from_str(&lexer, (char *) str);
 	if (ret != ERR_NO)
 	{
@@ -130,9 +131,9 @@ t_dlist	*lex_str(const char *str)
 			ft_dprintf(STDERR_FILENO, STR_ERROR_M, STR_MALLOC, strerror(errno));
 		else if (last == NULL)
 			ft_dprintf(STDERR_FILENO, STR_ERROR, get_lexer_error(ret));
-		else 
+		else
 			ft_dprintf(STDERR_FILENO, STR_PARSE_ERROR, get_lexer_error(ret),
-					tkn->val);
+				tkn->val);
 		ft_dlstclear(&lexer.tkns, free_token);
 	}
 	return (lexer.tkns);

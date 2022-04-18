@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:19:21 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/13 14:17:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 03:31:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ char	*get_parser_error(t_parser_errcode errcode)
 		return (STR_ERR_UNEXPECTED_TOKEN);
 	else if (errcode == ERR_EXPECTED_COMMAND)
 		return (STR_ERR_EXPECTED_COMMAND);
+	else if (errcode == ERR_INVALID_PRT)
+		return (STR_INVALID_PRT);
 	else if (errcode == ERR_MALLOC)
 		return (STR_MALLOC);
 	else

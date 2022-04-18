@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:12:13 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 13:55:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 03:16:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	pop_stack(t_parse_stack *stack, size_t times)
 	t_dlist	*top_prev;
 	size_t	i;
 
+	if (!stack->top)
+		return ;
 	i = 0;
 	while (i < times)
 	{

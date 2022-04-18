@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 15:56:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/15 13:19:51 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 02:44:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static bool	match_pattern(t_arg *arg, char *filename, char *pattern)
 	j = 0;
 	while (pattern[j] != '\0')
 	{
-		//printf("%p : %c ->> %p\n", &pattern[j], pattern[j], (char *) arg->wldc_lst->content);
 		if (pattern[j] == '*' && is_intrp_wldc(arg->wldc_lst, &pattern[j]))
 			break ;
 		if (filename[i++] != pattern[j++])

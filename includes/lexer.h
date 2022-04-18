@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/15 16:20:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/15 16:20:48 by dhubleur         ###   ########.fr       */
+/*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
+/*   Updated: 2022/04/18 10:23:09 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_token
 	char			*val;
 	size_t			len;
 	t_token_type	type;
-	t_dlist			*lst_elem;
 }				t_token;
 
 typedef struct s_lexer
