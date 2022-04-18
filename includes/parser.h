@@ -39,6 +39,7 @@ typedef enum e_parser_errcode
 	ERR_UNEXPECTED_TOKEN,
 	ERR_UNEXPECTED_IO_TOKEN,
 	ERR_UNEXPECTED_IO_HEREDOC_TOKEN,
+	ERR_INVALID_PRT
 }	t_parser_errcode;
 
 typedef enum	e_arg_type
@@ -112,6 +113,12 @@ int				assemble_out_stack_top(t_parser *parser, size_t npop_op,
 		bool force_pop);
 int				handle_cmd_start(t_parser *parser);
 int				handle_cmd_end(t_parser *parser);
+
+/* pushnstack_utils.c */
+
+bool	check_opening_prt(t_parser *parser);
+bool	is_top_an_operator(t_parser parser);
+bool	check_tkn_after_prt(t_parser *parser);
 
 /* args.c */
 
