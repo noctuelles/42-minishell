@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 14:16:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 15:09:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,9 @@ t_dlist	*tokenize_from_arg(t_arg *old_arg, char *str);
 t_arg	*add_to_args_cpy(t_lexer *lex, t_arg *old_arg);
 void	update_prev(t_lexer *lex);
 void	check_for_break(t_lexer *lex);
+
+/* prompt.c */
+
+char	*read_from_user(t_minishell *minishell);
 
 #endif
