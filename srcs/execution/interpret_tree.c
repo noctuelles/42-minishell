@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 15:39:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 15:43:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char 	*get_path_from_name(char *name, t_minishell *minishell, t_command *command
 	}
 	else
 	{
-		if (access(name, F_OK))
+		if (access(name, F_OK) == 0)
 			return (name);
 		return (NULL);
 	}
