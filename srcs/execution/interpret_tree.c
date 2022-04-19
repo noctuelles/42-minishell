@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:23:00 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 12:04:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,17 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 char	*get_path_from_name(char *name, t_minishell *minishell,
 	t_command *command)
 {
+	char	*path;
+
 	if (ft_strchr(name, '/') == NULL)
 	{
 		if (!is_builtin(name))
 		{
 			command->is_name_malloc = 1;
-			return (get_path_from_env(name, minishell));
+			path = get_path_from_env(name, minishell);
+			if (!path)
+				ft_dprintf(2, COMMAND_NOT_FOUND, name);
+			return (path);
 		}
 		else
 			return (name);
@@ -81,6 +86,7 @@ char	*get_path_from_name(char *name, t_minishell *minishell,
 	{
 		if (access(name, F_OK) == 0)
 			return (name);
+		ft_dprintf(2, ERROR_ERRNO, name, strerror(errno));
 		return (NULL);
 	}
 }
@@ -113,7 +119,7 @@ void	add_io(t_arg *node, t_command *command)
 
 int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
 {
-	if (ft_strcmp(line, node->value) != 0)
+	if (ft_strnstr(line, node->value, ft_strlen(line)) == NULL)
 	{
 		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
@@ -207,11 +213,7 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 		command->name = get_path_from_name(
 				((t_arg *)node->args->content)->value, minishell, command);
 		if (!command->name)
-		{
-			ft_dprintf(2, COMMAND_NOT_FOUND,
-				((t_arg *)node->args->content)->value);
 			return (command);
-		}
 		*arg_count = 1;
 		if (node->args->next != NULL)
 			parse_list(node->args->next, command, arg_count);

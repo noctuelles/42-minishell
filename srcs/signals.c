@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 13:19:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/07 12:46:59 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:59:43 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,5 @@ void	set_signals_as_parent(void)
 {
 	signal(SIGINT, signal_handler_as_parent);
 	signal(SIGQUIT, signal_handler_as_parent);
+	signal(SIGTERM, signal_handler_as_parent);
 }
