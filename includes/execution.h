@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 17:12:57 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:34:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include "parser.h"
 
 
-# define STR_CMD_NOT_FOUND  STR_SHELL_NAME ": command not found.\n"
+# define STR_CMD_NOT_FOUND  STR_SHELL_NAME ": %s: command not found.\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"
 # define PIPE_ERROR "Minishell: Pipe error occured\n"
 # define FORK_ERROR "Minishell: Fork error occured\n"

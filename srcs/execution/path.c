@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:29:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 17:16:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:35:40 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static char	*search_accessible_path(char **paths, char *cmd_name)
 			free(abs_cmd_path);
 		i++;
 	}
+	errno = 0;
 	return (NULL);
 }
 
