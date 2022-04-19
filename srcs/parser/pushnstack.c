@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 11:15:09 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 03:51:17 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/18 22:20:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ int	handle_cmd_end(t_parser *parser)
 {
 	if (curr_type(*parser) == T_CL_PRT)
 	{
-		if (!check_opening_prt(parser))
-			return (-1);
 		while (curr_type(*parser) == T_CL_PRT)
 		{
+			if (!check_opening_prt(parser))
+				return (-1);
 			if (assemble_out_stack_top(parser, 2, true) == -1)
 				return (-1);
 			consume_token(parser);
