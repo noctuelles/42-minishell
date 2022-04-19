@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 18:09:22 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 22:19:15 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 	t_command	*command;
 
 	command = init_cmd();
+	if (!command)
+		return (NULL);
 	if (node->args != NULL)
 	{
 		command->is_piped = piped;
@@ -108,12 +110,14 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 {
 	t_command	*first;
 
-	(void)minishell->vars;
 	first = NULL;
-	apply_expansion_on_node(root, minishell);
+	if (!apply_expansion_on_node(root, minishell))
+		return (NULL);
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false, minishell);
+		if (!first)
+			return (NULL);
 	}
 	else
 	{

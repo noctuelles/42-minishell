@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 22:11:39 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 22:23:28 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static bool	is_a_logical_node(t_ast_tree_node *node)
 		return (false);
 }
 
-static bool	is_a_pipeline_node(t_ast_tree_node *node)
+bool	is_a_pipeline_node(t_ast_tree_node *node)
 {
 	if (node->type == NODE_COMMAND || node->type == NODE_PIPE)
 		return (true);

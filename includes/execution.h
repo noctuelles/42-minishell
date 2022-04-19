@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 20:11:49 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 22:23:40 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ void	here_doc_logic(t_arg *node, t_command *command);
 /* commands_utils.c */
 
 t_command	*init_cmd(void);
+
+bool	is_a_pipeline_node(t_ast_tree_node *node);
 
 
 
