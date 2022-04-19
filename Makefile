@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/19 13:08:16 by plouvel          ###   ########.fr        #
+#    Updated: 2022/04/19 16:23:43 by plouvel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS			=	main.c \
 					prompt.c \
 					ft_strtrunc.c \
 					signals.c \
+					signals_utils.c \
 					$(addprefix builtins/, \
 						ft_cd.c \
 						ft_echo.c \

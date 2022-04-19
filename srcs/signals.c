@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 13:19:31 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:59:43 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 16:27:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,58 +23,45 @@
 
 int	g_sigint = 0;
 
-void	signal_handler_as_prompt(int signum)
+int	set_signals_as_prompt(void)
 {
-	if (signum == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else if (signum == SIGQUIT)
-	{
-		write(1, "\33[2K\r", 5);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	struct sigaction	as_prompt;
+
+	as_prompt.sa_handler = signal_handler_as_prompt;
+	sigemptyset(&as_prompt.sa_mask);
+	as_prompt.sa_flags = 0;
+	if (sigaction(SIGINT, &as_prompt, NULL) == -1
+		|| sigaction(SIGQUIT, &as_prompt, NULL) == -1)
+		return (-1);
+	else
+		return (0);
 }
 
-void	signal_handler_as_here_doc(int signum)
+int	set_signals_as_here_doc(void)
 {
-	if (signum == SIGINT)
-	{
-		g_sigint = 1;
-		close(0);
-	}
-	else if (signum == SIGQUIT)
-	{
-		write(1, "\33[2K\r", 5);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	struct sigaction	as_here_doc;
+
+	as_here_doc.sa_handler = signal_handler_as_here_doc;
+	sigemptyset(&as_here_doc.sa_mask);
+	as_here_doc.sa_flags = 0;
+	if (sigaction(SIGINT, &as_here_doc, NULL) == -1
+		|| sigaction(SIGQUIT, &as_here_doc, NULL) == -1)
+		return (-1);
+	else
+		return (0);
 }
 
-void	signal_handler_as_parent(int signum)
+int	set_signals_as_parent(void)
 {
-	(void)signum;
-}
+	struct sigaction	as_parent;
 
-void	set_signals_as_prompt(void)
-{
-	signal(SIGINT, signal_handler_as_prompt);
-	signal(SIGQUIT, signal_handler_as_prompt);
-}
-
-void	set_signals_as_here_doc(void)
-{
-	signal(SIGINT, signal_handler_as_here_doc);
-	signal(SIGQUIT, signal_handler_as_here_doc);
-}
-
-void	set_signals_as_parent(void)
-{
-	signal(SIGINT, signal_handler_as_parent);
-	signal(SIGQUIT, signal_handler_as_parent);
-	signal(SIGTERM, signal_handler_as_parent);
+	as_parent.sa_handler = signal_handler_as_parent;
+	sigemptyset(&as_parent.sa_mask);
+	as_parent.sa_flags = 0;
+	if (sigaction(SIGINT, &as_parent, NULL) == -1
+		|| sigaction(SIGQUIT, &as_parent, NULL) == -1
+		|| sigaction(SIGTERM, &as_parent, NULL) == -1)
+		return (-1);
+	else
+		return (0);
 }
