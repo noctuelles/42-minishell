@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/19 16:23:43 by plouvel          ###   ########.fr        #
+#    Updated: 2022/04/19 16:53:07 by plouvel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ SRCS			=	main.c \
 					$(addprefix env/, \
 						env.c) \
 					$(addprefix execution/, \
+						path.c \
 						builtin.c \
 						command_preparator.c \
 						executor.c \

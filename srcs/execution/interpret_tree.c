@@ -6,63 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 12:04:33 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 16:51:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "ft_dprintf.h"
 #include <readline/readline.h>
-
-extern int	g_sigint;
-
-char	*create_path(char *path, char *command_name)
-{
-	char	*exec_path;
-
-	exec_path = malloc(sizeof(char)
-			* (ft_strlen(path) + ft_strlen(command_name) + 2));
-	exec_path[0] = '\0';
-	ft_strcat(exec_path, path);
-	ft_strcat(exec_path, "/");
-	ft_strcat(exec_path, command_name);
-	return (exec_path);
-}
-
-void	not_found(char **exec_path)
-{
-	free(*exec_path);
-	*exec_path = NULL;
-}
-
-char	*get_path_from_env(char *command_name, t_minishell *minishell)
-{
-	char	*path;
-	char	*cpy;
-	int		found;
-	char	*exec_path;
-
-	found = 0;
-	exec_path = NULL;
-	if (get_var(minishell->vars, "PATH") != NULL)
-	{
-		cpy = ft_strdup(get_var(minishell->vars, "PATH")->value);
-		path = cpy;
-		while (ft_strtrunc(&path, ':'))
-		{
-			if (!found)
-			{
-				exec_path = create_path(path, command_name);
-				if (access(exec_path, F_OK) == 0)
-					found = 1;
-				else
-					not_found(&exec_path);
-			}
-		}
-		free(cpy);
-	}
-	return (exec_path);
-}
 
 char	*get_path_from_name(char *name, t_minishell *minishell,
 	t_command *command)
