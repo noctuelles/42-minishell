@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:29:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 17:35:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:37:29 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ char	*get_path_from_name(char *name, t_minishell *minishell,
 		if (access(name, F_OK | X_OK | R_OK) == 0)
 			return (name);
 		else
-			return (display_error_more(STR_ACCESS));
+			return (display_error_more(name));
 	}
 }
