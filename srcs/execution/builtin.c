@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:09 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:13:02 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 20:28:58 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	clean_everything(t_minishell *minishell)
 	if (minishell->vars)
 		free_env(minishell->vars);
 	if (minishell->current_pipeline_first)
-		free_command_pipeline(minishell->current_pipeline_first);
+		free_cmd_pipeline(minishell->current_pipeline_first);
 	if (minishell->root)
 		ast_tree_delete_node(minishell->root);
 	close(minishell->save_stdin);
