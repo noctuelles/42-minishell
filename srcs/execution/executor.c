@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 20:20:10 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 
 void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 {
@@ -69,7 +70,7 @@ void	dup_for_redirections(t_command *command, int pid)
 
 void	error_exit(char *str, int errno_value)
 {
-	fprintf(stderr, ERROR_ERRNO, str, strerror(errno_value));
+	ft_dprintf(2, ERROR_ERRNO, str, strerror(errno_value));
 	exit(1);
 }
 

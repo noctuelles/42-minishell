@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:52:55 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 20:14:36 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 
 int	open_in(t_arg *arg, t_command *command)
 {
@@ -19,7 +20,7 @@ int	open_in(t_arg *arg, t_command *command)
 	command->io_in_fd = open(arg->value, O_RDONLY);
 	if (command->io_in_fd < 0)
 	{
-		fprintf(stderr, ERROR_ERRNO, arg->value, strerror(errno));
+		ft_dprintf(2, ERROR_ERRNO, arg->value, strerror(errno));
 		return (0);
 	}
 	return (1);
@@ -38,7 +39,7 @@ int	open_out(t_arg *arg, t_command *command)
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (command->io_out_fd < 0)
 	{
-		fprintf(stderr, ERROR_ERRNO, arg->value, strerror(errno));
+		ft_dprintf(2, ERROR_ERRNO, arg->value, strerror(errno));
 		return (0);
 	}
 	return (1);

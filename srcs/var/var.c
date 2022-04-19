@@ -6,13 +6,14 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 16:37:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 #include "minishell.h"
+#include "ft_dprintf.h"
 #include <stdbool.h>
 #include <ctype.h>
 
@@ -159,7 +160,7 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 	}
 	if (!is_valid_variable_name(var.name))
 	{
-		fprintf(stderr, "Minishell: export: '%s=%s': not a valid identifier\n",
+		ft_dprintf(2, "Minishell: export: '%s=%s': not a valid identifier\n",
 			var.name, var.value);
 		return (*lst_var);
 	}

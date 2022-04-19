@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 20:23:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:00:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 #include <readline/readline.h>
 
 extern int	g_sigint;
@@ -146,10 +147,10 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 		{
 			if (g_sigint)
 			{
-				printf("\n");
+				ft_dprintf(1, "\n");
 				break ;
 			}
-			printf(HERE_DOC_EOF, count, node->value);
+			ft_dprintf(1, HERE_DOC_EOF, count, node->value);
 			break ;
 		}
 	}
@@ -161,7 +162,7 @@ void	here_doc_logic(t_arg *node, t_command *command)
 	
 	if (pipe(pipefd) < 0)
 	{
-		printf(PIPE_ERROR);
+		ft_dprintf(1, PIPE_ERROR);
 		exit(1);
 	}
 	set_signals_as_here_doc();
@@ -207,7 +208,7 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 				((t_arg *)node->args->content)->value, minishell, command);
 		if (!command->name)
 		{
-			fprintf(stderr, COMMAND_NOT_FOUND,
+			ft_dprintf(2, COMMAND_NOT_FOUND,
 				((t_arg *)node->args->content)->value);
 			return (command);
 		}

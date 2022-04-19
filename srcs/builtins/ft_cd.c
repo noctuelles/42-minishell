@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 16:41:41 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:57:52 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "ft_printf.h"
 
 void	update_env(char *pwd, char *old_pwd, t_dlist *env)
 {
@@ -40,7 +41,7 @@ int	ft_cd(int argc, char **argv, t_minishell *minishell)
 	env = minishell->vars;
 	if (argc != 2)
 	{
-		printf(CD_FORMAT_ERROR, argv[0], argv[0]);
+		ft_printf(CD_FORMAT_ERROR, argv[0], argv[0]);
 		return (1);
 	}
 	if (chdir(argv[1]) == 0)
@@ -48,12 +49,12 @@ int	ft_cd(int argc, char **argv, t_minishell *minishell)
 		old_pwd = get_var(env, "PWD")->value;
 		if (get_current_working_dir(&pwd) != 0)
 		{
-			printf(ERROR_ERRNO, argv[0], strerror(errno));
+			ft_printf(ERROR_ERRNO, argv[0], strerror(errno));
 			return (1);
 		}
 		update_env(pwd, old_pwd, env);
 		return (0);
 	}
-	printf(ERROR_ERRNO, argv[0], strerror(errno));
+	ft_printf(ERROR_ERRNO, argv[0], strerror(errno));
 	return (1);
 }

@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 14:05:23 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:24:43 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:59:13 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "ft_printf.h"
 
 int	ft_unset(int argc, char **argv, t_minishell *minishell)
 {
@@ -18,7 +19,7 @@ int	ft_unset(int argc, char **argv, t_minishell *minishell)
 
 	if (argc < 2)
 	{
-		printf(UNSET_NOT_ENOUGH, argv[0]);
+		ft_printf(UNSET_NOT_ENOUGH, argv[0]);
 		return (1);
 	}
 	i = 0;

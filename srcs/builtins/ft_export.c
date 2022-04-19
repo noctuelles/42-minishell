@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 20:16:23 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:59:08 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "ft_printf.h"
 
 void	create_new_string(char *str, char *new_str, int size, int length)
 {
@@ -43,15 +44,15 @@ void	print_string_escape_quote(char *str)
 	size = -1;
 	length = 0;
 	create_new_string(str, new_str, size, length);
-	printf("%s", new_str);
+	ft_printf("%s", new_str);
 	free(new_str);
 }
 
 t_dlist	*print_var(t_dlist *env)
 {
-	printf(EXPORT_LIST, ((t_var *)env->content)->name);
+	ft_printf(EXPORT_LIST, ((t_var *)env->content)->name);
 	print_string_escape_quote(((t_var *)env->content)->value);
-	printf("\"\n");
+	ft_printf("\"\n");
 	return (env->next);
 }
 

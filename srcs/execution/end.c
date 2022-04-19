@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 20:18:13 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 
 void	free_cmd(t_command *cmd)
 {
@@ -59,12 +60,12 @@ void	treat_result(int pid, int wait_status, int *pipeline_result,
 		{
 			if (!g_sigint)
 			{
-				fprintf(stderr, QUIT);
+				ft_dprintf(2, QUIT);
 				g_sigint = 1;
 			}
 		}
 		else if (__WCOREDUMP(wait_status))
-			fprintf(stderr, END_BY_SIGNAL, pid, WTERMSIG(wait_status));
+			ft_dprintf(2, END_BY_SIGNAL, pid, WTERMSIG(wait_status));
 		if (last_pid != 0 && pid == last_pid)
 			*pipeline_result = 128 + WTERMSIG(wait_status);
 	}
