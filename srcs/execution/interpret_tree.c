@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 18:03:36 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 12:04:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 #include <readline/readline.h>
 
 extern int	g_sigint;
@@ -20,11 +21,11 @@ char	*create_path(char *path, char *command_name)
 	char	*exec_path;
 
 	exec_path = malloc(sizeof(char)
-			* (strlen(path) + strlen(command_name) + 2));
+			* (ft_strlen(path) + ft_strlen(command_name) + 2));
 	exec_path[0] = '\0';
-	strcat(exec_path, path);
-	strcat(exec_path, "/");
-	strcat(exec_path, command_name);
+	ft_strcat(exec_path, path);
+	ft_strcat(exec_path, "/");
+	ft_strcat(exec_path, command_name);
 	return (exec_path);
 }
 
@@ -45,7 +46,7 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 	exec_path = NULL;
 	if (get_var(minishell->vars, "PATH") != NULL)
 	{
-		cpy = strdup(get_var(minishell->vars, "PATH")->value);
+		cpy = ft_strdup(get_var(minishell->vars, "PATH")->value);
 		path = cpy;
 		while (ft_strtrunc(&path, ':'))
 		{
@@ -63,14 +64,20 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 	return (exec_path);
 }
 
-char 	*get_path_from_name(char *name, t_minishell *minishell, t_command *command)
+char	*get_path_from_name(char *name, t_minishell *minishell,
+	t_command *command)
 {
-	if (strchr(name, '/') == NULL)
+	char	*path;
+
+	if (ft_strchr(name, '/') == NULL)
 	{
 		if (!is_builtin(name))
 		{
 			command->is_name_malloc = 1;
-			return(get_path_from_env(name, minishell));
+			path = get_path_from_env(name, minishell);
+			if (!path)
+				ft_dprintf(2, COMMAND_NOT_FOUND, name);
+			return (path);
 		}
 		else
 			return (name);
@@ -79,6 +86,7 @@ char 	*get_path_from_name(char *name, t_minishell *minishell, t_command *command
 	{
 		if (access(name, F_OK) == 0)
 			return (name);
+		ft_dprintf(2, ERROR_ERRNO, name, strerror(errno));
 		return (NULL);
 	}
 }
@@ -96,13 +104,14 @@ void	add_io(t_arg *node, t_command *command)
 	if (node->type == ARG_REDIRECT_STDIN)
 	{
 		ft_dlstadd_back(&(command->io_in), ft_dlstnew(node));
-		if(command->here_doc > 0)
+		if (command->here_doc > 0)
 		{
 			close(command->here_doc);
 			command->here_doc = -1;
 		}
 	}
-	if(node->type == ARG_REDIRECT_FILE || node->type == ARG_REDIRECT_FILE_APPEND)
+	if (node->type == ARG_REDIRECT_FILE || node->type
+		== ARG_REDIRECT_FILE_APPEND)
 	{
 		ft_dlstadd_back(&(command->io_out), ft_dlstnew(node));
 	}
@@ -110,9 +119,9 @@ void	add_io(t_arg *node, t_command *command)
 
 int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
 {
-	if (strcmp(line, node->value) != 0)
+	if (ft_strnstr(line, node->value, ft_strlen(line)) == NULL)
 	{
-		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
 		return (0);
@@ -144,10 +153,10 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 		{
 			if (g_sigint)
 			{
-				printf("\n");
+				ft_dprintf(1, "\n");
 				break ;
 			}
-			printf(HERE_DOC_EOF, count, node->value);
+			ft_dprintf(1, HERE_DOC_EOF, count, node->value);
 			break ;
 		}
 	}
@@ -156,9 +165,10 @@ void	here_doc_read(t_arg *node, int pipefd[2], t_command *command)
 void	here_doc_logic(t_arg *node, t_command *command)
 {
 	int		pipefd[2];
+	
 	if (pipe(pipefd) < 0)
 	{
-		printf(PIPE_ERROR);
+		ft_dprintf(1, PIPE_ERROR);
 		exit(1);
 	}
 	set_signals_as_here_doc();
@@ -178,25 +188,32 @@ void	parse_list(t_dlist *node, t_command *command, int *arg_count)
 		parse_list(node->next, command, arg_count);
 }
 
-t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_minishell *minishell)
+t_command	*init_cmd(void)
 {
 	t_command	*command;
 
-	command = calloc(sizeof(t_command), 1);
+	command = ft_calloc(sizeof(t_command), 1);
 	command->io_in = NULL;
 	command->io_out = NULL;
 	command->here_doc = -1;
 	command->empty_command = 0;
 	command->is_name_malloc = 0;
-	if(node->args != NULL)
+	return (command);
+}
+
+t_command	*prepare_command(bool piped, t_ast_tree_node *node,
+	int *arg_count, t_minishell *minishell)
+{
+	t_command	*command;
+
+	command = init_cmd();
+	if (node->args != NULL)
 	{
 		command->is_piped = piped;
-		command->name = get_path_from_name(((t_arg *)node->args->content)->value, minishell, command);
-		if(!command->name)
-		{
-			fprintf(stderr, COMMAND_NOT_FOUND, ((t_arg *)node->args->content)->value);
+		command->name = get_path_from_name(
+				((t_arg *)node->args->content)->value, minishell, command);
+		if (!command->name)
 			return (command);
-		}
 		*arg_count = 1;
 		if (node->args->next != NULL)
 			parse_list(node->args->next, command, arg_count);
@@ -209,7 +226,8 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node, int *arg_count, t_
 	return (command);
 }
 
-t_command	*parse_command(t_ast_tree_node *node, bool piped, t_minishell *minishell)
+t_command	*parse_command(t_ast_tree_node *node, bool piped,
+	t_minishell *minishell)
 {
 	t_command	*command;
 	int			args_count;
@@ -217,14 +235,14 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped, t_minishell *minishe
 	int			i;
 
 	command = prepare_command(piped, node, &args_count, minishell);
-	if(command->name != NULL && !g_sigint)
+	if (command->name != NULL && !g_sigint)
 	{
-		command->args = calloc(sizeof(char *), args_count + 1);
+		command->args = ft_calloc(sizeof(char *), args_count + 1);
 		elem = node->args;
 		i = 0;
-		while(elem)
+		while (elem)
 		{
-			if(((t_arg *)elem->content)->type == ARG_WORD)
+			if (((t_arg *)elem->content)->type == ARG_WORD)
 			{
 				command->args[i] = ((t_arg *)elem->content)->value;
 				i++;
@@ -269,7 +287,7 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 			add_command(parse_command(root->left, true, minishell), &first);
 			root = root->right;
 		}
-		if(!g_sigint)
+		if (!g_sigint)
 			add_command(parse_command(root, false, minishell), &first);
 	}
 	return (first);
@@ -292,6 +310,7 @@ void	parse_and_or(t_ast_tree_node *node, t_minishell *minishell)
 			parse_and_or(node->right, minishell);
 		else if (node->right->type == NODE_COMMAND
 			|| node->right->type == NODE_PIPE)
-			minishell->last_ret = execute_pipeline(node->right, minishell) % 256;
+			minishell->last_ret
+				= execute_pipeline(node->right, minishell) % 256;
 	}
 }

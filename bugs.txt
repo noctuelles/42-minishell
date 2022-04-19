@@ -1,6 +1,0 @@
-- Tokenisation: seul les espaces sont pris en compte
-- export a="salut ca va" && echo wesh > $a, comportement etrange
-- ./salut_j_existe_pas, pas le bon message
--  catch le sigterm en mode parent
-- here_doc: vu qu on respecte le sujet et pas bash, respecter le containing
-- cd avec env -i, crash 

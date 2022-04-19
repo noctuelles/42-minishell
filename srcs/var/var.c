@@ -6,13 +6,14 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/17 16:37:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 12:21:57 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 #include "minishell.h"
+#include "ft_dprintf.h"
 #include <stdbool.h>
 #include <ctype.h>
 
@@ -134,8 +135,8 @@ t_dlist	*import_in_env(t_dlist **lst_var, t_var var)
 	else
 	{
 		free(get_var(*lst_var, var.name)->value);
-		get_var(*lst_var, var.name)->value = strdup(var.value);
-		get_var(*lst_var, var.name)->value_len = strlen(var.value);
+		get_var(*lst_var, var.name)->value = ft_strdup(var.value);
+		get_var(*lst_var, var.name)->value_len = ft_strlen(var.value);
 	}
 	return (*lst_var);
 }
@@ -159,7 +160,7 @@ t_dlist	*import_one_var(t_dlist **lst_var, char *value)
 	}
 	if (!is_valid_variable_name(var.name))
 	{
-		fprintf(stderr, "Minishell: export: '%s=%s': not a valid identifier\n",
+		ft_dprintf(2, "Minishell: export: '%s=%s': not a valid identifier\n",
 			var.name, var.value);
 		return (*lst_var);
 	}

@@ -6,17 +6,18 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:17:43 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/17 14:23:32 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:08:55 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+#include "ft_printf.h"
 
 int	is_option_string(char *str)
 {
 	int	i;
 
-	if (strlen(str) < 2)
+	if (ft_strlen(str) < 2)
 		return (0);
 	if (str[0] != '-')
 		return (0);
@@ -48,11 +49,11 @@ int	ft_echo(int argc, char **argv, t_minishell *minishell)
 		i = 0;
 	while (++i < argc)
 	{
-		printf("%s", argv[i]);
+		ft_printf("%s", argv[i]);
 		if (i < argc - 1)
-			printf(" ");
+			ft_printf(" ");
 	}
 	if (!is_option)
-		printf("\n");
+		ft_printf("\n");
 	return (0);
 }

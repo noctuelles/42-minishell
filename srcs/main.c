@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 18:03:14 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/18 20:23:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,18 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	if (forking)
 		set_signals_as_parent();
 	while (first != NULL)
-		count += treat_return_code(&first, execute_file(first, minishell, forking), &status, &last_pid);
+		count += treat_return_code(&first,
+				execute_file(first, minishell, forking), &status, &last_pid);
 	status = wait_for_result(count, last_pid, status);
-	if(g_sigint)
+	if (g_sigint)
 		return (pipeline_clean(minishell, 130));
 	return (pipeline_clean(minishell, status));
 }
 
 void	start_exec(t_minishell *minishell)
 {
-	if (minishell->root->type == NODE_COMMAND || minishell->root->type == NODE_PIPE)
+	if (minishell->root->type == NODE_COMMAND
+		|| minishell->root->type == NODE_PIPE)
 		minishell->last_ret = execute_pipeline(minishell->root, minishell);
 	else
 		parse_and_or(minishell->root, minishell);

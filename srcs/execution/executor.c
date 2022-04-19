@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 15:38:44 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 
 void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
 {
@@ -43,7 +44,7 @@ void	close_all_error(t_command *command, int code)
 void	dup_and_close(int fd1, int fd2)
 {
 	dup2(fd1, fd2);
-	if(fd1 > 0)
+	if (fd1 > 0)
 		close(fd1);
 }
 
@@ -69,7 +70,7 @@ void	dup_for_redirections(t_command *command, int pid)
 
 void	error_exit(char *str, int errno_value)
 {
-	fprintf(stderr, ERROR_ERRNO, str, strerror(errno_value));
+	ft_dprintf(2, ERROR_ERRNO, str, strerror(errno_value));
 	exit(1);
 }
 
@@ -109,15 +110,32 @@ int	simple_builtin(t_command *command, t_minishell *minishell)
 	save_stdout = -1;
 	if (command->io_out_fd != -1)
 	{
-			save_stdout = dup(1);
-			dup2(command->io_out_fd, 1);
-			close(command->io_out_fd);
+		save_stdout = dup(1);
+		dup2(command->io_out_fd, 1);
+		close(command->io_out_fd);
 	}
 	ret = exec_builtin(command, minishell, 0);
 	dup2(save_stdout, 1);
-	if(save_stdout > 0)
+	if (save_stdout > 0)
 		close(save_stdout);
 	return (ret);
+}
+
+int	null_command(int forking, t_command *command)
+{
+	int		pipefd[2];
+
+	if (forking)
+	{
+		pipe(pipefd);
+		dup2(pipefd[0], 0);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	if (command->empty_command)
+		return (1);
+	else
+		return (127);
 }
 
 int	execute_file(t_command *command, t_minishell *minishell, int forking)
@@ -125,7 +143,7 @@ int	execute_file(t_command *command, t_minishell *minishell, int forking)
 	pid_t	pid;
 	int		pipefd[2];
 
-	if(!prepare_fd(command))
+	if (!prepare_fd(command))
 		return (1);
 	if (command->name != NULL)
 	{
@@ -144,17 +162,5 @@ int	execute_file(t_command *command, t_minishell *minishell, int forking)
 			return (simple_builtin(command, minishell));
 	}
 	else
-	{
-		if(forking)
-		{
-			pipe(pipefd);
-			dup2(pipefd[0], 0);
-			close(pipefd[0]);
-			close(pipefd[1]);
-		}
-		if(command->empty_command)
-			return (1);
-		else
-			return (127);
-	}
+		return (null_command(forking, command));
 }
