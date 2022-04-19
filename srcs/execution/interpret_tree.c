@@ -6,40 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 16:51:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:03:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "ft_dprintf.h"
 #include <readline/readline.h>
-
-char	*get_path_from_name(char *name, t_minishell *minishell,
-	t_command *command)
-{
-	char	*path;
-
-	if (ft_strchr(name, '/') == NULL)
-	{
-		if (!is_builtin(name))
-		{
-			command->is_name_malloc = 1;
-			path = get_path_from_env(name, minishell);
-			if (!path)
-				ft_dprintf(2, COMMAND_NOT_FOUND, name);
-			return (path);
-		}
-		else
-			return (name);
-	}
-	else
-	{
-		if (access(name, F_OK) == 0)
-			return (name);
-		ft_dprintf(2, ERROR_ERRNO, name, strerror(errno));
-		return (NULL);
-	}
-}
 
 void	count_arg(t_arg *node, int *arg_count)
 {

@@ -6,11 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 17:13:22 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "minishell.h"
 #include "ft_dprintf.h"
 
 void	dup_for_pipe(t_command *command, int pid, int pipefd[2])
@@ -92,7 +93,7 @@ void	executing(t_command *command, t_minishell *minishell)
 	if (!is_builtin(command->args[0]))
 	{
 		execve(command->name, command->args, export_env(minishell->vars));
-		perror(EXECUTION_ERROR);
+		perror(STR_EXEC_ERROR);
 		close_all_error(command, errno);
 	}
 	else

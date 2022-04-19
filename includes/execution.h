@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 16:52:19 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:12:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@
 # include "parser.h"
 
 
-# define COMMAND_NOT_FOUND "Minishell: %s: command not found\n"
+# define STR_CMD_NOT_FOUND  STR_SHELL_NAME ": command not found.\n"
 # define ERROR_ERRNO "Minishell: %s: %s\n"
 # define PIPE_ERROR "Minishell: Pipe error occured\n"
 # define FORK_ERROR "Minishell: Fork error occured\n"
-# define EXECUTION_ERROR "Minishell: Error occured during execution\n"
+# define STR_EXEC_ERROR     STR_SHELL_NAME ": error occured during execution: "
 # define HERE_DOC_EOF "Minishell: warning: here-document at line %i \
 delimited by end-of-file (wanted `%s')\n"
 # define END_BY_SIGNAL "Minishell: process %i terminated by a signal (%i)\n"
@@ -77,7 +77,9 @@ int			execute_file(t_command *command, t_minishell *minishell, int forking);
 int			prepare_fd(t_command *command);
 void	free_command_pipeline(t_command *first);
 int	pipeline_clean(t_minishell *minishell, int code);
-char	*get_path_from_env(char *cmd_name, t_minishell *minishell);
+char	*get_path_from_name(char *name, t_minishell *minishell,
+	t_command *command);
+
 
 
 

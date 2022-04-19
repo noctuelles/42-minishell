@@ -6,13 +6,16 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:29:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 16:50:37 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 17:16:04 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "env.h"
 #include "minishell.h"
+#include "ft_dprintf.h"
+#include "builtins.h"
+#include "execution.h"
 #include <stdlib.h>
 
 static char	*create_path(char *path, char *command_name)
@@ -50,7 +53,7 @@ static char	*search_accessible_path(char **paths, char *cmd_name)
 	return (NULL);
 }
 
-char	*get_path_from_env(char *cmd_name, t_minishell *minishell)
+static char	*get_path_from_env(char *cmd_name, t_minishell *minishell)
 {
 	size_t	i;
 	t_var	*path_var;
@@ -73,4 +76,31 @@ char	*get_path_from_env(char *cmd_name, t_minishell *minishell)
 		free(paths);
 	}
 	return (cmd_path);
+}
+
+char	*get_path_from_name(char *name, t_minishell *minishell,
+	t_command *command)
+{
+	char	*path;
+
+	if (!ft_strchr(name, '/'))
+	{
+		if (!is_builtin(name))
+		{
+			command->is_name_malloc = 1;
+			path = get_path_from_env(name, minishell);
+			if (!path && errno == 0)
+				ft_dprintf(STDERR_FILENO, STR_CMD_NOT_FOUND, name);
+			return (path);
+		}
+		else
+			return (name);
+	}
+	else
+	{
+		if (access(name, F_OK | X_OK | R_OK) == 0)
+			return (name);
+		else
+			return (display_error_more(STR_ACCESS));
+	}
 }
