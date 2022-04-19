@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 17:34:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 18:08:49 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,20 @@ int			execute_file(t_command *command, t_minishell *minishell, int forking);
 int			prepare_fd(t_command *command);
 void	free_command_pipeline(t_command *first);
 int	pipeline_clean(t_minishell *minishell, int code);
+
+/* path.c */
+
 char	*get_path_from_name(char *name, t_minishell *minishell,
 	t_command *command);
+
+/* io.c */
+
+void	*add_io(t_arg *node, t_command *command);
+void	here_doc_logic(t_arg *node, t_command *command);
+
+/* commands_utils.c */
+
+t_command	*init_cmd(void);
 
 
 
