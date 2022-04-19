@@ -1,2 +1,0 @@
-- cd avec env -i, crash 
-- protect bultin pwd
