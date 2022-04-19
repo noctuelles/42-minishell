@@ -6,40 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 12:16:09 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 20:13:11 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "ft_dprintf.h"
-
-void	free_cmd(t_command *cmd)
-{
-	if (cmd->name && cmd->is_name_malloc)
-		free(cmd->name);
-	free(cmd->args);
-	if (cmd->io_in_fd > 0)
-		close(cmd->io_in_fd);
-	if (cmd->io_out_fd > 0)
-		close(cmd->io_out_fd);
-	if (cmd->here_doc > 0)
-		close(cmd->here_doc);
-	ft_dlstclear(&(cmd->io_in), NULL);
-	ft_dlstclear(&(cmd->io_out), NULL);
-	free(cmd);
-}
-
-void	free_command_pipeline(t_command *first)
-{
-	t_command	*tmp;
-
-	while (first != NULL)
-	{
-		tmp = first->next;
-		free_cmd(first);
-		first = tmp;
-	}
-}
 
 void	free_for_end(t_minishell *minishell)
 {
@@ -60,7 +32,7 @@ void	treat_result(int pid, int wait_status, int *pipeline_result,
 		{
 			if (!g_sigint)
 			{
-				ft_dprintf(2, QUIT);
+				ft_dprintf(STDERR_FILENO, QUIT);
 				g_sigint = 1;
 			}
 		}
@@ -95,16 +67,17 @@ int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 
 int	wait_for_result(int count, int last_pid, int status)
 {
-	int	i;
-	int	pid;
-	int	wait_status;
+	size_t	i;
+	int		pid;
+	int		wait_status;
 
-	i = -1;
-	while (++i < count)
+	i = 0;
+	while (i < (size_t) count)
 	{
 		pid = waitpid(-1, &wait_status, 0);
-		close(0);
+		close(STDIN_FILENO);
 		treat_result(pid, wait_status, &status, last_pid);
+		i++;
 	}
 	return (status);
 }
@@ -115,7 +88,7 @@ int	pipeline_clean(t_minishell *minishell, int code)
 	g_sigint = 0;
 	dup2(minishell->save_stdin, 0);
 	close(minishell->save_stdin);
-	free_command_pipeline(minishell->current_pipeline_first);
+	free_cmd_pipeline(minishell->current_pipeline_first);
 	minishell->current_pipeline_first = NULL;
 	return (code);
 }

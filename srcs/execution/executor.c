@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 17:13:22 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/19 20:14:19 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 		error_exit(PIPE_ERROR, errno);
 	*pid = fork();
 	if (*pid == -1)
-		error_exit(FORK_ERROR, errno);
+		display_error_more("fork");
 	dup_for_pipe(command, *pid, pipefd);
 	dup_for_redirections(command, *pid);
 	if (*pid != 0)
