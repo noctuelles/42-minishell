@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 10:59:08 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:22:59 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	ft_export(int argc, char **argv, t_minishell *minishell)
 	i = 0;
 	while (++i < argc)
 	{
-		if (strchr(argv[i], '='))
+		if (ft_strchr(argv[i], '='))
 			import_one_var(&env, argv[i]);
 		else
 		{

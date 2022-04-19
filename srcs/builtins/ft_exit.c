@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 10:56:40 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:13:02 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ void	init(int argc, t_minishell *minishell)
 
 void	check_long(char **argv, t_minishell *minishell)
 {
-	if (argv[1][0] == '-' && (strcmp(argv[1], "-9223372036854775808") > 0
-		|| strlen(argv[1]) > 20))
+	if (argv[1][0] == '-' && (ft_strcmp(argv[1], "-9223372036854775808") > 0
+		|| ft_strlen(argv[1]) > 20))
 	{
 		ft_dprintf(2, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		minishell->last_ret = 2;
 		end_program(minishell, -1);
 	}
-	if (argv[1][0] != '-' && (strcmp(argv[1], "9223372036854775807") > 0
-		|| strlen(argv[1]) > 19))
+	if (argv[1][0] != '-' && (ft_strcmp(argv[1], "9223372036854775807") > 0
+		|| ft_strlen(argv[1]) > 19))
 	{
 		ft_dprintf(2, EXIT_NUMERIC_REQUIRED, argv[0], argv[1]);
 		minishell->last_ret = 2;

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:49:24 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:00:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:23:00 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ char	*create_path(char *path, char *command_name)
 	char	*exec_path;
 
 	exec_path = malloc(sizeof(char)
-			* (strlen(path) + strlen(command_name) + 2));
+			* (ft_strlen(path) + ft_strlen(command_name) + 2));
 	exec_path[0] = '\0';
-	strcat(exec_path, path);
-	strcat(exec_path, "/");
-	strcat(exec_path, command_name);
+	ft_strcat(exec_path, path);
+	ft_strcat(exec_path, "/");
+	ft_strcat(exec_path, command_name);
 	return (exec_path);
 }
 
@@ -46,7 +46,7 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 	exec_path = NULL;
 	if (get_var(minishell->vars, "PATH") != NULL)
 	{
-		cpy = strdup(get_var(minishell->vars, "PATH")->value);
+		cpy = ft_strdup(get_var(minishell->vars, "PATH")->value);
 		path = cpy;
 		while (ft_strtrunc(&path, ':'))
 		{
@@ -67,7 +67,7 @@ char	*get_path_from_env(char *command_name, t_minishell *minishell)
 char	*get_path_from_name(char *name, t_minishell *minishell,
 	t_command *command)
 {
-	if (strchr(name, '/') == NULL)
+	if (ft_strchr(name, '/') == NULL)
 	{
 		if (!is_builtin(name))
 		{
@@ -113,9 +113,9 @@ void	add_io(t_arg *node, t_command *command)
 
 int	treat_line(char *line, t_arg *node, int pipefd[2], t_command *command)
 {
-	if (strcmp(line, node->value) != 0)
+	if (ft_strcmp(line, node->value) != 0)
 	{
-		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
 		return (0);
@@ -186,7 +186,7 @@ t_command	*init_cmd(void)
 {
 	t_command	*command;
 
-	command = calloc(sizeof(t_command), 1);
+	command = ft_calloc(sizeof(t_command), 1);
 	command->io_in = NULL;
 	command->io_out = NULL;
 	command->here_doc = -1;
@@ -235,7 +235,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 	command = prepare_command(piped, node, &args_count, minishell);
 	if (command->name != NULL && !g_sigint)
 	{
-		command->args = calloc(sizeof(char *), args_count + 1);
+		command->args = ft_calloc(sizeof(char *), args_count + 1);
 		elem = node->args;
 		i = 0;
 		while (elem)

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 10:57:52 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:08:53 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ void	update_env(char *pwd, char *old_pwd, t_dlist *env)
 		get_var(env, "OLDPWD")->value = old_pwd;
 	}
 	else
-		import_one_var(&env, strcat(strdup("OLDPWD="), old_pwd));
-	get_var(env, "OLDPWD")->value_len = strlen(old_pwd);
+		import_one_var(&env, ft_strcat(ft_strdup("OLDPWD="), old_pwd));
+	get_var(env, "OLDPWD")->value_len = ft_strlen(old_pwd);
 	if (get_var(env, "PWD") != NULL)
 	{
 		get_var(env, "PWD")->value = pwd;
 	}
 	else
-		import_one_var(&env, strcat(strdup("PWD="), pwd));
-	get_var(env, "PWD")->value_len = strlen(pwd);
+		import_one_var(&env, ft_strcat(ft_strdup("PWD="), pwd));
+	get_var(env, "PWD")->value_len = ft_strlen(pwd);
 }
 
 int	ft_cd(int argc, char **argv, t_minishell *minishell)
