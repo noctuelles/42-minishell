@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:43:24 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:47:14 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,9 @@ static bool	check_if_expandable(t_dlist *elem)
 static void	*print_errmsg(t_minishell *minishell, int errcode)
 {
 	if (errcode == -1)
-		display_error_more(minishell, STR_OPENDIR, 1);
+		display_error_more(minishell, STR_OPENDIR, ERR_OPENDIR);
 	else if (errcode == -2)
-		display_error_more(minishell, STR_READDIR, 1);
+		display_error_more(minishell, STR_READDIR, ERR_READDIR);
 	else if (errcode == -3)
 		display_error_more(minishell, STR_MALLOC, ERR_MALLOC);
 	return (NULL);

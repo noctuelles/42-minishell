@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:26:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:49:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static t_dlist	*iter(t_dlist **args, t_minishell *minishell, t_dlist *(*f)())
 		next = elem->next;
 		arg = (t_arg *) elem->content;
 		elem = f(args, elem, arg, minishell);
-		if (elem == NULL && minishell->err)
+		if (!elem && minishell->err)
 			return (NULL);
 		else if (elem != next)
 			elem = elem->next;

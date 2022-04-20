@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:28:45 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:51:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,6 @@
 # include <errno.h>
 # include "env.h"
 
-# define BLK "\e[0;30m"
-# define RED "\e[0;31m"
-# define GRN "\e[0;32m"
-# define YEL "\e[0;33m"
-# define BLU "\e[0;34m"
-# define MAG "\e[0;35m"
-# define CYN "\e[0;36m"
-# define WHT "\e[0;37m"
-# define RST "\e[0m"
-
 # define STR_SHELL_NAME         "minishell"
 
 # define STR_PROMPT_ARROW       " > "
@@ -46,7 +36,9 @@
 
 # define STR_MALLOC             "malloc"
 # define STR_OPENDIR            "opendir"
+# define ERR_OPENDIR            120
 # define STR_READDIR            "readdir"
+# define ERR_READDIR            121
 # define STR_GETCWD             "getcwd"
 # define STR_ACCESS             "access"
 
@@ -54,7 +46,6 @@
 
 # define STR_ENV_WARNING        STR_SHELL_NAME ": warning: you seems to have \
 launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
-
 
 # define ENO                    0
 
