@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:34:42 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 16:18:27 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*fill_envp_str(char **str, t_var var)
 	return (*str);
 }
 
-char	**free_envp(char **envp, size_t i)
+static char	**free_envp(char **envp, size_t i)
 {
 	size_t	n;
 
