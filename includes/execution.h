@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 14:21:51 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 16:27:03 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@
 # include "builtins.h"
 # include "parser.h"
 
-# define STR_CMD_NOT_FOUND  STR_SHELL_NAME ": %s: command not found.\n"
-# define PIPE_ERROR "minishell: Pipe error occured\n"
-# define FORK_ERROR "minishell: Fork error occured\n"
-# define STR_EXEC_ERROR     STR_SHELL_NAME ": error occured during execution: "
-# define HERE_DOC_EOF "minishell: warning: here-document at line %i \
+# define STR_CMD_NOT_FOUND  "minishell: %s: command not found.\n"
+# define PIPE_ERROR         "minishell: pipe error occured\n"
+# define FORK_ERROR         "minishell: fork error occured\n"
+# define STR_EXEC_ERROR     "minishell: error occured during execution: "
+# define HERE_DOC_EOF       "minishell: warning: here-document at line %i \
 delimited by end-of-file (wanted `%s')\n"
-# define END_BY_SIGNAL "minishell: process %i terminated by a signal (%i)\n"
-# define QUIT "Quit (core dumped)\n"
+# define END_BY_SIGNAL      "minishell: process %i terminated by a signal \
+(%i)\n"
+# define QUIT               "Quit (core dumped)\n"
 
 extern int	g_sigint;
 
