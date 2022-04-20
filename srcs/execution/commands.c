@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 22:19:15 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 02:54:06 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,10 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 	t_command	*first;
 
 	first = NULL;
-	if (!apply_expansion_on_node(root, minishell))
-		return (NULL);
+	apply_expansion_on_node(root, minishell);
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false, minishell);
-		if (!first)
-			return (NULL);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 14:50:38 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 18:44:32 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:43:24 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,14 @@ static bool	check_if_expandable(t_dlist *elem)
 		return (true);
 }
 
-static void	*print_errmsg(int errcode)
+static void	*print_errmsg(t_minishell *minishell, int errcode)
 {
 	if (errcode == -1)
-		display_error_more(STR_OPENDIR);
+		display_error_more(minishell, STR_OPENDIR, 1);
 	else if (errcode == -2)
-		display_error_more(STR_READDIR);
+		display_error_more(minishell, STR_READDIR, 1);
 	else if (errcode == -3)
-		display_error_more(STR_MALLOC);
+		display_error_more(minishell, STR_MALLOC, ERR_MALLOC);
 	return (NULL);
 }
 
@@ -116,7 +116,7 @@ t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg,
 		return (elem);
 	errcode = scan_current_directory(&files, arg);
 	if (errcode != 0)
-		return (print_errmsg(errcode));
+		return (print_errmsg(minishell, errcode));
 	if (ft_dlstsize(files) > 1 && arg->type != ARG_WORD)
 	{
 		ft_dprintf(STDERR_FILENO, STR_ERROR_M, "ambiguous redirect",

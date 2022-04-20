@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Updated: 2022/04/17 22:08:13 by dhubleur         ###   ########.fr       */
-/*   Updated: 2022/04/18 18:12:09 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:29:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg,
 	{
 		subtkns = tokenize_from_arg(arg, arg->value);
 		if (subtkns == NULL)
-			return (NULL);
+			return (set_minishell_err_null(minishell, ERR_MALLOC));
 		if (ft_dlstsize(subtkns) > 1 && arg->type != ARG_WORD)
 		{
 			ft_dprintf(STDERR_FILENO, STR_ERROR_M, "ambiguous redirect",
@@ -71,13 +71,13 @@ t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
 			i = include_variable(arg, get_var_info(&arg->value[i + 1],
 						minishell));
 			if (i == -2)
-				return (display_error_more(STR_MALLOC));
+				return (display_error_more(minishell, STR_MALLOC, ERR_MALLOC));
 		}
 		i++;
 	}
 	subargs = post_process(args, elem, arg, minishell);
-	if (subargs == NULL && errno != ENO)
-		return (display_error_more(STR_MALLOC));
+	if (subargs == NULL && minishell->err)
+		return (display_error_more(NULL, STR_MALLOC, 0));
 	else
 		return (subargs);
 }

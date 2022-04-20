@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 22:24:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:33:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ void	*setup_minishell(int argc, char **argv, t_minishell *minishell,
 	(void) argc;
 	(void) argv;
 	ft_memset(minishell, 0, sizeof(t_minishell));
-	minishell->vars = import_var(&minishell->vars, envp);
-	if (!minishell->vars && errno != 0)
-		return (display_error_more(STR_MALLOC));
+	minishell->vars = import_var(minishell, envp);
+	if (!minishell->vars && minishell->err)
+		return (display_error_more(NULL, STR_MALLOC, 0));
 	else if (!minishell->vars)
 		ft_dprintf(STDERR_FILENO, STR_ENV_WARNING);
 	return (minishell);

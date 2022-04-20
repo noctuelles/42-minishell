@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:16:18 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 18:11:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:32:52 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_minishell
 {
 	char			*cmd_str;
 	t_dlist			*vars;
+	int				err;
 	int				last_ret;
 	int				save_stdin;
 	t_ast_tree_node	*root;
@@ -46,7 +47,7 @@ t_var	*get_var(t_dlist *lst_var, char *name);
 t_dlist	*add_var(t_dlist **lst_var, char *name, char *value);
 void	del_var(t_dlist **lst_var, char *name);
 void	free_var(void *dlst_content);
-t_dlist	*import_var(t_dlist **lst_var, char **envp);
+t_dlist	*import_var(t_minishell *minishell, char **envp);
 t_var	*update_var(t_dlist *lst_var, char *name, t_var to_update);
 char	**export_env(t_dlist *lst);
 t_dlist	*import_one_var(t_dlist **lst_var, char *value);
