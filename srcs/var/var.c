@@ -6,16 +6,15 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:32:24 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 16:07:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 #include "minishell.h"
 #include "ft_dprintf.h"
 #include <stdbool.h>
-#include <ctype.h>
+#include <stdlib.h>
 
 t_dlist	*add_var(t_dlist **lst_var, char *name, char *value)
 {
@@ -42,20 +41,6 @@ t_dlist	*add_var(t_dlist **lst_var, char *name, char *value)
 	}
 	ft_dlstadd_back(lst_var, elem);
 	return (*lst_var);
-}
-
-/* free_var() free a given variable.
- * It doesn't try to free his name and value if the variable is inherited from
- * the execution environnement. */
-
-void	free_var(void *dlst_content)
-{
-	t_var	*var;
-
-	var = (t_var *) dlst_content;
-	free(var->name);
-	free(var->value);
-	free(var);
 }
 
 /* del_var() try to delete the variable whose name is passed as an argument.
@@ -110,78 +95,18 @@ t_dlist	*import_var(t_minishell *minishell, char **envp)
 	return (minishell->vars);
 }
 
-bool	is_valid_variable_name(char *str)
-{
-	int	i;
+/* free_var() free a given variable.
+ * It doesn't try to free his name and value if the variable is inherited from
+ * the execution environnement. */
 
-	if (!isalpha(str[0]) && str[0] != '_')
-		return (false);
-	i = -1;
-	while (str[++i])
-	{
-		if (!isalnum(str[i]) && str[i] != '_')
-			return (false);
-	}
-	return (true);
-}
-
-t_dlist	*import_in_env(t_dlist **lst_var, t_var var)
-{
-	if (get_var(*lst_var, var.name) == NULL)
-	{
-		if (!add_var(lst_var, var.name, var.value))
-			return (NULL);
-	}
-	else
-	{
-		free(get_var(*lst_var, var.name)->value);
-		get_var(*lst_var, var.name)->value = ft_strdup(var.value);
-		get_var(*lst_var, var.name)->value_len = ft_strlen(var.value);
-	}
-	return (*lst_var);
-}
-
-t_dlist	*import_one_var(t_dlist **lst_var, char *value)
-{
-	size_t	j;
-	t_var	var;
-
-	j = 0;
-	while (value[j] != '\0')
-	{
-		if (value[j] == '=')
-		{
-			var.name = &value[0];
-			var.value = &value[j + 1];
-			value[j] = '\0';
-			break ;
-		}
-		j++;
-	}
-	if (!is_valid_variable_name(var.name))
-	{
-		ft_dprintf(2, "Minishell: export: '%s=%s': not a valid identifier\n",
-			var.name, var.value);
-		return (*lst_var);
-	}
-	return (import_in_env(lst_var, var));
-}
-
-/* get_var() returns a pointer to a shell variable, searching by it's name.
- * If the variable doesn't exist, the function return NULL. */
-
-t_var	*get_var(t_dlist *lst_var, char *name)
+void	free_var(void *dlst_content)
 {
 	t_var	*var;
 
-	while (lst_var)
-	{
-		var = (t_var *) lst_var->content;
-		if (ft_strcmp(var->name, name) == 0)
-			return (var);
-		lst_var = lst_var->next;
-	}
-	return (NULL);
+	var = (t_var *) dlst_content;
+	free(var->name);
+	free(var->value);
+	free(var);
 }
 
 void	free_env(t_dlist *env)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Updated: 2022/04/17 22:08:13 by dhubleur         ###   ########.fr       */
-/*   Updated: 2022/04/20 12:29:43 by plouvel          ###   ########.fr       */
+/*   Created: 2022/04/20 16:08:10 by plouvel           #+#    #+#             */
+/*   Updated: 2022/04/20 16:08:21 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static t_dlist	*post_process(t_dlist **args, t_dlist *elem, t_arg *arg,
 		if (ft_dlstsize(subtkns) > 1 && arg->type != ARG_WORD)
 		{
 			ft_dprintf(STDERR_FILENO, STR_ERROR_M, "ambiguous redirect",
-					arg->value);
+				arg->value);
 			minishell->ambiguous_redir = true;
 		}
 		return (insert_list(args, subtkns, elem));

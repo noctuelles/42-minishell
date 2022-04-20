@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 14:22:18 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:59:38 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@
 # define STR_SHELL_NAME         "minishell"
 
 # define STR_PROMPT_ARROW       " > "
-# define STR_STD_PROMPT         STR_SHELL_NAME STR_PROMPT_ARROW
-# define STR_PARSE_ERROR        STR_SHELL_NAME ": %s: near token '%s'.\n"
-# define STR_ERROR              STR_SHELL_NAME ": %s.\n"
-# define STR_ERROR_M            STR_SHELL_NAME ": %s: %s.\n"
+# define STR_STD_PROMPT         "minishell > "
+# define STR_PARSE_ERROR        "minishell: %s: near token '%s'.\n"
+# define STR_ERROR              "minishell: %s.\n"
+# define STR_ERROR_M            "minishell: %s: %s.\n"
 
 # define STR_MALLOC             "malloc"
 # define STR_OPENDIR            "opendir"
@@ -44,8 +44,8 @@
 
 # define CURRENT_DIR            "."
 
-# define STR_ENV_WARNING        STR_SHELL_NAME ": warning: you seems to have \
-launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
+# define STR_ENV_WARNING        "minishell: warning: you seems to have launch \
+the minishell into an empty environnement.\n\n"
 
 # define ENO                    0
 
@@ -67,8 +67,6 @@ bool	is_expnd_quote(t_list *lst, char *pquote);
 bool	is_rem_quote(t_list *lst, char *pquote);
 t_list	*add_to_list(t_list **list, void *content);
 t_dlist	*insert_list(t_dlist **main_lst, t_dlist *to_insert, t_dlist *elem);
-
-
 
 /* wildcard_expansion.c */
 
@@ -108,4 +106,5 @@ char	*read_from_user(t_minishell *minishell);
 
 
 void	*set_minishell_err_null(t_minishell *minishell, int err);
+
 #endif
