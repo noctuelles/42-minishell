@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 22:23:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:38:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,12 @@
 
 
 # define STR_CMD_NOT_FOUND  STR_SHELL_NAME ": %s: command not found.\n"
-# define ERROR_ERRNO "Minishell: %s: %s\n"
-# define PIPE_ERROR "Minishell: Pipe error occured\n"
-# define FORK_ERROR "Minishell: Fork error occured\n"
+# define PIPE_ERROR "minishell: Pipe error occured\n"
+# define FORK_ERROR "minishell: Fork error occured\n"
 # define STR_EXEC_ERROR     STR_SHELL_NAME ": error occured during execution: "
-# define HERE_DOC_EOF "Minishell: warning: here-document at line %i \
+# define HERE_DOC_EOF "minishell: warning: here-document at line %i \
 delimited by end-of-file (wanted `%s')\n"
-# define END_BY_SIGNAL "Minishell: process %i terminated by a signal (%i)\n"
+# define END_BY_SIGNAL "minishell: process %i terminated by a signal (%i)\n"
 # define QUIT "Quit (core dumped)\n"
 
 extern int	g_sigint;

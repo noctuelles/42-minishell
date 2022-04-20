@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 22:19:15 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:46:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+#include "ft_dprintf.h"
 
 /* gestions d'erreurs et simplification */
 
@@ -50,7 +51,11 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 		command->name = get_path_from_name(
 				((t_arg *)node->args->content)->value, minishell, command);
 		if (!command->name)
+		{
+			if (minishell->err != 0)
+				return (NULL);
 			return (command);
+		}
 		*arg_count = 1;
 		if (node->args->next != NULL)
 			parse_list(node->args->next, command, arg_count);
@@ -72,9 +77,13 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 	int			i;
 
 	command = prepare_command(piped, node, &args_count, minishell);
+	if (!command)
+		return (NULL);
 	if (command->name != NULL && !g_sigint)
 	{
 		command->args = ft_calloc(sizeof(char *), args_count + 1);
+		if (command->args)
+			return (NULL);
 		elem = node->args;
 		i = 0;
 		while (elem)
@@ -109,6 +118,7 @@ void	add_command(t_command *cmd, t_command **lst)
 t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 {
 	t_command	*first;
+	t_command	*cur;
 
 	first = NULL;
 	if (!apply_expansion_on_node(root, minishell))
@@ -123,11 +133,27 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 	{
 		while (root->type == NODE_PIPE && !g_sigint)
 		{
-			add_command(parse_command(root->left, true, minishell), &first);
+			cur = parse_command(root->left, true, minishell);
+			if (!cur)
+			{
+				ft_dprintf(2, "Malloc error occured while parsing commands\n");
+				free_cmd_pipeline(first);
+				return (NULL);
+			}
+			add_command(cur, &first);
 			root = root->right;
 		}
 		if (!g_sigint)
-			add_command(parse_command(root, false, minishell), &first);
+		{
+			cur = parse_command(root->left, false, minishell);
+			if (!cur)
+			{
+				ft_dprintf(2, "Malloc error occured while parsing commands\n");
+				free_cmd_pipeline(first);
+				return (NULL);
+			}
+			add_command(cur, &first);
+		}
 	}
 	return (first);
 }

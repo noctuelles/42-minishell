@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 22:24:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:42:12 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,19 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	init_variable(&forking, &count, &status, &last_pid);
 	minishell->save_stdin = dup(STDIN_FILENO);
 	first = parse_commands(root, minishell);
+	if (!first)
+		return (1);
 	minishell->current_pipeline_first = first;
 	if (g_sigint)
 		return (pipeline_clean(minishell, 130));
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	if (forking)
 		set_signals_as_parent();
-	while (first != NULL)
+	while (first != NULL && !g_sigint)
 		count += treat_return_code(&first,
 				execute_file(first, minishell, forking), &status, &last_pid);
+	if (g_sigint)
+		return (pipeline_clean(minishell, 1));
 	status = wait_for_result(count, last_pid, status);
 	if (g_sigint)
 		return (pipeline_clean(minishell, 130));

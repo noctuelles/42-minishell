@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 13:55:06 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 20:13:11 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:34:57 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ int	treat_return_code(t_command **cmd, int ret, int *status, int *last_pid)
 
 	first = *cmd;
 	count = 0;
+	if (ret == 424242)
+	{
+		g_sigint = 1;
+		return (0);
+	}
 	if (ret == 4242)
 		count = 1;
 	if (first->next == NULL)
