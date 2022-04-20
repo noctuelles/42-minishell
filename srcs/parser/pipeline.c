@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:09:37 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/14 20:14:49 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 02:18:20 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ t_ast_tree_node	*pipeline(t_parser *parser)
 	else if (is_valid_terminal(curr_type(*parser)))
 		rslt = cmd_node;
 	else
-		return (set_parser_errcode(parser, ERR_UNEXPECTED_TOKEN));
+		return (clean(parser, cmd_node, NULL, ERR_UNEXPECTED_TOKEN));
 	return (rslt);
 }
