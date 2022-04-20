@@ -6,12 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:46:04 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 13:23:21 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "ft_dprintf.h"
+#include "minishell.h"
 
 /* gestions d'erreurs et simplification */
 
@@ -82,7 +83,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 	if (command->name != NULL && !g_sigint)
 	{
 		command->args = ft_calloc(sizeof(char *), args_count + 1);
-		if (command->args)
+		if (!command->args)
 			return (NULL);
 		elem = node->args;
 		i = 0;
@@ -121,13 +122,14 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 	t_command	*cur;
 
 	first = NULL;
-	if (!apply_expansion_on_node(root, minishell))
+	apply_expansion_on_node(root, minishell);
+	if (!root && minishell->err != 0)
 		return (NULL);
 	if (root->type == NODE_COMMAND)
 	{
 		first = parse_command(root, false, minishell);
 		if (!first)
-			return (NULL);
+			display_error_more(NULL, "malloc", 0);
 	}
 	else
 	{
@@ -136,7 +138,7 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 			cur = parse_command(root->left, true, minishell);
 			if (!cur)
 			{
-				ft_dprintf(2, "Malloc error occured while parsing commands\n");
+				display_error_more(NULL, "malloc", 0);
 				free_cmd_pipeline(first);
 				return (NULL);
 			}
@@ -145,10 +147,10 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 		}
 		if (!g_sigint)
 		{
-			cur = parse_command(root->left, false, minishell);
+			cur = parse_command(root, false, minishell);
 			if (!cur)
 			{
-				ft_dprintf(2, "Malloc error occured while parsing commands\n");
+				display_error_more(NULL, "malloc", 0);
 				free_cmd_pipeline(first);
 				return (NULL);
 			}

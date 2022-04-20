@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:19:21 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 15:06:05 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:28:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ void	*display_error(void)
 	return (NULL);
 }
 
-void	*display_error_more(const char *fcnt_name)
+void	*display_error_more(t_minishell *minishell, const char *fcnt_name,
+		int err)
 {
+	if (minishell)
+		minishell->err = err;
 	ft_dprintf(STDERR_FILENO, STR_ERROR_M, fcnt_name, strerror(errno));
 	return (NULL);
 }

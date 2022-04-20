@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 13:53:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:34:42 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ int	refill_env(t_dlist **env)
 		free(cwd);
 	}
 	if (retcode == -1)
-		display_error_more(STR_MALLOC);
+		display_error_more(NULL, STR_MALLOC, 0);
 	else if (retcode == -2)
-		display_error_more(STR_GETCWD);
+		display_error_more(NULL, STR_GETCWD, 0);
 	return (retcode);
 }

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 12:42:12 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 12:51:52 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,14 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	minishell->save_stdin = dup(STDIN_FILENO);
 	first = parse_commands(root, minishell);
 	if (!first)
+	{
 		return (1);
+	}
 	minishell->current_pipeline_first = first;
 	if (g_sigint)
+	{
 		return (pipeline_clean(minishell, 130));
+	}
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	if (forking)
 		set_signals_as_parent();
@@ -48,10 +52,14 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 		count += treat_return_code(&first,
 				execute_file(first, minishell, forking), &status, &last_pid);
 	if (g_sigint)
+	{
 		return (pipeline_clean(minishell, 1));
+	}
 	status = wait_for_result(count, last_pid, status);
 	if (g_sigint)
+	{
 		return (pipeline_clean(minishell, 130));
+	}
 	return (pipeline_clean(minishell, status));
 }
 
@@ -71,9 +79,9 @@ void	*setup_minishell(int argc, char **argv, t_minishell *minishell,
 	(void) argc;
 	(void) argv;
 	ft_memset(minishell, 0, sizeof(t_minishell));
-	minishell->vars = import_var(&minishell->vars, envp);
-	if (!minishell->vars && errno != 0)
-		return (display_error_more(STR_MALLOC));
+	minishell->vars = import_var(minishell, envp);
+	if (!minishell->vars && minishell->err)
+		return (display_error_more(NULL, STR_MALLOC, 0));
 	else if (!minishell->vars)
 		ft_dprintf(STDERR_FILENO, STR_ENV_WARNING);
 	return (minishell);
@@ -89,6 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	minishell.current_pipeline_first = NULL;
 	while (1)
 	{
+		minishell.err = 0;
 		minishell.cmd_str = read_from_user(&minishell);
 		if (minishell.cmd_str)
 		{

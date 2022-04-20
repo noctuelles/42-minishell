@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 14:43:46 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 18:13:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:26:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static t_dlist	*iter(t_dlist **args, t_minishell *minishell, t_dlist *(*f)())
 		next = elem->next;
 		arg = (t_arg *) elem->content;
 		elem = f(args, elem, arg, minishell);
-		if (elem == NULL && errno != ENO)
+		if (elem == NULL && minishell->err)
 			return (NULL);
 		else if (elem != next)
 			elem = elem->next;
@@ -54,11 +54,11 @@ t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
 	if (root->type == NODE_COMMAND)
 		cmd_node = root;
 	new_args = iter(&cmd_node->args, minishell, var_expansion);
-	if (!new_args)
+	if (!new_args && minishell->err)
 		return (NULL);
 	cmd_node->args = new_args;
 	new_args = iter(&cmd_node->args, minishell, wildcard_expansion);
-	if (!new_args)
+	if (!new_args && minishell->err)
 		return (NULL);
 	cmd_node->args = new_args;
 	if (minishell->ambiguous_redir)

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 13:54:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 12:21:57 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 12:32:24 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	del_var(t_dlist **lst_var, char *name)
  * envp is considered to be the paremeters implicitly passed to main()
  * routine. */
 
-t_dlist	*import_var(t_dlist **lst_var, char **envp)
+t_dlist	*import_var(t_minishell *minishell, char **envp)
 {
 	size_t	i;
 	size_t	j;
@@ -103,11 +103,11 @@ t_dlist	*import_var(t_dlist **lst_var, char **envp)
 			}
 			j++;
 		}
-		if (!add_var(lst_var, var.name, var.value))
-			return (NULL);
+		if (!add_var(&minishell->vars, var.name, var.value))
+			return (set_minishell_err_null(minishell, ERR_MALLOC));
 		i++;
 	}
-	return (*lst_var);
+	return (minishell->vars);
 }
 
 bool	is_valid_variable_name(char *str)

@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:53:14 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 12:36:47 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 12:49:28 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ int	pipe_and_fork(int pipefd[2], t_command *command, int *pid)
 {
 	if ((command->is_piped && pipe(pipefd) < 0))
 	{
-		display_error_more("pipe");
+		display_error_more(NULL, "pipe", 0);
 		return (0);
 	}
 	*pid = fork();
 	if (*pid == -1)
 	{
-		display_error_more("fork");
+		display_error_more(NULL, "fork", 0);
 		return (0);
 	}
 	dup_for_pipe(command, *pid, pipefd);

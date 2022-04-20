@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/19 17:16:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 12:28:45 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
 
 # define STR_BUILTIN_EXPORT     "export"
 
-void	*display_error_more(const char *fcnt_name);
+void	*display_error_more(t_minishell *minishell, const char *fcnt_name,
+		int err);
 
 /* io_utils.c */
 
@@ -114,4 +115,6 @@ void	check_for_break(t_lexer *lex);
 
 char	*read_from_user(t_minishell *minishell);
 
+
+void	*set_minishell_err_null(t_minishell *minishell, int err);
 #endif

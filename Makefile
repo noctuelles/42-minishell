@@ -6,7 +6,7 @@
 #    By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 10:05:58 by dhubleur          #+#    #+#              #
-#    Updated: 2022/04/20 12:41:19 by dhubleur         ###   ########.fr        #
+#    Updated: 2022/04/20 12:51:09 by dhubleur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS_PATH		=	./srcs
 SRCS			=	main.c \
 					prompt.c \
 					signals.c \
+					utils.c \
 					signals_utils.c \
 					$(addprefix builtins/, \
 						ft_cd.c \
