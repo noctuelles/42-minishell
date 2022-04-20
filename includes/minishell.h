@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:51:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 14:22:18 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ launch the " STR_SHELL_NAME " into an empty environnement.\n\n"
 # define STR_BUILTIN_EXPORT     "export"
 
 void	*display_error_more(t_minishell *minishell, const char *fcnt_name,
-		int err);
+			int err);
 
 /* io_utils.c */
 
@@ -74,18 +74,18 @@ t_dlist	*insert_list(t_dlist **main_lst, t_dlist *to_insert, t_dlist *elem);
 
 void	print_tokens(void *content);
 t_dlist	*wildcard_expansion(t_dlist **args, t_dlist *elem, t_arg *arg,
-		t_minishell *minishell);
+			t_minishell *minishell);
 
 /* wildcard_expansion_utils.c */
 
-int	add_file_to_list(t_arg *arg, t_dlist **files, struct dirent *dir_ent);
+int		add_file_to_list(t_arg *arg, t_dlist **files, struct dirent *dir_ent);
 void	ascii_sort_list(t_dlist *files);
 size_t	compute_str_size(t_dlist *files);
 
 /* var_expansion.c */
 
 t_dlist	*var_expansion(t_dlist **args, t_dlist *elem,
-		t_arg *arg, t_minishell *minishell);
+			t_arg *arg, t_minishell *minishell);
 
 /* var_expansion_utils.c */
 

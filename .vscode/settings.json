@@ -20,6 +20,7 @@
 		"builtins.h": "c",
 		"typeinfo": "cpp",
 		"algorithm": "c",
-		"stddef.h": "c"
+		"stddef.h": "c",
+		"env.h": "c"
 	}
 }

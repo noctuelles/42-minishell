@@ -6,15 +6,15 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 18:41:40 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 14:20:46 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-#include "libft.h"
-#include <stdbool.h>
+# include "libft.h"
+# include <stdbool.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <stdlib.h>
@@ -23,7 +23,7 @@
 # include <stdio.h>
 # include <sys/wait.h>
 
-typedef enum	s_node_type
+typedef enum e_node_type
 {
 	NODE_PIPE,
 	NODE_COMMAND,
@@ -32,7 +32,7 @@ typedef enum	s_node_type
 	NODE_LOGICAL_OR,
 }	t_node_type;
 
-typedef struct	s_ast_tree_node
+typedef struct s_ast_tree_node
 {
 	t_node_type				type;
 	t_dlist					*args;
@@ -47,7 +47,7 @@ void			ast_tree_apply_preorder(t_ast_tree_node *root);
 void			ast_tree_print_graph(t_ast_tree_node *root);
 void			ast_tree_delete_node(void *node);
 t_ast_tree_node	*ast_tree_attach(t_ast_tree_node *root, t_ast_tree_node *left,
-		t_ast_tree_node *right);
+					t_ast_tree_node *right);
 
 /* Debug purpose. */
 

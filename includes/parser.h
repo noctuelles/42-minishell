@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 11:05:25 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/18 14:20:30 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/20 14:22:49 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef enum e_parser_errcode
 	ERR_INVALID_PRT
 }	t_parser_errcode;
 
-typedef enum	e_arg_type
+typedef enum e_arg_type
 {
 	ARG_WORD,
 	ARG_REDIRECT_STDIN,
@@ -53,7 +53,7 @@ typedef enum	e_arg_type
 	ARG_REDIRECT_HERE_DOC
 }	t_arg_type;
 
-typedef struct	s_arg
+typedef struct s_arg
 {
 	char		*value;
 	size_t		len;
@@ -63,13 +63,14 @@ typedef struct	s_arg
 	t_list		*wldc_lst;
 	char		quote;
 }	t_arg;
-typedef struct	s_parse_stack
+
+typedef struct s_parse_stack
 {
 	t_dlist	*top;
 	t_dlist	*cnt;
 }	t_parse_stack;
 
-typedef struct	s_parser
+typedef struct s_parser
 {
 	t_dlist				*tkns;
 	t_token				*last_used_tkn;
@@ -106,32 +107,32 @@ t_ast_tree_node	*parse_from_str(char *str);
 /* stack.c */
 
 t_dlist			*push_stack(t_parser *parser, t_parse_stack *stack,
-		void *content);
+					void *content);
 void			pop_stack(t_parse_stack *stack, size_t times);
 
 /* pushnstack.c */
 
 int				assemble_out_stack_top(t_parser *parser, size_t npop_op,
-		bool force_pop);
+					bool force_pop);
 int				handle_cmd_start(t_parser *parser);
 int				handle_cmd_end(t_parser *parser);
 
 /* pushnstack_utils.c */
 
-bool	check_opening_prt(t_parser *parser);
-bool	is_top_an_operator(t_parser parser);
-bool	check_tkn_after_prt(t_parser *parser);
+bool			check_opening_prt(t_parser *parser);
+bool			is_top_an_operator(t_parser parser);
+bool			check_tkn_after_prt(t_parser *parser);
 
 /* args.c */
 
 t_arg			*new_arg(char *value, t_token_type token_type, bool dup);
 void			free_arg(void *parg);
 t_arg			*add_arg_to_list(t_parser *parser, t_dlist **args,
-		t_token_type type);
+					t_token_type type);
 
 /* node_expansion.c */
 
 t_ast_tree_node	*apply_expansion_on_node(t_ast_tree_node *root,
-		t_minishell *minishell);
+					t_minishell *minishell);
 
 #endif
