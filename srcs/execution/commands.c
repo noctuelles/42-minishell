@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 13:35:43 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:27:04 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ void	*parse_list(t_dlist *node, t_command *command, int *arg_count)
 	if (arg_type == ARG_WORD)
 		(*arg_count)++;
 	else if (arg_type == ARG_REDIRECT_HERE_DOC)
+	{
+		if (command->here_doc > 0)
+			close(command->here_doc);
 		here_doc_logic(node->content, command);
+	}
 	else
 	{
 		if (!add_io(node->content, command))
