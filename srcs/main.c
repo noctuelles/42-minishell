@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 15:39:04 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 12:51:52 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 14:31:16 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@
 #include <readline/history.h>
 #include <signal.h>
 
-void	init_variable(int *forking, int *count, int *status, int *last_pid)
+int	init_variable(int *count, int *status, int *last_pid,
+			t_minishell *minishell)
 {
-	*forking = 1;
 	*count = 0;
 	*status = 0;
 	*last_pid = 0;
+	minishell->save_stdin = dup(STDIN_FILENO);
+	return (1);
 }
 
 int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
@@ -33,18 +35,13 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 	int			last_pid;
 	t_command	*first;
 
-	init_variable(&forking, &count, &status, &last_pid);
-	minishell->save_stdin = dup(STDIN_FILENO);
+	forking = init_variable(&count, &status, &last_pid, minishell);
 	first = parse_commands(root, minishell);
 	if (!first)
-	{
 		return (1);
-	}
 	minishell->current_pipeline_first = first;
 	if (g_sigint)
-	{
 		return (pipeline_clean(minishell, 130));
-	}
 	forking = !(first->next == NULL && first->name && is_builtin(first->name));
 	if (forking)
 		set_signals_as_parent();
@@ -52,14 +49,10 @@ int	execute_pipeline(t_ast_tree_node *root, t_minishell *minishell)
 		count += treat_return_code(&first,
 				execute_file(first, minishell, forking), &status, &last_pid);
 	if (g_sigint)
-	{
 		return (pipeline_clean(minishell, 1));
-	}
 	status = wait_for_result(count, last_pid, status);
 	if (g_sigint)
-	{
 		return (pipeline_clean(minishell, 130));
-	}
 	return (pipeline_clean(minishell, status));
 }
 
