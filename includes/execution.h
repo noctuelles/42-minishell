@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 12:38:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 13:39:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,15 @@ int			execute_file(t_command *command, t_minishell *minishell, int forking);
 int			prepare_fd(t_command *command);
 void	free_cmd_pipeline(t_command *first);
 int	pipeline_clean(t_minishell *minishell, int code);
+t_command	*test_parse_and_add(t_ast_tree_node *root, t_minishell *minishell,
+	t_command **first, bool forking);
+t_command	*parse_command(t_ast_tree_node *node, bool piped,
+	t_minishell *minishell);
+void	dup_for_pipe(t_command *command, int pid, int pipefd[2]);
+void	close_all_error(t_command *command, int code);
+void	dup_and_close(int fd1, int fd2);
+void	dup_for_redirections(t_command *command, int pid);
+void	error_exit(char *str, int errno_value);
 
 /* path.c */
 

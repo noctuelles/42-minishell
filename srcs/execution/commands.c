@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 13:23:21 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/20 13:35:43 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ void	*parse_list(t_dlist *node, t_command *command, int *arg_count)
 	return (node);
 }
 
+t_command	*check_error_cause(t_command *command, t_minishell *minishell)
+{
+	if (minishell->err != 0)
+		return (NULL);
+	return (command);
+}
+
 t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 	int *arg_count, t_minishell *minishell)
 {
@@ -52,11 +59,7 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 		command->name = get_path_from_name(
 				((t_arg *)node->args->content)->value, minishell, command);
 		if (!command->name)
-		{
-			if (minishell->err != 0)
-				return (NULL);
-			return (command);
-		}
+			return (check_error_cause(command, minishell));
 		*arg_count = 1;
 		if (node->args->next != NULL)
 			parse_list(node->args->next, command, arg_count);
@@ -90,10 +93,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 		while (elem)
 		{
 			if (((t_arg *)elem->content)->type == ARG_WORD)
-			{
-				command->args[i] = ((t_arg *)elem->content)->value;
-				i++;
-			}
+				command->args[i++] = ((t_arg *)elem->content)->value;
 			elem = elem->next;
 		}
 	}
@@ -101,25 +101,9 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 	return (command);
 }
 
-void	add_command(t_command *cmd, t_command **lst)
-{
-	t_command	*elem;
-
-	if (*lst == NULL)
-		*lst = cmd;
-	else
-	{
-		elem = *lst;
-		while (elem->next != NULL)
-			elem = elem->next;
-		elem->next = cmd;
-	}
-}
-
 t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 {
 	t_command	*first;
-	t_command	*cur;
 
 	first = NULL;
 	apply_expansion_on_node(root, minishell);
@@ -135,27 +119,13 @@ t_command	*parse_commands(t_ast_tree_node *root, t_minishell *minishell)
 	{
 		while (root->type == NODE_PIPE && !g_sigint)
 		{
-			cur = parse_command(root->left, true, minishell);
-			if (!cur)
-			{
-				display_error_more(NULL, "malloc", 0);
-				free_cmd_pipeline(first);
+			if (!test_parse_and_add(root->left, minishell, &first, true))
 				return (NULL);
-			}
-			add_command(cur, &first);
 			root = root->right;
 		}
 		if (!g_sigint)
-		{
-			cur = parse_command(root, false, minishell);
-			if (!cur)
-			{
-				display_error_more(NULL, "malloc", 0);
-				free_cmd_pipeline(first);
+			if (!test_parse_and_add(root, minishell, &first, false))
 				return (NULL);
-			}
-			add_command(cur, &first);
-		}
 	}
 	return (first);
 }
