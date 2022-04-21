@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/21 16:22:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 16:35:24 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	check_for_break(t_lexer *lex);
 
 char	*read_from_user(t_minishell *minishell);
 
+/* utils.c */
 
 void	*set_minishell_err_null(t_minishell *minishell, int err);
 
