@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 20:08:51 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 16:18:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 21:55:01 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,24 @@ char	**export_env(t_dlist *lst)
 int	get_current_working_dir(char **cwd)
 {
 	size_t	buff_size;
+	char	*save;
 
 	buff_size = 100;
 	*cwd = (char *) malloc(buff_size * sizeof(char));
+	save = *cwd;
 	if (!*cwd)
 		return (-1);
 	*cwd = getcwd(*cwd, buff_size);
 	while (*cwd == NULL)
 	{
-		free(*cwd);
+		free(save);
 		if (errno == ERANGE)
 		{
 			buff_size *= 2;
 			*cwd = (char *) malloc(buff_size * sizeof(char));
 			if (!*cwd)
 				return (-1);
+			save = *cwd;
 		}
 		else
 			return (-2);
