@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 15:27:04 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 21:11:59 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,17 @@ t_command	*check_error_cause(t_command *command, t_minishell *minishell)
 	return (command);
 }
 
+char	*find_command_name(t_dlist *args)
+{
+	while (args)
+	{
+		if (((t_arg *)args->content)->type == ARG_WORD)
+			return (((t_arg *)args->content)->value);
+		args = args->next;
+	}
+	return (NULL);
+}
+
 t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 	int *arg_count, t_minishell *minishell)
 {
@@ -61,12 +72,12 @@ t_command	*prepare_command(bool piped, t_ast_tree_node *node,
 	{
 		command->is_piped = piped;
 		command->name = get_path_from_name(
-				((t_arg *)node->args->content)->value, minishell, command);
+				find_command_name(node->args), minishell, command);
 		if (!command->name)
 			return (check_error_cause(command, minishell));
-		*arg_count = 1;
+		*arg_count = 0;
 		if (node->args->next != NULL)
-			parse_list(node->args->next, command, arg_count);
+			parse_list(node->args, command, arg_count);
 	}
 	else
 	{

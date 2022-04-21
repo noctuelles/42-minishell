@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:29:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:38:50 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 21:12:24 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ char	*get_path_from_name(char *name, t_minishell *minishell,
 {
 	char	*path;
 
+	if (!name)
+		return (NULL);
 	if (!ft_strchr(name, '/'))
 	{
 		if (!is_builtin(name))
