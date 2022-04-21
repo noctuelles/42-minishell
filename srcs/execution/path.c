@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 16:29:39 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/21 21:12:24 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 21:28:33 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 #include "builtins.h"
 #include "execution.h"
 #include <stdlib.h>
+
+char	*find_command_name(t_dlist *args)
+{
+	while (args)
+	{
+		if (((t_arg *)args->content)->type == ARG_WORD)
+			return (((t_arg *)args->content)->value);
+		args = args->next;
+	}
+	return (NULL);
+}
 
 static char	*create_path(char *path, char *command_name)
 {

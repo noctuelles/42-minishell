@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:47:50 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/20 16:27:03 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 21:28:42 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void		close_all_error(t_command *command, int code);
 void		dup_and_close(int fd1, int fd2);
 void		dup_for_redirections(t_command *command, int pid);
 void		error_exit(char *str, int errno_value);
+char		*find_command_name(t_dlist *args);
 
 /* path.c */
 

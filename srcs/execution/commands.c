@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/21 21:11:59 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 21:28:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,6 @@ t_command	*check_error_cause(t_command *command, t_minishell *minishell)
 	if (minishell->err != 0)
 		return (NULL);
 	return (command);
-}
-
-char	*find_command_name(t_dlist *args)
-{
-	while (args)
-	{
-		if (((t_arg *)args->content)->type == ARG_WORD)
-			return (((t_arg *)args->content)->value);
-		args = args->next;
-	}
-	return (NULL);
 }
 
 t_command	*prepare_command(bool piped, t_ast_tree_node *node,
