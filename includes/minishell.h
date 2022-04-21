@@ -6,25 +6,23 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:07:41 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 15:59:38 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 16:22:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
-# include <string.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <sys/types.h>
 # include <dirent.h>
 # include <stdbool.h>
+# include "libft.h"
 # include "lexer.h"
 # include "parser.h"
-# include <errno.h>
 # include "env.h"
+
+/******************************************************************************
+ *                                  Macros                                    *
+ *****************************************************************************/
 
 # define STR_SHELL_NAME         "minishell"
 
@@ -50,6 +48,10 @@ the minishell into an empty environnement.\n\n"
 # define ENO                    0
 
 # define STR_BUILTIN_EXPORT     "export"
+
+/******************************************************************************
+ *                            Functions Prototype                             *
+ *****************************************************************************/
 
 void	*display_error_more(t_minishell *minishell, const char *fcnt_name,
 			int err);

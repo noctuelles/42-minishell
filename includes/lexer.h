@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:39:17 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 16:24:21 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 16:07:22 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define STR_OP_PRT           "("
 # define STR_CL_PRT           ")"
 # define STR_SP               " "
+# define STR_TAB              "\t"
 
 # define STR_INVALID_PRT     "invalid parenthesis use"
 # define STR_INVALID_QUOTE   "quote not closed"

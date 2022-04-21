@@ -6,12 +6,13 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 16:38:30 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:22:59 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:32:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 #include "ft_printf.h"
+#include <stdlib.h>
 
 void	create_new_string(char *str, char *new_str, int size, int length)
 {

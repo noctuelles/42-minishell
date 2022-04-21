@@ -6,12 +6,16 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 18:04:21 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 12:22:01 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:29:10 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include "ft_dprintf.h"
 #include "builtins.h"
-#include "ft_printf.h"
 
 void	update_env(char *pwd, char *old_pwd, t_minishell *minishell)
 {
@@ -43,7 +47,7 @@ int	ft_cd(int argc, char **argv, t_minishell *minishell)
 	env = minishell->vars;
 	if (argc != 2)
 	{
-		ft_printf(CD_FORMAT_ERROR, argv[0], argv[0]);
+		ft_dprintf(STDERR_FILENO, CD_FORMAT_ERROR, argv[0], argv[0]);
 		return (1);
 	}
 	if (chdir(argv[1]) == 0)
@@ -51,12 +55,12 @@ int	ft_cd(int argc, char **argv, t_minishell *minishell)
 		old_pwd = get_var(env, "PWD")->value;
 		if (get_current_working_dir(&pwd) != 0)
 		{
-			ft_printf(ERROR_ERRNO, argv[0], strerror(errno));
+			ft_dprintf(STDERR_FILENO, ERROR_ERRNO, argv[0], strerror(errno));
 			return (1);
 		}
 		update_env(pwd, old_pwd, minishell);
 		return (0);
 	}
-	ft_printf(ERROR_ERRNO, argv[0], strerror(errno));
+	ft_dprintf(STDERR_FILENO, ERROR_ERRNO, argv[0], strerror(errno));
 	return (1);
 }

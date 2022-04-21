@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:55:43 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 14:20:46 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:26:56 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 # define AST_H
 
 # include "libft.h"
-# include <stdbool.h>
-# include <errno.h>
-# include <fcntl.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <stdio.h>
-# include <sys/wait.h>
+
+/******************************************************************************
+ *                              Typedef & Enum                                *
+ *****************************************************************************/
 
 typedef enum e_node_type
 {
@@ -39,6 +35,10 @@ typedef struct s_ast_tree_node
 	struct s_ast_tree_node	*left;
 	struct s_ast_tree_node	*right;
 }	t_ast_tree_node;
+
+/******************************************************************************
+ *                            Functions Prototype                             *
+ *****************************************************************************/
 
 /* ast.c */
 

@@ -6,10 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 18:19:21 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/20 12:28:17 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 16:33:31 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
+#include <errno.h>
 #include "minishell.h"
 #include "ft_dprintf.h"
 

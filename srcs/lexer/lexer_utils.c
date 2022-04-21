@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 14:08:26 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/18 18:42:47 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/04/21 16:07:54 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ t_token	search_existing_token(const char *str)
 	else if (ft_strncmp(str, STR_CL_PRT, 1) == 0)
 		return (set_token(&token, STR_CL_PRT, 1, T_CL_PRT));
 	else if (ft_strncmp(str, STR_SP, 1) == 0)
+		return (set_token(&token, STR_SP, 1, T_BREAK));
+	else if (ft_strncmp(str, STR_TAB, 1) == 0)
 		return (set_token(&token, STR_SP, 1, T_BREAK));
 	return (set_token(&token, NULL, 0, T_NULL));
 }

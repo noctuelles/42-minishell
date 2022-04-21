@@ -6,10 +6,12 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 16:10:41 by dhubleur          #+#    #+#             */
-/*   Updated: 2022/04/19 11:13:02 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:32:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <unistd.h>
 #include "builtins.h"
 #include "ft_dprintf.h"
 
