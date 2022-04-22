@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 17:58:19 by plouvel           #+#    #+#             */
-/*   Updated: 2022/04/21 21:28:27 by dhubleur         ###   ########.fr       */
+/*   Updated: 2022/04/22 12:52:22 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 		return (NULL);
 	if (command->name != NULL && !g_sigint)
 	{
-		command->args = ft_calloc(sizeof(char *), args_count + 1);
+		command->args = ft_calloc(sizeof(char *), args_count + 2);
 		if (!command->args)
 			return (NULL);
 		elem = node->args;
@@ -100,6 +100,7 @@ t_command	*parse_command(t_ast_tree_node *node, bool piped,
 				command->args[i++] = ((t_arg *)elem->content)->value;
 			elem = elem->next;
 		}
+		command->args[i] = NULL;
 	}
 	command->next = NULL;
 	return (command);
